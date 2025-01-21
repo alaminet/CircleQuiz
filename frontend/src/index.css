@@ -1,0 +1,13 @@
+.question-radio-group .ant-space {
+  width: 100%;
+}
+
+/* Add this CSS to your stylesheet */
+@media print {
+  body {
+    font-size: 12pt;
+  }
+  .no-print {
+    display: none;
+  }
+}
