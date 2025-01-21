@@ -28,6 +28,7 @@ const ExamFinished = () => {
               View Results
             </Button>,
             <Button
+              disabled={!view}
               onClick={() => window.print()}
               className="no-print"
               style={{ margin: "10px auto" }}>
