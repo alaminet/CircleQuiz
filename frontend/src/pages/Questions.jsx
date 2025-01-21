@@ -180,7 +180,7 @@ const Questions = () => {
 
   return (
     <>
-      <BasicLayout>
+      <div>
         <Flex gap={16} justify="space-between" align="center">
           <div>
             <CloseCircleOutlined style={{ fontSize: "30px" }} />
@@ -210,7 +210,8 @@ const Questions = () => {
               onChange={onChangeRadio}
               value={value}
               className="question-radio-group"
-              style={{ width: "100%" }}>
+              style={{ width: "100%" }}
+            >
               <Space direction="vertical">
                 {/* {steps[current]?.options?.map((opt, j) => (
                   <>
@@ -242,7 +243,8 @@ const Questions = () => {
                     padding: "10px",
                     width: "100%",
                     fontWeight: "bold",
-                  }}>
+                  }}
+                >
                   {steps[current]?.options[shuffledNumbers[0]]?.label}
                 </Radio>
                 <Radio
@@ -256,7 +258,8 @@ const Questions = () => {
                     padding: "10px",
                     width: "100%",
                     fontWeight: "bold",
-                  }}>
+                  }}
+                >
                   {steps[current]?.options[shuffledNumbers[1]]?.label}
                 </Radio>
                 <Radio
@@ -270,7 +273,8 @@ const Questions = () => {
                     padding: "10px",
                     width: "100%",
                     fontWeight: "bold",
-                  }}>
+                  }}
+                >
                   {steps[current]?.options[shuffledNumbers[2]]?.label}
                 </Radio>
                 <Radio
@@ -284,7 +288,8 @@ const Questions = () => {
                     padding: "10px",
                     width: "100%",
                     fontWeight: "bold",
-                  }}>
+                  }}
+                >
                   {steps[current]?.options[shuffledNumbers[3]]?.label}
                 </Radio>
               </Space>
@@ -295,7 +300,8 @@ const Questions = () => {
         <div
           style={{
             marginTop: 24,
-          }}>
+          }}
+        >
           {current < steps.length - 1 && (
             <Button type="primary" onClick={() => next()}>
               Next
@@ -311,12 +317,13 @@ const Questions = () => {
               style={{
                 margin: "0 8px",
               }}
-              onClick={() => prev()}>
+              onClick={() => prev()}
+            >
               Previous
             </Button>
           )}
         </div>
-      </BasicLayout>
+      </div>
     </>
   );
 };
