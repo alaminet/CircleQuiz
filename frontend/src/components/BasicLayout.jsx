@@ -103,7 +103,7 @@ const BasicLayout = () => {
                   Hello; {user.username}
                 </Title>
                 <Text type="secondary" style={{ textWrap: "nowrap" }}>
-                  {moment(new Date()).format("[Today is] dddd, MMMM Do YYYY")}
+                  {moment(new Date()).format("[Today is] dddd, MMMM DD, YYYY")}
                 </Text>
               </Typography>
             </Col>
