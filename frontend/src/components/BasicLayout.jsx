@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import {
   AntDesignOutlined,
+  FileDoneOutlined,
   FileSearchOutlined,
+  FormOutlined,
   HomeOutlined,
   LogoutOutlined,
+  PlusCircleOutlined,
+  QuestionCircleOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
 import {
@@ -26,6 +31,38 @@ const items = [
     key: "/",
     icon: <HomeOutlined />,
     label: "Home",
+  },
+  {
+    key: "admin",
+    icon: <UserOutlined />,
+    label: "Admin",
+    children: [
+      {
+        key: "topics",
+        icon: <FileDoneOutlined />,
+        label: "TopicsDetails",
+      },
+      {
+        key: "addexam",
+        icon: <FormOutlined />,
+        label: "Add Exam",
+      },
+      {
+        key: "viewexam",
+        icon: <FormOutlined />,
+        label: "View Exam",
+      },
+      {
+        key: "addqa",
+        icon: <QuestionCircleOutlined />,
+        label: "Add Q&A",
+      },
+      {
+        key: "viewqa",
+        icon: <QuestionCircleOutlined />,
+        label: "View Q&A",
+      },
+    ],
   },
   {
     key: "result",

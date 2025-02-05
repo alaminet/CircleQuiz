@@ -126,7 +126,7 @@ const Home = () => {
       <Row gutter={[16, 16]} justify="start" align="middle">
         {topics?.map((item, i) => (
           <>
-            <Col key={i} span={12}>
+            <Col key={i} xs={12} lg={6}>
               <Flex
                 justify="space-between"
                 wrap
