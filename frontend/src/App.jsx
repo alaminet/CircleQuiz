@@ -12,6 +12,7 @@ import Questions from "./pages/Questions";
 import ExamFinished from "./pages/ExamFinished";
 import BasicLayout from "./components/BasicLayout";
 import AddTopic from "./pages/AddTopic";
+import AddExam from "./pages/AddExam";
 
 function App() {
   const router = createBrowserRouter(
@@ -24,6 +25,7 @@ function App() {
             <Route path="questions" element={<Questions />}></Route>
             <Route path="result" element={<ExamFinished />}></Route>
             <Route path="topics" element={<AddTopic />}></Route>
+            <Route path="exam" element={<AddExam />}></Route>
           </Route>
         </Route>
         <Route element={<LoggedOutUser />}>

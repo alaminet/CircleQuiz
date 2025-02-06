@@ -33,10 +33,6 @@ const AddTopic = () => {
   const [tbllist, setTbllist] = useState([]);
   const [itemlist, setitemlist] = useState([]);
 
-  // Filter `option.label` match the user type `input`
-  const filterOption = (input, option) =>
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-
   // Add new Topic
   const onFinishNewTopic = async (values) => {
     setLoading(true);
@@ -67,9 +63,8 @@ const AddTopic = () => {
     setEditItem(values);
     editForm.setFieldsValue({
       id: values._id,
-      loc: values.locID.loc,
-      issue: values.issue,
-      qty: values.qty,
+      name: values.name,
+      iconUrl: values.iconUrl,
     });
   };
   const onFinishEdit = async (values) => {
@@ -162,7 +157,9 @@ const AddTopic = () => {
       key: "icon",
       render: (icon) => (
         <Image
-          src="https://cdn-icons-png.flaticon.com/128/1041/1041168.png"
+          src={
+            icon || "https://cdn-icons-png.flaticon.com/128/1041/1041168.png"
+          }
           width={50}
           height={50}
         />
@@ -173,7 +170,7 @@ const AddTopic = () => {
       dataIndex: "action",
       key: "action",
       render: (item, record) =>
-        (user.role === "admin" || user.role === "LM") && (
+        user.role === "admin" && (
           <>
             <Flex gap={4}>
               <Tooltip title="Edit">
@@ -206,8 +203,7 @@ const AddTopic = () => {
             }}
             onFinish={onFinishNewTopic}
             onFinishFailed={onFinishNewTopicFailed}
-            autoComplete="off"
-          >
+            autoComplete="off">
             <Form.Item
               label="Topics Name"
               name="name"
@@ -216,8 +212,7 @@ const AddTopic = () => {
                   required: true,
                   message: "Please input Topics Name !",
                 },
-              ]}
-            >
+              ]}>
               <Input />
             </Form.Item>
             <Form.Item
@@ -228,13 +223,16 @@ const AddTopic = () => {
                   required: true,
                   message: "Please input Icon URL !",
                 },
-              ]}
-            >
+              ]}>
               <Input />
             </Form.Item>
 
             <Form.Item label={null}>
-              <Button type="primary" htmlType="submit" loading={loading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                disabled={loading}>
                 Add Topics
               </Button>
             </Form.Item>
@@ -270,57 +268,42 @@ const AddTopic = () => {
               title="Edit Category"
               open={isModalOpen}
               onCancel={handleCancel}
-              footer=""
-            >
+              footer="">
               <Form
                 form={editForm}
                 // layout="vertical"
                 onFinish={onFinishEdit}
                 // onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              >
+                autoComplete="off">
                 <Form.Item hidden name="id"></Form.Item>
                 <Form.Item
-                  name="loc"
-                  label="Location"
+                  name="name"
+                  label="Topics"
                   rules={[
                     {
                       required: true,
                     },
-                  ]}
-                >
-                  <Input placeholder="Location" />
+                  ]}>
+                  <Input placeholder="Topics" />
                 </Form.Item>
                 <Form.Item
-                  name="qty"
-                  label="Rec. Qty"
+                  name="iconUrl"
+                  label="Icon URL"
                   rules={[
                     {
                       required: true,
                     },
-                  ]}
-                >
-                  <InputNumber disabled placeholder="Receive Qty" />
+                  ]}>
+                  <Input placeholder="Icon URL" />
                 </Form.Item>
-                <Form.Item
-                  name="issue"
-                  label="Issue Qty"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <InputNumber placeholder="Issue Qty" />
-                </Form.Item>
+
                 <Form.Item>
                   <Space>
                     <Button
                       loading={loading}
                       disabled={loading}
                       type="primary"
-                      htmlType="submit"
-                    >
+                      htmlType="submit">
                       Submit
                     </Button>
                   </Space>

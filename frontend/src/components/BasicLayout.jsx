@@ -40,17 +40,12 @@ const items = [
       {
         key: "topics",
         icon: <FileDoneOutlined />,
-        label: "TopicsDetails",
+        label: "Topics Details",
       },
       {
-        key: "addexam",
+        key: "exam",
         icon: <FormOutlined />,
-        label: "Add Exam",
-      },
-      {
-        key: "viewexam",
-        icon: <FormOutlined />,
-        label: "View Exam",
+        label: "Exam Details",
       },
       {
         key: "addqa",
