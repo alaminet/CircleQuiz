@@ -23,10 +23,10 @@ import moment from "moment";
 const AddTopic = () => {
   const { Text } = Typography;
   const user = useSelector((user) => user.loginSlice.login);
+  const [newForm] = Form.useForm();
   const [editForm] = Form.useForm();
   const [editItem, setEditItem] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [findpartdlts] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [tbllist, setTbllist] = useState([]);
@@ -37,8 +37,23 @@ const AddTopic = () => {
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   // Add new Topic
-  const onFinishNewTopic = (values) => {
-    console.log("Success:", values);
+  const onFinishNewTopic = async (values) => {
+    setLoading(true);
+    try {
+      const data = await axios.post(
+        `${import.meta.env.VITE_API_URL}/v1/api/topic/add`,
+        {
+          name: values.name.trim(),
+          iconUrl: values.iconUrl.trim(),
+        }
+      );
+      setLoading(false);
+      newForm.resetFields();
+      message.success(data.data.message);
+    } catch (error) {
+      setLoading(false);
+      message.error(error.response.data.message);
+    }
   };
   const onFinishNewTopicFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -47,7 +62,7 @@ const AddTopic = () => {
   // form controll
   const onFinish = async (values) => {
     // console.log("Success:", values);
-    setLoading(true);
+
     try {
       const data = await axios.post(
         `${import.meta.env.VITE_API_URL}/v1/api/tnx/partstock`,
@@ -217,14 +232,16 @@ const AddTopic = () => {
       <div>
         <Row>
           <Form
-            name="basic"
+            form={newForm}
+            name="newForm"
             layout="inline"
             initialValues={{
               remember: true,
             }}
             onFinish={onFinishNewTopic}
             onFinishFailed={onFinishNewTopicFailed}
-            autoComplete="off">
+            autoComplete="off"
+          >
             <Form.Item
               label="Topics Name"
               name="name"
@@ -233,12 +250,25 @@ const AddTopic = () => {
                   required: true,
                   message: "Please input Topics Name !",
                 },
-              ]}>
-              <Input style={{ maxWidth: "350px" }} />
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Icon URL"
+              name="iconUrl"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input Icon URL !",
+                },
+              ]}
+            >
+              <Input />
             </Form.Item>
 
             <Form.Item label={null}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={loading}>
                 Add Topics
               </Button>
             </Form.Item>
@@ -254,11 +284,6 @@ const AddTopic = () => {
                 placeholder="Find by Name"
                 variant="filled"
               />
-              {/* <Table
-                style={{ width: "100%" }}
-                dataSource={tbllist}
-                columns={columns}
-              /> */}
               <Table
                 columns={columns}
                 tableLayout="fixed"
@@ -279,13 +304,15 @@ const AddTopic = () => {
               title="Edit Category"
               open={isModalOpen}
               onCancel={handleCancel}
-              footer="">
+              footer=""
+            >
               <Form
                 form={editForm}
                 // layout="vertical"
                 onFinish={onFinishEdit}
                 // onFinishFailed={onFinishFailed}
-                autoComplete="off">
+                autoComplete="off"
+              >
                 <Form.Item hidden name="id"></Form.Item>
                 <Form.Item
                   name="loc"
@@ -294,7 +321,8 @@ const AddTopic = () => {
                     {
                       required: true,
                     },
-                  ]}>
+                  ]}
+                >
                   <Input placeholder="Location" />
                 </Form.Item>
                 <Form.Item
@@ -304,7 +332,8 @@ const AddTopic = () => {
                     {
                       required: true,
                     },
-                  ]}>
+                  ]}
+                >
                   <InputNumber disabled placeholder="Receive Qty" />
                 </Form.Item>
                 <Form.Item
@@ -314,7 +343,8 @@ const AddTopic = () => {
                     {
                       required: true,
                     },
-                  ]}>
+                  ]}
+                >
                   <InputNumber placeholder="Issue Qty" />
                 </Form.Item>
                 <Form.Item>
@@ -323,7 +353,8 @@ const AddTopic = () => {
                       loading={loading}
                       disabled={loading}
                       type="primary"
-                      htmlType="submit">
+                      htmlType="submit"
+                    >
                       Submit
                     </Button>
                   </Space>
