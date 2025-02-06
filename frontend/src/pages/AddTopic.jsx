@@ -15,6 +15,7 @@ import {
   message,
   Flex,
   Tooltip,
+  Image,
 } from "antd";
 import { useSelector } from "react-redux";
 import { EditTwoTone, DeleteTwoTone } from "@ant-design/icons";
@@ -57,54 +58,6 @@ const AddTopic = () => {
   };
   const onFinishNewTopicFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-  };
-
-  // form controll
-  const onFinish = async (values) => {
-    // console.log("Success:", values);
-
-    try {
-      const data = await axios.post(
-        `${import.meta.env.VITE_API_URL}/v1/api/tnx/partstock`,
-        {
-          code: values.code.toUpperCase().trim(),
-        }
-      );
-      //   console.log(data?.data.receive);
-      const recArr = [];
-      let y = 1;
-      data?.data.receive.map((receive, i) => {
-        receive.receList.map((reclist, j) => {
-          if (reclist.codeID == data.data.itemMatch._id) {
-            recArr.push({
-              sl: y++,
-              recDate: moment(receive?.date).format("DD-MMM-YY"),
-              tnxID: receive?.tnxID,
-              code: data?.data?.itemMatch?.code,
-              name: data?.data?.itemMatch?.itemname,
-              loc: reclist?.locID?.loc,
-              lot: receive?.lotID?.lot,
-              recqty: reclist?.qty,
-              issqty: reclist?.issue,
-              onhand: reclist?.qty - reclist?.issue,
-              action: reclist,
-            });
-          }
-          setTbllist(recArr);
-        });
-      });
-      setLoading(false);
-      //   console.log(tbllist);
-    } catch (error) {
-      setLoading(false);
-      message.error(error.response.data.message);
-    }
-
-    // findpartdlts.resetFields();
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-    setLoading(false);
   };
 
   // edit table data
@@ -175,19 +128,21 @@ const AddTopic = () => {
   useEffect(() => {
     async function getData() {
       const data = await axios.get(
-        `${import.meta.env.VITE_API_URL}/v1/api/item/viewitemlist`
+        `${import.meta.env.VITE_API_URL}/v1/api/topic/view`
       );
+
       const tableData = [];
-      data?.data?.map((item, i) => {
+      data?.data?.view?.map((item, i) => {
         tableData.push({
-          label: item.code + "_" + item.itemname,
-          value: item.code,
+          sl: ++i,
+          topics: item?.name,
+          icon: item?.iconUrl,
         });
-        setitemlist(tableData);
+        setTbllist(tableData);
       });
     }
     getData();
-  }, []);
+  }, [onFinishNewTopic]);
 
   // table arrangment
   const columns = [
@@ -201,7 +156,18 @@ const AddTopic = () => {
       dataIndex: "topics",
       key: "totpics",
     },
-
+    {
+      title: "Icon",
+      dataIndex: "icon",
+      key: "icon",
+      render: (icon) => (
+        <Image
+          src="https://cdn-icons-png.flaticon.com/128/1041/1041168.png"
+          width={50}
+          height={50}
+        />
+      ),
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -290,7 +256,7 @@ const AddTopic = () => {
                 dataSource={
                   tbllist !== "" &&
                   tbllist.filter((item) =>
-                    item.lot.toLowerCase().includes(search.toLowerCase())
+                    item.topics.toLowerCase().includes(search.toLowerCase())
                   )
                 }
                 pagination={false}
