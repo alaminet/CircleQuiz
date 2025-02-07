@@ -4,16 +4,17 @@ const TopicsNewController = async (req, res) => {
   try {
     const { name, iconUrl } = req.body;
     const dataExist = await Topics.findOne({ name: name });
+
     if (!name || !iconUrl) {
       return res.status(404).send({ message: "Data Not Found" });
-    } else if (dataExist.length > 0) {
+    } else if (!dataExist) {
       const addnew = await new Topics({
         name: name,
         iconUrl: iconUrl,
       }).save();
       res.status(200).send({ addnew, message: "New Topics Added" });
     } else {
-      res.status(400).send({ addnew, message: "Duplicate Data" });
+      res.status(400).send({ addnew, message: "Duplicate Datacc" });
     }
   } catch (error) {
     await res.status(404).send({ error });

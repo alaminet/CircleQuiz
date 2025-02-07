@@ -16,6 +16,7 @@ import {
   Flex,
   Tooltip,
   Image,
+  Radio,
 } from "antd";
 import { useSelector } from "react-redux";
 import { EditTwoTone, DeleteTwoTone } from "@ant-design/icons";
@@ -31,6 +32,7 @@ const AddTopic = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [tbllist, setTbllist] = useState([]);
+  const [editStatus, setEditStatus] = useState(null);
 
   // Add new Topic
   const onFinishNewTopic = async (values) => {
@@ -60,10 +62,12 @@ const AddTopic = () => {
     // console.log(values);
     setIsModalOpen(true);
     setEditItem(values);
+    setEditStatus(values.status);
     editForm.setFieldsValue({
       id: values._id,
       topics: values.name,
       iconUrl: values.iconUrl,
+      status: values.status,
     });
   };
 
@@ -82,6 +86,7 @@ const AddTopic = () => {
             id: values.id,
             topics: values.topics,
             iconUrl: values.iconUrl,
+            status: editStatus,
           }
         );
         message.success(update.data.message);
@@ -163,6 +168,8 @@ const AddTopic = () => {
         ),
     },
   ];
+  // console.log(editItem);
+
   return (
     <>
       <div>
@@ -276,6 +283,40 @@ const AddTopic = () => {
                   ]}
                 >
                   <Input placeholder="Icon URL" />
+                </Form.Item>
+                <Form.Item
+                  // name="status"
+                  label="Status"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Radio.Group
+                    options={[
+                      {
+                        label: "Approve",
+                        value: "approve",
+                      },
+                      {
+                        label: "Waiting",
+                        value: "waiting",
+                      },
+                      {
+                        label: "Hold",
+                        value: "hold",
+                      },
+                      {
+                        label: "Delete",
+                        value: "delete",
+                      },
+                    ]}
+                    onChange={(e) => setEditStatus(e.target.value)}
+                    value={editStatus}
+                    optionType="button"
+                    buttonStyle="solid"
+                  />
                 </Form.Item>
 
                 <Form.Item>
