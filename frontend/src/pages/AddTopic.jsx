@@ -31,7 +31,6 @@ const AddTopic = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [tbllist, setTbllist] = useState([]);
-  const [itemlist, setitemlist] = useState([]);
 
   // Add new Topic
   const onFinishNewTopic = async (values) => {
@@ -40,7 +39,7 @@ const AddTopic = () => {
       const data = await axios.post(
         `${import.meta.env.VITE_API_URL}/v1/api/topic/add`,
         {
-          name: values.name.trim(),
+          name: values.topics.trim(),
           iconUrl: values.iconUrl.trim(),
         }
       );
@@ -49,7 +48,7 @@ const AddTopic = () => {
       message.success(data.data.message);
     } catch (error) {
       setLoading(false);
-      message.error(error.response.data.message);
+      message.error(error.code);
     }
   };
   const onFinishNewTopicFailed = (errorInfo) => {
@@ -63,54 +62,35 @@ const AddTopic = () => {
     setEditItem(values);
     editForm.setFieldsValue({
       id: values._id,
-      name: values.name,
+      topics: values.name,
       iconUrl: values.iconUrl,
     });
   };
+
   const onFinishEdit = async (values) => {
     // console.log(editItem);
     // console.log(values);
     setLoading(true);
-    if (editItem.locID.loc !== values.loc && editItem.issue !== values.issue) {
-      message.warning("Single Edit can be done");
-    } else {
-      if (editItem.locID.loc !== values.loc) {
-        try {
-          const update = await axios.post(
-            `${import.meta.env.VITE_API_URL}/v1/api/tnx/receiveupdate`,
-            {
-              id: values.id,
-              field: "locID",
-              value: values.loc,
-            }
-          );
-          message.success(update.data.message);
-          setLoading(false);
-          setIsModalOpen(false);
-        } catch (error) {
-          setLoading(false);
-          message.error(error.response.data.message);
-          // console.log(error.response.data.message);
-        }
-      }
-      if (editItem.issue !== values.issue) {
-        try {
-          const update = await axios.post(
-            `${import.meta.env.VITE_API_URL}/v1/api/tnx/receiveupdate`,
-            {
-              id: values.id,
-              field: "issue",
-              value: values.issue,
-            }
-          );
-          message.success(update.data.message);
-          setLoading(false);
-          setIsModalOpen(false);
-        } catch (error) {
-          setLoading(false);
-          message.error(error.response.data.message);
-          // console.log(error.response.data.message);
-        }
+    if (
+      editItem.topics !== values.topics ||
+      editItem.iconUrl !== values.iconUrl
+    ) {
+      try {
+        const update = await axios.post(
+          `${import.meta.env.VITE_API_URL}/v1/api/topic/edit`,
+          {
+            id: values.id,
+            topics: values.topics,
+            iconUrl: values.iconUrl,
+          }
+        );
+        message.success(update.data.message);
+        setLoading(false);
+        setIsModalOpen(false);
+      } catch (error) {
+        setLoading(false);
+        message.error(error.response.data.message);
+        // console.log(error.response.data.message);
       }
     }
   };
@@ -132,6 +112,7 @@ const AddTopic = () => {
           sl: ++i,
           topics: item?.name,
           icon: item?.iconUrl,
+          action: item,
         });
         setTbllist(tableData);
       });
@@ -155,15 +136,7 @@ const AddTopic = () => {
       title: "Icon",
       dataIndex: "icon",
       key: "icon",
-      render: (icon) => (
-        <Image
-          src={
-            icon || "https://cdn-icons-png.flaticon.com/128/1041/1041168.png"
-          }
-          width={50}
-          height={50}
-        />
-      ),
+      render: (icon) => <Image src={icon} width={50} height={50} />,
     },
     {
       title: "Action",
@@ -203,16 +176,18 @@ const AddTopic = () => {
             }}
             onFinish={onFinishNewTopic}
             onFinishFailed={onFinishNewTopicFailed}
-            autoComplete="off">
+            autoComplete="off"
+          >
             <Form.Item
               label="Topics Name"
-              name="name"
+              name="topics"
               rules={[
                 {
                   required: true,
                   message: "Please input Topics Name !",
                 },
-              ]}>
+              ]}
+            >
               <Input />
             </Form.Item>
             <Form.Item
@@ -223,7 +198,8 @@ const AddTopic = () => {
                   required: true,
                   message: "Please input Icon URL !",
                 },
-              ]}>
+              ]}
+            >
               <Input />
             </Form.Item>
 
@@ -232,7 +208,8 @@ const AddTopic = () => {
                 type="primary"
                 htmlType="submit"
                 loading={loading}
-                disabled={loading}>
+                disabled={loading}
+              >
                 Add Topics
               </Button>
             </Form.Item>
@@ -268,22 +245,25 @@ const AddTopic = () => {
               title="Edit Category"
               open={isModalOpen}
               onCancel={handleCancel}
-              footer="">
+              footer=""
+            >
               <Form
                 form={editForm}
                 // layout="vertical"
                 onFinish={onFinishEdit}
                 // onFinishFailed={onFinishFailed}
-                autoComplete="off">
+                autoComplete="off"
+              >
                 <Form.Item hidden name="id"></Form.Item>
                 <Form.Item
-                  name="name"
+                  name="topics"
                   label="Topics"
                   rules={[
                     {
                       required: true,
                     },
-                  ]}>
+                  ]}
+                >
                   <Input placeholder="Topics" />
                 </Form.Item>
                 <Form.Item
@@ -293,7 +273,8 @@ const AddTopic = () => {
                     {
                       required: true,
                     },
-                  ]}>
+                  ]}
+                >
                   <Input placeholder="Icon URL" />
                 </Form.Item>
 
@@ -303,7 +284,8 @@ const AddTopic = () => {
                       loading={loading}
                       disabled={loading}
                       type="primary"
-                      htmlType="submit">
+                      htmlType="submit"
+                    >
                       Submit
                     </Button>
                   </Space>
