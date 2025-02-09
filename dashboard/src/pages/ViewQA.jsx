@@ -18,7 +18,7 @@ import {
   Select,
 } from "antd";
 import { useSelector } from "react-redux";
-import { EditTwoTone, DeleteTwoTone,SearchOutlined  } from "@ant-design/icons";
+import { EditTwoTone, DeleteTwoTone, SearchOutlined } from "@ant-design/icons";
 
 const ViewQA = () => {
   const { Text } = Typography;
