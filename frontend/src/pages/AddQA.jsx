@@ -15,12 +15,14 @@ import {
   Tooltip,
   Image,
   Radio,
+  Select,
 } from "antd";
 import { useSelector } from "react-redux";
 import { EditTwoTone, DeleteTwoTone } from "@ant-design/icons";
 
-const AddTopic = () => {
+const AddQA = () => {
   const { Text } = Typography;
+  const { TextArea } = Input;
   const user = useSelector((user) => user.loginSlice.login);
   const [newForm] = Form.useForm();
   const [editForm] = Form.useForm();
@@ -28,18 +30,28 @@ const AddTopic = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [tbllist, setTbllist] = useState([]);
+  const [topicList, setTopicList] = useState([]);
   const [editStatus, setEditStatus] = useState(null);
 
   // Add new Topic
-  const onFinishNewTopic = async (values) => {
+  const onFinishNew = async (values) => {
+    // console.log(values);
     setLoading(true);
     try {
+      // question, options, ans, topic,
       const data = await axios.post(
-        `${import.meta.env.VITE_API_URL}/v1/api/topic/add`,
+        `${import.meta.env.VITE_API_URL}/v1/api/mcq/add`,
         {
-          name: values.topics.trim(),
-          iconUrl: values.iconUrl.trim(),
+          question: values.question.trim(),
+          options: [
+            values.A.trim(),
+            values.B.trim(),
+            values.C.trim(),
+            values.D.trim(),
+          ],
+          ans: values.ans,
+          topic: values.topic,
+          des: values.des.trim(),
         }
       );
       setLoading(false);
@@ -47,10 +59,11 @@ const AddTopic = () => {
       message.success(data.data.message);
     } catch (error) {
       setLoading(false);
-      message.error(error.code);
+      message.error(error.response.data.message);
     }
   };
-  const onFinishNewTopicFailed = (errorInfo) => {
+  const onFinishNewFailed = (errorInfo) => {
+    setLoading(false);
     console.log("Failed:", errorInfo);
   };
 
@@ -97,27 +110,26 @@ const AddTopic = () => {
     setIsModalOpen(false);
   };
 
+  // Get Topics List
+  async function getTopicData() {
+    const data = await axios.get(
+      `${import.meta.env.VITE_API_URL}/v1/api/topic/view`
+    );
+
+    const tableData = [];
+    data?.data?.view?.map((item, i) => {
+      tableData.push({
+        label: item?.name,
+        value: item?._id,
+      });
+      setTopicList(tableData);
+    });
+  }
+
   // Topics Info
   useEffect(() => {
-    async function getData() {
-      const data = await axios.get(
-        `${import.meta.env.VITE_API_URL}/v1/api/topic/view`
-      );
-
-      const tableData = [];
-      data?.data?.view?.map((item, i) => {
-        tableData.push({
-          sl: ++i,
-          topics: item?.name,
-          icon: item?.iconUrl,
-          status: item?.status,
-          action: item,
-        });
-        setTbllist(tableData);
-      });
-    }
-    getData();
-  }, [onFinishNewTopic, onFinishEdit]);
+    getTopicData();
+  }, [onFinishNew, onFinishEdit]);
 
   // table arrangment
   const columns = [
@@ -132,10 +144,29 @@ const AddTopic = () => {
       key: "topics",
     },
     {
-      title: "Icon",
-      dataIndex: "icon",
-      key: "icon",
-      render: (icon) => <Image src={icon} width={50} height={50} />,
+      title: "Question",
+      dataIndex: "question",
+      key: "question",
+    },
+    {
+      title: "Option A",
+      dataIndex: "optA",
+      key: "optA",
+    },
+    {
+      title: "Option B",
+      dataIndex: "optB",
+      key: "optB",
+    },
+    {
+      title: "Option C",
+      dataIndex: "optC",
+      key: "optAC",
+    },
+    {
+      title: "Option D",
+      dataIndex: "optD",
+      key: "optD",
     },
     {
       title: "Status",
@@ -157,11 +188,11 @@ const AddTopic = () => {
                 />
               </Tooltip>
               {/* <Tooltip title="Delete">
-                <Button
-                  // onClick={() => handleDelete(record)}
-                  icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-                />
-              </Tooltip> */}
+                  <Button
+                    // onClick={() => handleDelete(record)}
+                    icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+                  />
+                </Tooltip> */}
             </Flex>
           </>
         ),
@@ -176,39 +207,144 @@ const AddTopic = () => {
           <Form
             form={newForm}
             name="newForm"
-            layout="inline"
+            layout="horizontal"
+            style={{ width: "100%" }}
             initialValues={{
               remember: true,
             }}
-            onFinish={onFinishNewTopic}
-            onFinishFailed={onFinishNewTopicFailed}
+            onFinish={onFinishNew}
+            onFinishFailed={onFinishNewFailed}
             autoComplete="off"
           >
             <Form.Item
-              label="Topics Name"
-              name="topics"
+              label="Topics"
+              name="topic"
               rules={[
                 {
                   required: true,
-                  message: "Please input Topics Name !",
+                  message: "Please input Question!",
                 },
               ]}
             >
-              <Input />
+              <Select
+                showSearch
+                placeholder="Select Topics"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={topicList}
+              />
             </Form.Item>
             <Form.Item
-              label="Icon URL"
-              name="iconUrl"
+              label="Question"
+              name="question"
               rules={[
                 {
                   required: true,
-                  message: "Please input Icon URL !",
+                  message: "Please input Question!",
                 },
               ]}
             >
               <Input />
             </Form.Item>
-
+            <Row justify="space-between">
+              <Form.Item
+                label="Options A"
+                name="A"
+                // style={{ width: "40%" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input Options!",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Options B"
+                name="B"
+                // style={{ width: "40%" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input Options!",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Options C"
+                name="C"
+                // style={{ width: "40%" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input Options!",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Options D"
+                name="D"
+                // style={{ width: "40%" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input Options!",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Row>
+            <Form.Item
+              label="Ans"
+              name="ans"
+              // style={{ width: "40%" }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input Correct Option!",
+                },
+              ]}
+            >
+              <Select
+                showSearch
+                placeholder="Select Correct Option"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={[
+                  {
+                    value: 0,
+                    label: "Option A",
+                  },
+                  {
+                    value: 1,
+                    label: "Option B",
+                  },
+                  {
+                    value: 2,
+                    label: "Option C",
+                  },
+                  {
+                    value: 3,
+                    label: "Option D",
+                  },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label="Details" name="des">
+              <TextArea rows={4} />
+            </Form.Item>
             <Form.Item label={null}>
               <Button
                 type="primary"
@@ -216,14 +352,14 @@ const AddTopic = () => {
                 loading={loading}
                 disabled={loading}
               >
-                Add Topics
+                Add Q&A
               </Button>
             </Form.Item>
           </Form>
         </Row>
         <Row>
           {/* {tbllist.length > 0 && ( */}
-          <>
+          {/* <>
             <Divider>Topics Details Table</Divider>
             <div>
               <Input
@@ -245,7 +381,7 @@ const AddTopic = () => {
                 bordered
               />
             </div>
-          </>
+          </> */}
           {/* )} */}
           <div>
             <Modal
@@ -339,5 +475,4 @@ const AddTopic = () => {
     </>
   );
 };
-
-export default AddTopic;
+export default AddQA;

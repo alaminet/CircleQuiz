@@ -13,6 +13,11 @@ import ExamFinished from "./pages/ExamFinished";
 import BasicLayout from "./components/BasicLayout";
 import AddTopic from "./pages/AddTopic";
 import AddExam from "./pages/AddExam";
+import TopicsHome from "./pages/TopicsHome";
+import Bookmarks from "./pages/Bookmarks";
+import AddQA from "./pages/AddQA";
+import ViewQA from "./pages/ViewQA";
+import Exam from "./pages/Exam";
 
 function App() {
   const router = createBrowserRouter(
@@ -22,10 +27,15 @@ function App() {
           <Route path="/" element={<BasicLayout />}>
             <Route path="*" element={<Home />}></Route>
             <Route path="" element={<Home />}></Route>
+            <Route path="addtopics" element={<AddTopic />}></Route>
+            <Route path="addexam" element={<AddExam />}></Route>
+            <Route path="addqa" element={<AddQA />}></Route>
+            <Route path="viewqa" element={<ViewQA />}></Route>
+            <Route path="subjects" element={<TopicsHome />}></Route>
+            <Route path="bookmarks" element={<Bookmarks />}></Route>
+            <Route path="exam" element={<Exam />}></Route>
             <Route path="questions" element={<Questions />}></Route>
             <Route path="result" element={<ExamFinished />}></Route>
-            <Route path="topics" element={<AddTopic />}></Route>
-            <Route path="exam" element={<AddExam />}></Route>
           </Route>
         </Route>
         <Route element={<LoggedOutUser />}>

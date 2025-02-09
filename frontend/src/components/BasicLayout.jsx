@@ -6,10 +6,12 @@ import {
   FormOutlined,
   HomeOutlined,
   LogoutOutlined,
-  PlusCircleOutlined,
   QuestionCircleOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { BsGridFill } from "react-icons/bs";
+import { IoBookmarks } from "react-icons/io5";
+import { PiExamLight } from "react-icons/pi";
 import moment from "moment";
 import {
   Avatar,
@@ -38,19 +40,24 @@ const items = [
     label: "Admin",
     children: [
       {
-        key: "topics",
+        key: "addtopics",
         icon: <FileDoneOutlined />,
         label: "Topics Details",
       },
       {
-        key: "exam",
+        key: "addexam",
         icon: <FormOutlined />,
         label: "Exam Details",
       },
       {
         key: "addqa",
         icon: <QuestionCircleOutlined />,
-        label: "Add Q&A",
+        label: "Add Single Q&A",
+      },
+      {
+        key: "addqabulk",
+        icon: <QuestionCircleOutlined />,
+        label: "Add bulk Q&A",
       },
       {
         key: "viewqa",
@@ -58,6 +65,21 @@ const items = [
         label: "View Q&A",
       },
     ],
+  },
+  {
+    key: "subjects",
+    icon: <BsGridFill />,
+    label: "Subjects",
+  },
+  {
+    key: "bookmarks",
+    icon: <IoBookmarks />,
+    label: "Bookmarks",
+  },
+  {
+    key: "Exam",
+    icon: <PiExamLight />,
+    label: "Exam",
   },
   {
     key: "result",
@@ -101,7 +123,8 @@ const BasicLayout = () => {
         }}
         onCollapse={(collapsed, type) => {
           // console.log(collapsed, type);
-        }}>
+        }}
+      >
         {/* <div>
           <p style={{ color: "white" }}>logo</p>
         </div> */}
@@ -119,11 +142,13 @@ const BasicLayout = () => {
           style={{
             padding: 0,
             background: colorBgContainer,
-          }}>
+          }}
+        >
           <Row
             justify="space-between"
             align="middle"
-            style={{ padding: "0 10px" }}>
+            style={{ padding: "0 10px" }}
+          >
             <Col xs={20} style={{ overflow: "hidden" }}>
               <Typography>
                 <Title
@@ -131,8 +156,9 @@ const BasicLayout = () => {
                   style={{
                     margin: 0,
                     color: "#1C1C1C",
-                  }}>
-                  Hello; {user.username}
+                  }}
+                >
+                  Hello; {user.name}
                 </Title>
                 <Text type="secondary" style={{ textWrap: "nowrap" }}>
                   {moment(new Date()).format("[Today is] dddd, MMMM DD, YYYY")}
@@ -154,21 +180,24 @@ const BasicLayout = () => {
         <Content
           style={{
             margin: "24px 16px 0",
-          }}>
+          }}
+        >
           <div
             style={{
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-            }}>
+            }}
+          >
             <Outlet />
           </div>
         </Content>
         <Footer
           style={{
             textAlign: "center",
-          }}>
+          }}
+        >
           CircleQuiz ©{new Date().getFullYear()} Created by CircleThemeBD
         </Footer>
       </Layout>

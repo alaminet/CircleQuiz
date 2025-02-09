@@ -5,9 +5,11 @@ import { CheckOutlined } from "@ant-design/icons";
 
 const ExamFinished = () => {
   const [view, setView] = useState(false);
-  const examResult = useSelector((ExamResult) => ExamResult.examResult.results);
-  const scroes = examResult.filter(
-    (value) => value.ansCorrect === value.ansSelect
+  const examResult = useSelector(
+    (ExamResult) => ExamResult?.examResult?.results
+  );
+  const scroes = examResult?.filter(
+    (value) => value?.ansCorrect === value?.ansSelect
   ).length;
 
   return (
@@ -16,7 +18,7 @@ const ExamFinished = () => {
         <Result
           status="success"
           title={`Your Score is ${Math.round(
-            (scroes / examResult.length) * 100
+            (scroes / examResult?.length) * 100
           )}%`}
           subTitle="Your test has been completed successfully!"
           extra={[
@@ -24,14 +26,16 @@ const ExamFinished = () => {
               className="no-print"
               type="primary"
               key="console"
-              onClick={() => setView(true)}>
+              onClick={() => setView(true)}
+            >
               View Results
             </Button>,
             <Button
               disabled={!view}
               onClick={() => window.print()}
               className="no-print"
-              style={{ margin: "10px auto" }}>
+              style={{ margin: "10px auto" }}
+            >
               Print this Result
             </Button>,
           ]}
@@ -45,11 +49,11 @@ const ExamFinished = () => {
                 <div key={i}>
                   <p style={{ display: "flex", gap: "10px" }}>
                     <span>{i + 1 + ". "}</span>
-                    <span>{item.content}</span>
+                    <span>{item?.content}</span>
                   </p>
                   <p style={{ display: "flex", gap: "10px", margin: "0" }}>
                     <span style={{ fontWeight: "bold" }}>Options:</span>
-                    {item.options.map((opt, j) => (
+                    {item?.options?.map((opt, j) => (
                       <>
                         <div key={j} style={{ display: "flex", gap: "5px" }}>
                           <span>{j + 1 + ". "}</span>
@@ -61,8 +65,8 @@ const ExamFinished = () => {
                               options={[opt]}
                             /> */}
                           <div>
-                            <span>{opt.label} </span>
-                            {item.ansSelect === opt.value && (
+                            <span>{opt?.label} </span>
+                            {item?.ansSelect === opt?.value && (
                               <CheckOutlined style={{ fontWeight: "bold" }} />
                             )}
                           </div>
@@ -75,9 +79,12 @@ const ExamFinished = () => {
                     <span
                       style={{
                         color:
-                          item.ansCorrect === item.ansSelect ? "green" : "red",
-                      }}>
-                      {item.options[item.ansCorrect - 1].label}
+                          item?.ansCorrect === item?.ansSelect
+                            ? "green"
+                            : "red",
+                      }}
+                    >
+                      {item?.options[item?.ansCorrect - 1].label}
                     </span>
                   </p>
                 </div>
