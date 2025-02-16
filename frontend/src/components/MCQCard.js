@@ -1,4 +1,5 @@
 "use client";
+import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
 import {
   CaretRightOutlined,
@@ -176,8 +177,7 @@ const MCQCard = () => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}
-                >
+                  onClick={() => setShowDes(!showDes)}>
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -187,24 +187,21 @@ const MCQCard = () => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <EyeFilled /> <strong>1M</strong>
                 </Button>
                 <Button
                   color="primary"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <LikeFilled /> 120.5K
                 </Button>
                 <Button
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <ShareAltOutlined />
                 </Button>
               </div>
@@ -233,8 +230,7 @@ const MCQCard = () => {
                                   display: "block",
                                   fontSize: "12px",
                                   color: "gray",
-                                }}
-                              >
+                                }}>
                                 1Y Ago
                               </Text>
                             </Flex>
@@ -253,8 +249,7 @@ const MCQCard = () => {
                               color="primary"
                               variant="link"
                               size="small"
-                              style={{ gap: "2px" }}
-                            >
+                              style={{ gap: "2px" }}>
                               <small>
                                 <LikeFilled /> 120.5K
                               </small>
@@ -263,8 +258,7 @@ const MCQCard = () => {
                               color="primary"
                               variant="link"
                               size="small"
-                              style={{ gap: "2px" }}
-                            >
+                              style={{ gap: "2px" }}>
                               <small>
                                 <DislikeOutlined /> 120.5K
                               </small>
