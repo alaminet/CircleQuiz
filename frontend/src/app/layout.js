@@ -1,4 +1,5 @@
 import "@ant-design/v5-patch-for-react-19";
+import "ckeditor5/ckeditor5.css";
 import "./globals.css";
 import React from "react";
 import { Noto_Serif_Bengali } from "next/font/google";
