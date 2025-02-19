@@ -12,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 
-const SubjectHeading = () => {
+const SubjectHeading = ({ title }) => {
   // Search Bar
   const onSearch = (value, _e, info) => console.log(info?.source, value);
   return (
@@ -25,7 +25,9 @@ const SubjectHeading = () => {
           borderTopLeftRadius: "15px",
           borderTopRightRadius: "15px",
         }}>
-        <Title level={2}>Geography</Title>
+        <Title level={2} style={{ textTransform: "uppercase" }}>
+          {title}
+        </Title>
         <Text>All MCQ Question - (20230)</Text>
       </div>
       <div>

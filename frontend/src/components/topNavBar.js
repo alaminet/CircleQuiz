@@ -10,6 +10,12 @@ import {
   HomeOutlined,
   CopyOutlined,
   SearchOutlined,
+  PlusCircleOutlined,
+  SnippetsOutlined,
+  AimOutlined,
+  SolutionOutlined,
+  ReadOutlined,
+  ApiOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 const url =
@@ -17,6 +23,7 @@ const url =
 
 const TopNavBar = () => {
   const router = useRouter();
+
   const [current, setCurrent] = useState("mail");
   const handleMenu = (e) => {
     console.log("click ", e);
@@ -25,55 +32,35 @@ const TopNavBar = () => {
   };
   const items = [
     {
-      //   label: "Home",
+      label: "Home",
       key: "/",
       icon: <HomeOutlined />,
     },
     {
       label: "Job Assistant",
       key: "job",
-      //   icon: <AppstoreOutlined />,
+      icon: <AppstoreOutlined />,
       //   disabled: true,
     },
     {
       label: "Subjects",
       key: "subjects",
-      icon: <CopyOutlined />,
+      icon: <SnippetsOutlined />,
       children: [
         {
-          type: "group",
-          label: "Item 1",
-          children: [
-            {
-              label: "Option 1",
-              key: "setting:11",
-            },
-            {
-              label: "Option 2",
-              key: "setting:12",
-            },
-          ],
+          label: "All Subjects",
+          key: "subject",
         },
         {
-          type: "group",
-          label: "Item 2",
-          children: [
-            {
-              label: "Option 3",
-              key: "setting:13",
-            },
-            {
-              label: "Option 4",
-              key: "setting:14",
-            },
-          ],
+          label: "Bangla",
+          key: "subject/bangla",
         },
       ],
     },
     {
       label: "Academy",
       key: "academy",
-      icon: <CopyOutlined />,
+      icon: <AimOutlined />,
       children: [
         {
           type: "group",
@@ -108,7 +95,7 @@ const TopNavBar = () => {
     {
       label: "Admission",
       key: "admission",
-      icon: <CopyOutlined />,
+      icon: <SolutionOutlined />,
       children: [
         {
           type: "group",
@@ -143,7 +130,7 @@ const TopNavBar = () => {
     {
       label: "Books",
       key: "books",
-      icon: <CopyOutlined />,
+      icon: <ReadOutlined />,
       children: [
         {
           type: "group",
@@ -177,6 +164,7 @@ const TopNavBar = () => {
     },
     {
       key: "pricing",
+      icon: <ApiOutlined />,
       label: (
         <a href="#" target="_blank" rel="noopener noreferrer">
           Pricing
@@ -200,10 +188,20 @@ const TopNavBar = () => {
         }}
       />
       <Flex gap={5}>
-      <Tooltip title="search">
-        <Button shape="circle" icon={<SearchOutlined />} />
-      </Tooltip>
-      <Avatar src={url} />
+        <Tooltip title="search">
+          <Button shape="circle" icon={<SearchOutlined />} />
+        </Tooltip>
+        <Tooltip title="Add Q&A">
+          <Button
+            href="/addmcq"
+            type="primary"
+            shape="round"
+            icon={<PlusCircleOutlined />}>
+            Add Q&A
+          </Button>
+        </Tooltip>
+
+        <Avatar src={url} />
       </Flex>
     </>
   );

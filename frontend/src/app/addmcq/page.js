@@ -145,7 +145,12 @@ const Addmcq = () => {
                   </Row>
                   <Row gutter={10}>
                     <Col>
-                      <Form.Item name="answer" label="Correct Answer">
+                      <Form.Item
+                        name="answer"
+                        label="Correct Answer"
+                        rules={[
+                          { required: true, message: "Slect Correct Ans!" },
+                        ]}>
                         <Select
                           showSearch
                           placeholder="Select Answer"
@@ -174,7 +179,44 @@ const Addmcq = () => {
                       </Form.Item>
                     </Col>
                     <Col>
-                      <Form.Item name="tag" label="Referance">
+                      <Form.Item
+                        name="Subject"
+                        label="Related Subject"
+                        style={{
+                          width: 300,
+                        }}
+                        rules={[
+                          { required: true, message: "Slect Related Subject!" },
+                        ]}>
+                        <Select
+                          showSearch
+                          placeholder="Select Subject"
+                          optionFilterProp="label"
+                          // onChange={onChange}
+                          // onSearch={onSearch}
+                          options={[
+                            {
+                              value: 1,
+                              label: "A",
+                            },
+                            {
+                              value: 2,
+                              label: "B",
+                            },
+                            {
+                              value: 3,
+                              label: "C",
+                            },
+                            {
+                              value: 4,
+                              label: "D",
+                            },
+                          ]}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col>
+                      <Form.Item name="tag" label="Tag/Referance">
                         <Select
                           mode="multiple"
                           allowClear

@@ -5,7 +5,7 @@ import { Col, Row } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import CardBasicWMore from "@/components/CardBasicWMore";
 
-const Page = () => {
+const Page = ({ params }) => {
   return (
     <>
       <Row gutter={[8, 8]}>
@@ -14,7 +14,7 @@ const Page = () => {
         </Col>
         <Col md={12}>
           <div>
-            <SubjectHeading />
+            <SubjectHeading title={params.slug} />
             <MCQCard />
           </div>
         </Col>
