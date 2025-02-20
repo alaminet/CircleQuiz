@@ -1,4 +1,5 @@
 "use client";
+import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
 import { Avatar, Button, Flex, Menu, Switch, Tooltip } from "antd";
 import {
@@ -193,7 +194,7 @@ const TopNavBar = () => {
         </Tooltip>
         <Tooltip title="Add Q&A">
           <Button
-            href="/addmcq"
+            onClick={() => router.push("/addmcq")}
             type="primary"
             shape="round"
             icon={<PlusCircleOutlined />}>

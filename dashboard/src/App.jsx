@@ -18,6 +18,7 @@ import Bookmarks from "./pages/Bookmarks";
 import AddQA from "./pages/AddQA";
 import ViewQA from "./pages/ViewQA";
 import Exam from "./pages/Exam";
+import AddCategory from "./pages/AddCategory";
 
 function App() {
   const router = createBrowserRouter(
@@ -27,6 +28,7 @@ function App() {
           <Route path="/" element={<BasicLayout />}>
             <Route path="*" element={<Home />}></Route>
             <Route path="" element={<Home />}></Route>
+            <Route path="addcategory" element={<AddCategory />}></Route>
             <Route path="addtopics" element={<AddTopic />}></Route>
             <Route path="addexam" element={<AddExam />}></Route>
             <Route path="addqa" element={<AddQA />}></Route>

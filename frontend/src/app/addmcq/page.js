@@ -1,6 +1,7 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
-import React, { useRef, useState } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Col, Row, Input, Select, Divider, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
@@ -15,6 +16,8 @@ const Addmcq = () => {
   const [optC, setOptC] = useState("");
   const [optD, setOptD] = useState("");
   const [details, setDetails] = useState("");
+  const [catList, setCatList] = useState([]);
+  const [subjList, setSubjList] = useState([]);
 
   // select with new tag
   let index = 0;
@@ -41,6 +44,44 @@ const Addmcq = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  // Get Category List
+  const getCategory = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/category/view`
+    );
+    const data = await res.json();
+    const tableData = [];
+    data?.view?.map((item) => {
+      item.status === "approve" &&
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+        });
+      setCatList(tableData);
+    });
+  };
+  // Get Topics List
+  const getTopics = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/topic/view`
+    );
+    const data = await res.json();
+    const tableData = [];
+    data?.view?.map((item) => {
+      item.status === "approve" &&
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+        });
+      setSubjList(tableData);
+    });
+  };
+
+  useEffect(() => {
+    getCategory();
+    getTopics();
+  }, []);
   return (
     <>
       <div>
@@ -180,6 +221,26 @@ const Addmcq = () => {
                     </Col>
                     <Col>
                       <Form.Item
+                        name="category"
+                        label="Category"
+                        style={{
+                          width: 300,
+                        }}
+                        rules={[
+                          { required: true, message: "Slect Category!" },
+                        ]}>
+                        <Select
+                          showSearch
+                          placeholder="Select Category"
+                          optionFilterProp="label"
+                          // onChange={onChange}
+                          // onSearch={onSearch}
+                          options={catList}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col>
+                      <Form.Item
                         name="Subject"
                         label="Related Subject"
                         style={{
@@ -194,24 +255,7 @@ const Addmcq = () => {
                           optionFilterProp="label"
                           // onChange={onChange}
                           // onSearch={onSearch}
-                          options={[
-                            {
-                              value: 1,
-                              label: "A",
-                            },
-                            {
-                              value: 2,
-                              label: "B",
-                            },
-                            {
-                              value: 3,
-                              label: "C",
-                            },
-                            {
-                              value: 4,
-                              label: "D",
-                            },
-                          ]}
+                          options={subjList}
                         />
                       </Form.Item>
                     </Col>
