@@ -19,6 +19,16 @@ const MCQModel = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Topics",
     },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    tag: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Tags",
+      },
+    ],
     status: {
       type: String,
       enum: ["waiting", "approved", "hold", "delete"],

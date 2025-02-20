@@ -1,6 +1,5 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
-import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Col, Row, Input, Select, Divider, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -9,6 +8,7 @@ import CustomEditor from "@/components/CustomEditor";
 
 const Addmcq = () => {
   const [ckForm] = Form.useForm();
+  const [error, setError] = useState(null);
   const [loadings, setLoadings] = useState(false);
   const [questionVal, setQuestionVal] = useState("");
   const [optA, setOptA] = useState("");
@@ -18,28 +18,83 @@ const Addmcq = () => {
   const [details, setDetails] = useState("");
   const [catList, setCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
+  const [tagList, setTagList] = useState([]);
+  console.log(error);
 
   // select with new tag
-  let index = 0;
-  const [items, setItems] = useState(["jack", "lucy"]);
   const [name, setName] = useState([]);
   const inputRef = useRef(null);
-  const onNameChange = (event) => {
-    setName(event.target.value);
+
+  // New Tag Added server enviroment
+  const postData = async (data) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/tag/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    return await response.json();
   };
-  const addItem = (e) => {
+
+  // New MCQ add Environment
+  const postMCQData = async (data) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const addItem = async (e) => {
     e.preventDefault();
-    setItems([...items, name || `New item ${index++}`]);
-    setName("");
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 0);
+    try {
+      const result = await postData({ name });
+      getTag();
+      setName("");
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   // Form Submit
-  const onFinish = (values) => {
-    setLoadings(true);
-    console.log("Success:", values);
+  const onFinish = async (values) => {
+    // setLoadings(true);
+    // console.log("Success:", values);
+    try {
+      setError(null);
+      const result = await postMCQData({ data: values });
+      console.log("Success:", result);
+    } catch (error) {
+      setError(error.message);
+    }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -48,7 +103,13 @@ const Addmcq = () => {
   // Get Category List
   const getCategory = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/category/view`
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/category/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     const data = await res.json();
     const tableData = [];
@@ -64,7 +125,13 @@ const Addmcq = () => {
   // Get Topics List
   const getTopics = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/topic/view`
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/topic/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     const data = await res.json();
     const tableData = [];
@@ -77,10 +144,32 @@ const Addmcq = () => {
       setSubjList(tableData);
     });
   };
+  // Get Topics List
+  const getTag = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/tag/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    const tableData = [];
+    data?.view?.map((item) => {
+      tableData.push({
+        label: item?.name,
+        value: item?._id,
+      });
+      setTagList(tableData);
+    });
+  };
 
   useEffect(() => {
     getCategory();
     getTopics();
+    getTag();
   }, []);
   return (
     <>
@@ -200,19 +289,19 @@ const Addmcq = () => {
                           // onSearch={onSearch}
                           options={[
                             {
-                              value: 1,
+                              value: 0,
                               label: "A",
                             },
                             {
-                              value: 2,
+                              value: 1,
                               label: "B",
                             },
                             {
-                              value: 3,
+                              value: 2,
                               label: "C",
                             },
                             {
-                              value: 4,
+                              value: 3,
                               label: "D",
                             },
                           ]}
@@ -241,7 +330,7 @@ const Addmcq = () => {
                     </Col>
                     <Col>
                       <Form.Item
-                        name="Subject"
+                        name="subject"
                         label="Related Subject"
                         style={{
                           width: 300,
@@ -265,7 +354,7 @@ const Addmcq = () => {
                           mode="multiple"
                           allowClear
                           style={{
-                            width: 300,
+                            minWidth: 300,
                           }}
                           placeholder="Tag/Ref"
                           dropdownRender={(menu) => (
@@ -284,7 +373,7 @@ const Addmcq = () => {
                                   placeholder="Please enter item"
                                   ref={inputRef}
                                   value={name}
-                                  onChange={onNameChange}
+                                  onChange={(e) => setName(e.target.value)}
                                   onKeyDown={(e) => e.stopPropagation()}
                                 />
                                 <Button
@@ -296,10 +385,7 @@ const Addmcq = () => {
                               </Space>
                             </>
                           )}
-                          options={items.map((item) => ({
-                            label: item,
-                            value: item,
-                          }))}
+                          options={tagList}
                         />
                       </Form.Item>
                     </Col>

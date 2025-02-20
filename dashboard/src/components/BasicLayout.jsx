@@ -40,19 +40,24 @@ const items = [
     label: "Admin",
     children: [
       {
+        key: "addcategory",
+        icon: <FormOutlined />,
+        label: "Category Details",
+      },
+      {
         key: "addtopics",
         icon: <FileDoneOutlined />,
         label: "Topics Details",
       },
       {
+        key: "addtag",
+        icon: <FileDoneOutlined />,
+        label: "Tag Details",
+      },
+      {
         key: "addexam",
         icon: <FormOutlined />,
         label: "Exam Details",
-      },
-      {
-        key: "addcategory",
-        icon: <FormOutlined />,
-        label: "Category Details",
       },
       {
         key: "addqa",
