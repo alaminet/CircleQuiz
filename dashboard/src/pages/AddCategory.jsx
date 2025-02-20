@@ -125,6 +125,7 @@ const AddCategory = () => {
       title: "SL",
       dataIndex: "sl",
       key: "sl",
+      width: 50,
     },
     {
       title: "Category Name",
@@ -146,6 +147,7 @@ const AddCategory = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      width: 80,
       render: (item, record) =>
         user.role === "admin" && (
           <>

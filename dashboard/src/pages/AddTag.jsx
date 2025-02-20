@@ -119,6 +119,7 @@ const AddTag = () => {
       title: "SL",
       dataIndex: "sl",
       key: "sl",
+      width: 50,
     },
     {
       title: "Tag Name",
@@ -135,6 +136,7 @@ const AddTag = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      width: 80,
       render: (item, record) =>
         user.role === "admin" && (
           <>

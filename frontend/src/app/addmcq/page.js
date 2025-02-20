@@ -144,7 +144,7 @@ const Addmcq = () => {
       setSubjList(tableData);
     });
   };
-  // Get Topics List
+  // Get Tag List
   const getTag = async () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/tag/view`,

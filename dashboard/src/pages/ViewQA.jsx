@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -13,15 +13,16 @@ import {
   message,
   Flex,
   Tooltip,
-  Image,
   Radio,
   Select,
+  Col,
 } from "antd";
 import { useSelector } from "react-redux";
-import { EditTwoTone, DeleteTwoTone, SearchOutlined } from "@ant-design/icons";
+import { EditTwoTone, PlusOutlined } from "@ant-design/icons";
 
 // Fixed header And colum in table
 import { createStyles } from "antd-style";
+import CKEditorInput from "../components/CKEditorInput";
 const useStyle = createStyles(({ css, token }) => {
   const { antCls } = token;
   return {
@@ -52,7 +53,17 @@ const ViewQA = () => {
   const [search, setSearch] = useState("");
   const [qaList, setQAList] = useState([]);
   const [topicList, setTopicList] = useState([]);
-
+  const [questionVal, setQuestionVal] = useState("");
+  const [optA, setOptA] = useState("");
+  const [optB, setOptB] = useState("");
+  const [optC, setOptC] = useState("");
+  const [optD, setOptD] = useState("");
+  const [details, setDetails] = useState("");
+  const [catList, setCatList] = useState([]);
+  const [subjList, setSubjList] = useState([]);
+  const [tagList, setTagList] = useState([]);
+  const [tagnName, setTagName] = useState([]);
+  const inputRef = useRef(null);
   // table arrangment
   const columns = [
     {
@@ -60,6 +71,7 @@ const ViewQA = () => {
       dataIndex: "sl",
       key: "sl",
       fixed: "left",
+      width: 50,
     },
     {
       title: "Topics Name",
@@ -119,7 +131,7 @@ const ViewQA = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      width: 100,
+      width: 80,
       fixed: "right",
       render: (item, record) =>
         user.role === "admin" && (
@@ -145,7 +157,9 @@ const ViewQA = () => {
 
   // edit table data
   const handleEdit = (values) => {
-    getTopicData();
+    getCategory();
+    getTopics();
+    getTag();
     setIsModalOpen(true);
     setEditItem(values);
     editForm.setFieldsValue({
@@ -160,6 +174,7 @@ const ViewQA = () => {
       topic: values?.topic?._id,
       status: values?.status,
     });
+    console.log(editItem);
   };
 
   const onFinishEdit = async (values) => {
@@ -210,6 +225,26 @@ const ViewQA = () => {
     setIsModalOpen(false);
   };
 
+  // Add new Tag
+  const addItem = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await axios.post(
+        `${import.meta.env.VITE_API_URL}/v1/api/tag/add`,
+        {
+          name: tagnName,
+        }
+      );
+      getTag();
+      setTagName("");
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   // Get Q&A List
   async function getQAData() {
     const data = await axios.get(
@@ -235,22 +270,51 @@ const ViewQA = () => {
       setQAList(tableData);
     });
   }
-
+  // Get Category List
+  const getCategory = async () => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/v1/api/category/view`
+    );
+    const tableData = [];
+    res?.data?.view?.map((item) => {
+      item.status === "approve" &&
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+        });
+      setCatList(tableData);
+    });
+  };
   // Get Topics List
-  async function getTopicData() {
-    const data = await axios.get(
+  const getTopics = async () => {
+    const res = await axios.get(
       `${import.meta.env.VITE_API_URL}/v1/api/topic/view`
+    );
+    const tableData = [];
+    res?.data?.view?.map((item) => {
+      item.status === "approve" &&
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+        });
+      setSubjList(tableData);
+    });
+  };
+  // Get Tag List
+  const getTag = async () => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/v1/api/tag/view`
     );
 
     const tableData = [];
-    data?.data?.view?.map((item, i) => {
+    res?.data?.view?.map((item) => {
       tableData.push({
         label: item?.name,
         value: item?._id,
       });
-      setTopicList(tableData);
+      setTagList(tableData);
     });
-  }
+  };
 
   // Q&A Info
   useEffect(() => {
@@ -295,136 +359,232 @@ const ViewQA = () => {
           >
             <Form
               form={editForm}
-              // layout="vertical"
+              layout="vertical"
               onFinish={onFinishEdit}
               // onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item hidden name="id"></Form.Item>
-              <Form.Item
-                name="topic"
-                label="Topic"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select
-                  showSearch
-                  labelInValue
-                  placeholder="Select Topics"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={topicList}
-                />
-              </Form.Item>
-              <Form.Item
-                name="question"
-                label="Question"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input placeholder="Question" />
-              </Form.Item>
-              <Row justify="space-between">
+              <div>
                 <Form.Item
-                  label="Opt-A"
-                  name="A"
+                  name="question"
+                  label="Question"
                   rules={[
-                    {
-                      required: true,
-                      message: "Please input Options!",
-                    },
+                    { required: true, message: "Please input Question!" },
                   ]}
                 >
-                  <Input />
+                  <CKEditorInput
+                    onChange={setQuestionVal}
+                    defaultData={editItem?.question}
+                  />
                 </Form.Item>
-                <Form.Item
-                  label="Opt-B"
-                  name="B"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input Options!",
-                    },
-                  ]}
-                >
-                  <Input />
+                <Form.Item hidden>
+                  <Input type="hidden" name="question" value={questionVal} />
                 </Form.Item>
-                <Form.Item
-                  label="Opt-C"
-                  name="C"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input Options!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Opt-D"
-                  name="D"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input Options!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
+              </div>
+              <Row gutter={10}>
+                <Col md={6}>
+                  <Form.Item
+                    name="optA"
+                    label="Option A"
+                    rules={[
+                      { required: true, message: "Please input Option A!" },
+                    ]}
+                  >
+                    <CKEditorInput
+                      onChange={setOptA}
+                      defaultData={editItem?.options[0]}
+                    />
+                  </Form.Item>
+                  <Form.Item hidden>
+                    <Input type="hidden" name="optA" value={optA} />
+                  </Form.Item>
+                </Col>
+                <Col md={6}>
+                  <Form.Item
+                    name="optB"
+                    label="Option B"
+                    rules={[
+                      { required: true, message: "Please input Option B!" },
+                    ]}
+                  >
+                    <CKEditorInput
+                      onChange={setOptB}
+                      defaultData={editItem?.options[1]}
+                    />
+                  </Form.Item>
+                  <Form.Item hidden>
+                    <Input type="hidden" name="optB" value={optB} />
+                  </Form.Item>
+                </Col>
+                <Col md={6}>
+                  <Form.Item
+                    name="optC"
+                    label="Option C"
+                    rules={[
+                      { required: true, message: "Please input Option C!" },
+                    ]}
+                  >
+                    <CKEditorInput
+                      onChange={setOptC}
+                      defaultData={editItem?.options[2]}
+                    />
+                  </Form.Item>
+                  <Form.Item hidden>
+                    <Input type="hidden" name="optC" value={optC} />
+                  </Form.Item>
+                </Col>
+                <Col md={6}>
+                  <Form.Item
+                    name="optD"
+                    label="Option D"
+                    rules={[
+                      { required: true, message: "Please input Option D!" },
+                    ]}
+                  >
+                    <CKEditorInput
+                      onChange={setOptD}
+                      defaultData={editItem?.options[3]}
+                    />
+                  </Form.Item>
+                  <Form.Item hidden>
+                    <Input type="hidden" name="optD" value={optD} />
+                  </Form.Item>
+                </Col>
               </Row>
-              <Form.Item
-                label="Ans"
-                name="ans"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input Correct Option!",
-                  },
-                ]}
-              >
-                <Select
-                  showSearch
-                  labelInValue
-                  placeholder="Select Correct Option"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={[
-                    {
-                      value: 0,
-                      label: "A",
-                    },
-                    {
-                      value: 1,
-                      label: "B",
-                    },
-                    {
-                      value: 2,
-                      label: "C",
-                    },
-                    {
-                      value: 3,
-                      label: "D",
-                    },
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item label="Details" name="des">
-                <TextArea rows={4} />
-              </Form.Item>
+              <Row gutter={10}>
+                <Col>
+                  <Form.Item
+                    name="answer"
+                    label="Correct Answer"
+                    rules={[{ required: true, message: "Slect Correct Ans!" }]}
+                  >
+                    <Select
+                      showSearch
+                      placeholder="Select Answer"
+                      optionFilterProp="label"
+                      defaultValue={editItem?.ans}
+                      // onChange={onChange}
+                      // onSearch={onSearch}
+                      options={[
+                        {
+                          value: 0,
+                          label: "A",
+                        },
+                        {
+                          value: 1,
+                          label: "B",
+                        },
+                        {
+                          value: 2,
+                          label: "C",
+                        },
+                        {
+                          value: 3,
+                          label: "D",
+                        },
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name="category"
+                    label="Category"
+                    style={{
+                      width: 300,
+                    }}
+                    rules={[{ required: true, message: "Slect Category!" }]}
+                  >
+                    <Select
+                      showSearch
+                      placeholder="Select Category"
+                      optionFilterProp="label"
+                      defaultValue={editItem?.category._id}
+                      // onChange={onChange}
+                      // onSearch={onSearch}
+                      options={catList}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name="subject"
+                    label="Related Subject"
+                    style={{
+                      width: 300,
+                    }}
+                    rules={[
+                      { required: true, message: "Slect Related Subject!" },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      placeholder="Select Subject"
+                      optionFilterProp="label"
+                      defaultValue={editItem?.topic._id}
+                      // onChange={onChange}
+                      // onSearch={onSearch}
+                      options={subjList}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item name="tag" label="Tag/Referance">
+                    <Select
+                      mode="multiple"
+                      defaultValue={editItem?.tag.map((t) => t._id)}
+                      allowClear
+                      style={{
+                        minWidth: 300,
+                      }}
+                      placeholder="Tag/Ref"
+                      dropdownRender={(menu) => (
+                        <>
+                          {menu}
+                          <Divider
+                            style={{
+                              margin: "8px 0",
+                            }}
+                          />
+                          <Space
+                            style={{
+                              padding: "0 8px 4px",
+                            }}
+                          >
+                            <Input
+                              placeholder="Please enter item"
+                              ref={inputRef}
+                              value={tagnName}
+                              onChange={(e) => setTagName(e.target.value)}
+                              onKeyDown={(e) => e.stopPropagation()}
+                            />
+                            <Button
+                              type="text"
+                              icon={<PlusOutlined />}
+                              onClick={addItem}
+                            >
+                              Add item
+                            </Button>
+                          </Space>
+                        </>
+                      )}
+                      options={tagList}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <div>
+                <Form.Item name="details" label="Details">
+                  <CKEditorInput
+                    onChange={setDetails}
+                    defaultData={editItem?.des}
+                  />
+                </Form.Item>
+                <Form.Item hidden>
+                  <Input type="hidden" name="details" value={details} />
+                </Form.Item>
+              </div>
               <Form.Item
                 name="status"
                 label="Status"

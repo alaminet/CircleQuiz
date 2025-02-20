@@ -125,6 +125,7 @@ const AddTopic = () => {
       title: "SL",
       dataIndex: "sl",
       key: "sl",
+      width: 50,
     },
     {
       title: "Topics Name",
@@ -146,6 +147,7 @@ const AddTopic = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      width: 80,
       render: (item, record) =>
         user.role === "admin" && (
           <>
