@@ -20,7 +20,28 @@ import {
 import { useSelector } from "react-redux";
 import { EditTwoTone, DeleteTwoTone, SearchOutlined } from "@ant-design/icons";
 
+// Fixed header And colum in table
+import { createStyles } from "antd-style";
+const useStyle = createStyles(({ css, token }) => {
+  const { antCls } = token;
+  return {
+    customTable: css`
+      ${antCls}-table {
+        ${antCls}-table-container {
+          ${antCls}-table-body,
+          ${antCls}-table-content {
+            scrollbar-width: thin;
+            scrollbar-color: #eaeaea transparent;
+            scrollbar-gutter: stable;
+          }
+        }
+      }
+    `,
+  };
+});
+
 const ViewQA = () => {
+  const { styles } = useStyle();
   const { Text } = Typography;
   const { TextArea } = Input;
   const user = useSelector((user) => user.loginSlice.login);
@@ -38,6 +59,7 @@ const ViewQA = () => {
       title: "SL",
       dataIndex: "sl",
       key: "sl",
+      fixed: "left",
     },
     {
       title: "Topics Name",
@@ -48,36 +70,45 @@ const ViewQA = () => {
       title: "Question",
       dataIndex: "question",
       key: "question",
+      render: (question) => (
+        <div dangerouslySetInnerHTML={{ __html: question }} />
+      ),
     },
     {
       title: "Opt-A",
       dataIndex: "optA",
       key: "optA",
+      render: (optA) => <div dangerouslySetInnerHTML={{ __html: optA }} />,
     },
     {
       title: "Opt-B",
       dataIndex: "optB",
       key: "optB",
+      render: (optB) => <div dangerouslySetInnerHTML={{ __html: optB }} />,
     },
     {
       title: "Opt-C",
       dataIndex: "optC",
       key: "optC",
+      render: (optC) => <div dangerouslySetInnerHTML={{ __html: optC }} />,
     },
     {
       title: "Opt-D",
       dataIndex: "optD",
       key: "optD",
+      render: (optD) => <div dangerouslySetInnerHTML={{ __html: optD }} />,
     },
     {
       title: "Ans",
       dataIndex: "ans",
       key: "ans",
+      render: (ans) => <div dangerouslySetInnerHTML={{ __html: ans }} />,
     },
     {
       title: "Details",
       dataIndex: "des",
       key: "des",
+      render: (des) => <div dangerouslySetInnerHTML={{ __html: des }} />,
     },
     {
       title: "Status",
@@ -88,6 +119,8 @@ const ViewQA = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      width: 100,
+      fixed: "right",
       render: (item, record) =>
         user.role === "admin" && (
           <>
@@ -235,6 +268,7 @@ const ViewQA = () => {
             style={{ marginBottom: "15px" }}
           />
           <Table
+            className={styles.customTable}
             columns={columns}
             tableLayout="auto"
             dataSource={
@@ -245,6 +279,10 @@ const ViewQA = () => {
             }
             pagination={false}
             bordered
+            scroll={{
+              x: "max-content",
+              y: 55 * 5,
+            }}
           />
         </div>
         <div>
