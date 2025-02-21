@@ -174,7 +174,6 @@ const ViewQA = () => {
       topic: values?.topic?._id,
       status: values?.status,
     });
-    console.log(editItem);
   };
 
   const onFinishEdit = async (values) => {
@@ -533,7 +532,7 @@ const ViewQA = () => {
                   <Form.Item name="tag" label="Tag/Referance">
                     <Select
                       mode="multiple"
-                      defaultValue={editItem?.tag.map((t) => t._id)}
+                      defaultValue={editItem?.tag.map((item) => item._id)}
                       allowClear
                       style={{
                         minWidth: 300,

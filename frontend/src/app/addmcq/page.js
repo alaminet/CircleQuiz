@@ -1,7 +1,17 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Form, Col, Row, Input, Select, Divider, Space } from "antd";
+import {
+  Button,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  Divider,
+  Space,
+  message,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
 import CustomEditor from "@/components/CustomEditor";
@@ -19,7 +29,6 @@ const Addmcq = () => {
   const [catList, setCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
-  console.log(error);
 
   // select with new tag
   const [name, setName] = useState([]);
@@ -37,11 +46,9 @@ const Addmcq = () => {
         body: JSON.stringify(data),
       }
     );
-
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-
     return await response.json();
   };
 
@@ -58,12 +65,10 @@ const Addmcq = () => {
           body: JSON.stringify(data),
         }
       );
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message);
       }
-
       return await response.json();
     } catch (error) {
       throw error;
@@ -86,18 +91,23 @@ const Addmcq = () => {
 
   // Form Submit
   const onFinish = async (values) => {
-    // setLoadings(true);
+    setLoadings(true);
     // console.log("Success:", values);
     try {
       setError(null);
       const result = await postMCQData({ data: values });
-      console.log("Success:", result);
+      message.success(result.message);
+      ckForm.resetFields();
+      setLoadings(false);
     } catch (error) {
       setError(error.message);
+      message.error(error.message);
+      setLoadings(false);
     }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+    setLoadings(false);
   };
 
   // Get Category List
@@ -183,32 +193,24 @@ const Addmcq = () => {
               </Title>
               <div>
                 <Form
+                  form={ckForm}
                   name="ckForm"
-                  // labelCol={{
-                  //   span: 8,
-                  // }}
-                  // wrapperCol={{
-                  //   span: 16,
-                  // }}
-                  style={
-                    {
-                      // maxWidth: 600,
-                    }
-                  }
                   initialValues={{
                     remember: true,
                   }}
                   layout="vertical"
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off">
+                  autoComplete="off"
+                >
                   <div>
                     <Form.Item
                       name="question"
                       label="Question"
                       rules={[
                         { required: true, message: "Please input Question!" },
-                      ]}>
+                      ]}
+                    >
                       <CustomEditor onChange={setQuestionVal} />
                     </Form.Item>
                     <Form.Item hidden>
@@ -226,7 +228,8 @@ const Addmcq = () => {
                         label="Option A"
                         rules={[
                           { required: true, message: "Please input Option A!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptA} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -239,7 +242,8 @@ const Addmcq = () => {
                         label="Option B"
                         rules={[
                           { required: true, message: "Please input Option B!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptB} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -252,7 +256,8 @@ const Addmcq = () => {
                         label="Option C"
                         rules={[
                           { required: true, message: "Please input Option C!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptC} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -265,7 +270,8 @@ const Addmcq = () => {
                         label="Option D"
                         rules={[
                           { required: true, message: "Please input Option D!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptD} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -280,7 +286,8 @@ const Addmcq = () => {
                         label="Correct Answer"
                         rules={[
                           { required: true, message: "Slect Correct Ans!" },
-                        ]}>
+                        ]}
+                      >
                         <Select
                           showSearch
                           placeholder="Select Answer"
@@ -315,9 +322,8 @@ const Addmcq = () => {
                         style={{
                           width: 300,
                         }}
-                        rules={[
-                          { required: true, message: "Slect Category!" },
-                        ]}>
+                        rules={[{ required: true, message: "Slect Category!" }]}
+                      >
                         <Select
                           showSearch
                           placeholder="Select Category"
@@ -337,7 +343,8 @@ const Addmcq = () => {
                         }}
                         rules={[
                           { required: true, message: "Slect Related Subject!" },
-                        ]}>
+                        ]}
+                      >
                         <Select
                           showSearch
                           placeholder="Select Subject"
@@ -368,7 +375,8 @@ const Addmcq = () => {
                               <Space
                                 style={{
                                   padding: "0 8px 4px",
-                                }}>
+                                }}
+                              >
                                 <Input
                                   placeholder="Please enter item"
                                   ref={inputRef}
@@ -379,7 +387,8 @@ const Addmcq = () => {
                                 <Button
                                   type="text"
                                   icon={<PlusOutlined />}
-                                  onClick={addItem}>
+                                  onClick={addItem}
+                                >
                                   Add item
                                 </Button>
                               </Space>
