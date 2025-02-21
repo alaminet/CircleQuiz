@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@100..900&display=swap');
+
 .question-radio-group .ant-space {
   width: 100%;
 }
-
+*{
+  font-family: "Noto Sans Bengali", serif !important;
+}
 /* Add this CSS to your stylesheet */
 @media print {
   body {

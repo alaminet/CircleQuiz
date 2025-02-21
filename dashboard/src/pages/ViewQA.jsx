@@ -9,7 +9,6 @@ import {
   Modal,
   Space,
   Table,
-  Typography,
   message,
   Flex,
   Tooltip,
@@ -43,8 +42,6 @@ const useStyle = createStyles(({ css, token }) => {
 
 const ViewQA = () => {
   const { styles } = useStyle();
-  const { Text } = Typography;
-  const { TextArea } = Input;
   const user = useSelector((user) => user.loginSlice.login);
   const [editForm] = Form.useForm();
   const [editItem, setEditItem] = useState();
@@ -52,13 +49,12 @@ const ViewQA = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [qaList, setQAList] = useState([]);
-  const [topicList, setTopicList] = useState([]);
-  const [questionVal, setQuestionVal] = useState("");
-  const [optA, setOptA] = useState("");
-  const [optB, setOptB] = useState("");
-  const [optC, setOptC] = useState("");
-  const [optD, setOptD] = useState("");
-  const [details, setDetails] = useState("");
+  const [questionVal, setQuestionVal] = useState(editItem?.question);
+  const [optA, setOptA] = useState(editItem?.options[0]);
+  const [optB, setOptB] = useState(editItem?.options[1]);
+  const [optC, setOptC] = useState(editItem?.options[2]);
+  const [optD, setOptD] = useState(editItem?.options[3]);
+  const [details, setDetails] = useState(editItem?.des);
   const [catList, setCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
@@ -165,45 +161,54 @@ const ViewQA = () => {
     editForm.setFieldsValue({
       id: values?._id,
       question: values?.question,
-      A: values?.options[0],
-      B: values?.options[1],
-      C: values?.options[2],
-      D: values?.options[3],
-      ans: values?.ans,
+      optA: values?.options[0],
+      optB: values?.options[1],
+      optC: values?.options[2],
+      optD: values?.options[3],
+      answer: values?.ans,
+      topic: values?.topic._id,
+      category: values?.category._id,
+      tag: values?.tag.map((item) => item._id),
       des: values?.des,
-      topic: values?.topic?._id,
       status: values?.status,
     });
   };
 
   const onFinishEdit = async (values) => {
+    console.log("prev", editItem);
+    console.log("edit", values);
     setLoading(true);
     if (
+      editItem.ans !== values.answer ||
+      editItem.category._id !== values.category ||
+      editItem.des !== values.details ||
+      editItem.options[0] !== values.optA ||
+      editItem.options[1] !== values.optB ||
+      editItem.options[2] !== values.optC ||
+      editItem.options[3] !== values.optD ||
       editItem.question !== values.question ||
-      editItem.options[0] !== values.A ||
-      editItem.options[1] !== values.B ||
-      editItem.options[2] !== values.C ||
-      editItem.options[3] !== values.D ||
-      editItem.ans !== values.ans ||
-      editItem.des !== values.des ||
-      editItem.topic?._id !== values.topic ||
-      editItem.status !== values.status
+      editItem.status !== values.status ||
+      editItem.tag.map((item) => item._id) !== values.tag ||
+      editItem.topic?._id !== values.topic
     ) {
       try {
+        // id, question, options, ans, des, topic, status,category,tag
         const update = await axios.post(
           `${import.meta.env.VITE_API_URL}/v1/api/mcq/edit`,
           {
             id: values.id,
             question: values.question.trim(),
             options: [
-              values.A.trim(),
-              values.B.trim(),
-              values.C.trim(),
-              values.D.trim(),
+              values.optA.trim(),
+              values.optB.trim(),
+              values.optC.trim(),
+              values.optD.trim(),
             ],
-            ans: values.ans,
-            des: values.des?.trim(),
+            ans: values.answer,
+            des: values.details?.trim(),
             topic: values.topic,
+            category: values.category,
+            tag: values.tag,
             status: values.status,
           }
         );
@@ -356,13 +361,7 @@ const ViewQA = () => {
             onCancel={handleCancel}
             footer=""
           >
-            <Form
-              form={editForm}
-              layout="vertical"
-              onFinish={onFinishEdit}
-              // onFinishFailed={onFinishFailed}
-              autoComplete="off"
-            >
+            <Form form={editForm} layout="vertical" onFinish={onFinishEdit}>
               <Form.Item hidden name="id"></Form.Item>
               <div>
                 <Form.Item
@@ -462,9 +461,6 @@ const ViewQA = () => {
                       showSearch
                       placeholder="Select Answer"
                       optionFilterProp="label"
-                      defaultValue={editItem?.ans}
-                      // onChange={onChange}
-                      // onSearch={onSearch}
                       options={[
                         {
                           value: 0,
@@ -499,16 +495,13 @@ const ViewQA = () => {
                       showSearch
                       placeholder="Select Category"
                       optionFilterProp="label"
-                      defaultValue={editItem?.category._id}
-                      // onChange={onChange}
-                      // onSearch={onSearch}
                       options={catList}
                     />
                   </Form.Item>
                 </Col>
                 <Col>
                   <Form.Item
-                    name="subject"
+                    name="topic"
                     label="Related Subject"
                     style={{
                       width: 300,
@@ -521,9 +514,6 @@ const ViewQA = () => {
                       showSearch
                       placeholder="Select Subject"
                       optionFilterProp="label"
-                      defaultValue={editItem?.topic._id}
-                      // onChange={onChange}
-                      // onSearch={onSearch}
                       options={subjList}
                     />
                   </Form.Item>
@@ -532,7 +522,6 @@ const ViewQA = () => {
                   <Form.Item name="tag" label="Tag/Referance">
                     <Select
                       mode="multiple"
-                      defaultValue={editItem?.tag.map((item) => item._id)}
                       allowClear
                       style={{
                         minWidth: 300,
