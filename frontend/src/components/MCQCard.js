@@ -34,7 +34,9 @@ import {
 const { Text, Title, Paragraph } = Typography;
 const { Group } = Radio;
 
-const MCQCard = () => {
+const MCQCard = ({ data }) => {
+  console.log(data);
+
   const [showDes, setShowDes] = useState(false);
   // Card Menu
   const onClick = (e) => {
@@ -81,7 +83,9 @@ const MCQCard = () => {
             <Col xs={24} md={20}>
               <div>
                 <Title level={5} style={{ margin: "0" }}>
-                  1. বুড়িগঙ্গা নদীর বাম তীরে অবস্থিত?
+                  <span
+                    dangerouslySetInnerHTML={{ __html: data?.question }}
+                  ></span>
                 </Title>
               </div>
             </Col>
@@ -108,15 +112,22 @@ const MCQCard = () => {
             }}
             options={[
               {
+                value: 0,
+                label: (
+                  <Flex gap="small" justify="center" align="center" vertical>
+                    <span
+                      dangerouslySetInnerHTML={{ __html: data?.options[0] }}
+                    ></span>
+                  </Flex>
+                ),
+              },
+              {
                 value: 1,
                 label: (
                   <Flex gap="small" justify="center" align="center" vertical>
-                    <LineChartOutlined
-                      style={{
-                        fontSize: 18,
-                      }}
-                    />
-                    LineChart
+                    <span
+                      dangerouslySetInnerHTML={{ __html: data?.options[1] }}
+                    ></span>
                   </Flex>
                 ),
               },
@@ -124,12 +135,9 @@ const MCQCard = () => {
                 value: 2,
                 label: (
                   <Flex gap="small" justify="center" align="center" vertical>
-                    <DotChartOutlined
-                      style={{
-                        fontSize: 18,
-                      }}
-                    />
-                    DotChart
+                    <span
+                      dangerouslySetInnerHTML={{ __html: data?.options[2] }}
+                    ></span>
                   </Flex>
                 ),
               },
@@ -137,37 +145,22 @@ const MCQCard = () => {
                 value: 3,
                 label: (
                   <Flex gap="small" justify="center" align="center" vertical>
-                    <BarChartOutlined
-                      style={{
-                        fontSize: 18,
-                      }}
-                    />
-                    BarChart
-                  </Flex>
-                ),
-              },
-              {
-                value: 4,
-                label: (
-                  <Flex gap="small" justify="center" align="center" vertical>
-                    <PieChartOutlined
-                      style={{
-                        fontSize: 18,
-                      }}
-                    />
-                    PieChart
+                    <span
+                      dangerouslySetInnerHTML={{ __html: data?.options[3] }}
+                    ></span>
                   </Flex>
                 ),
               },
             ]}
           />
           <div style={{ marginTop: "20px", display: "flex", gap: "5px" }}>
-            <Button color="cyan" variant="outlined" size="small">
-              বাংলাদেশের নদ-নদী
-            </Button>
-            <Button color="cyan" variant="outlined" size="small">
-              বাংলাদেশের নদ-নদী
-            </Button>
+            {data?.tag.map((tag, j) => (
+              <>
+                <Button key={j} color="cyan" variant="outlined" size="small">
+                  <span dangerouslySetInnerHTML={{ __html: tag?.name }}></span>
+                </Button>
+              </>
+            ))}
           </div>
           <Divider style={{ margin: "20px 0" }} />
           <div>
@@ -177,7 +170,8 @@ const MCQCard = () => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}>
+                  onClick={() => setShowDes(!showDes)}
+                >
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -187,21 +181,24 @@ const MCQCard = () => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <EyeFilled /> <strong>1M</strong>
                 </Button>
                 <Button
                   color="primary"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <LikeFilled /> 120.5K
                 </Button>
                 <Button
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <ShareAltOutlined />
                 </Button>
               </div>
@@ -230,7 +227,8 @@ const MCQCard = () => {
                                   display: "block",
                                   fontSize: "12px",
                                   color: "gray",
-                                }}>
+                                }}
+                              >
                                 1Y Ago
                               </Text>
                             </Flex>
@@ -249,7 +247,8 @@ const MCQCard = () => {
                               color="primary"
                               variant="link"
                               size="small"
-                              style={{ gap: "2px" }}>
+                              style={{ gap: "2px" }}
+                            >
                               <small>
                                 <LikeFilled /> 120.5K
                               </small>
@@ -258,7 +257,8 @@ const MCQCard = () => {
                               color="primary"
                               variant="link"
                               size="small"
-                              style={{ gap: "2px" }}>
+                              style={{ gap: "2px" }}
+                            >
                               <small>
                                 <DislikeOutlined /> 120.5K
                               </small>
