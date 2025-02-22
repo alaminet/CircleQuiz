@@ -12,13 +12,8 @@ const Page = ({ params }) => {
   const [search, setSearch] = useState("");
   const [typeSearch, setTypeSearch] = useState([]);
 
-  const filterPostsByTag = (posts, tagName) => {
-    return posts.filter((post) => post.tag.some((tag) => tag.name === tagName));
-  };
-
   const mcqListFiler = mcqList?.filter((item) => {
-    // return item?.question?.toLowerCase().includes(search.toLowerCase());
-    if (typeSearch) {
+    if (!search && typeSearch) {
       const typeCat = typeSearch[1];
       const typeVal = typeSearch[0];
       if (typeCat == "category") {

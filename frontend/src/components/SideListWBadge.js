@@ -8,6 +8,31 @@ import {
 import { Menu } from "antd";
 
 const SideListWBadge = ({ data, search }) => {
+  const dataArr = data;
+
+  // Unique Data sorting
+  const itemCat = dataArr?.map((item) => {
+    return {
+      key: item.category.name.toLowerCase(),
+      label: item.category.name,
+    };
+  });
+  const uniqueCat = [
+    ...new Map(itemCat?.map((item) => [item.key, item])).values(),
+  ];
+  let tArr = [];
+  const itemTag = dataArr?.map((item) => {
+    item?.tag?.map((t) => {
+      tArr.push({
+        key: t.name,
+        label: t.name,
+      });
+    });
+  });
+  const uniqueTag = [
+    ...new Map(tArr?.map((item) => [item.key, item])).values(),
+  ];
+
   const handleMenu = (e) => {
     search(e.keyPath);
   };
@@ -17,31 +42,13 @@ const SideListWBadge = ({ data, search }) => {
       key: "category",
       label: "Category",
       icon: <MailOutlined />,
-      children: [
-        {
-          key: "job",
-          label: "Job",
-        },
-        {
-          key: "2",
-          label: "Option 2",
-        },
-      ],
+      children: uniqueCat,
     },
     {
       key: "tag",
       label: "Tag/Referance",
       icon: <AppstoreOutlined />,
-      children: [
-        {
-          key: "১৩তম বিসিএস প্রিলিমিনারি",
-          label: "১৩তম বিসিএস প্রিলিমিনারি",
-        },
-        {
-          key: "বাংলা সাহিত্য",
-          label: "বাংলা সাহিত্য",
-        },
-      ],
+      children: uniqueTag,
     },
     {
       type: "divider",
