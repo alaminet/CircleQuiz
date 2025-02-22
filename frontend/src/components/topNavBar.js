@@ -1,6 +1,6 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Button, Flex, Menu, Switch, Tooltip } from "antd";
 import {
   AppstoreOutlined,
@@ -24,13 +24,43 @@ const url =
 
 const TopNavBar = () => {
   const router = useRouter();
+  const [current, setCurrent] = useState('/');
+  const [subList, setSubjList] = useState([]);
 
-  const [current, setCurrent] = useState("mail");
-  const handleMenu = (e) => {
-    console.log("click ", e);
-    setCurrent(e.key);
-    router.push(e.key);
+  // Get Topics List
+  const getTopics = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/topic/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    const tableData = [];
+    data?.view?.map((item) => {
+      item.status === "approve" &&
+        tableData.push({
+          label: item?.name,
+          key: item?.slug,
+        });
+      setSubjList(tableData);
+    });
   };
+
+  useEffect(() => {
+    getTopics();
+  }, []);
+
+  // Handle Nav Menu
+  const handleMenu = (e) => {
+    let path = e?.keyPath.reverse().join("/");
+    setCurrent(`/${path}`)
+    router.push(`/${path}`);
+  };
+
   const items = [
     {
       label: "Home",
@@ -45,18 +75,9 @@ const TopNavBar = () => {
     },
     {
       label: "Subjects",
-      key: "subjects",
+      key: "subject",
       icon: <SnippetsOutlined />,
-      children: [
-        {
-          label: "All Subjects",
-          key: "subject",
-        },
-        {
-          label: "Bangla",
-          key: "subject/bangla",
-        },
-      ],
+      children: subList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
       label: "Academy",
@@ -173,6 +194,7 @@ const TopNavBar = () => {
       ),
     },
   ];
+
   return (
     <>
       <div>Logo</div>

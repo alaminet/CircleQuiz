@@ -5,12 +5,15 @@ import SubjectHeading from "@/components/SubjectHeading";
 import { Col, Row } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import CardBasicWMore from "@/components/CardBasicWMore";
-import { useRouter } from "next/router";
+import { Pagination } from "antd";
+
 const Page = ({ params }) => {
   const { slug } = use(params);
   const [mcqList, setMcqList] = useState();
   const [search, setSearch] = useState("");
   const [typeSearch, setTypeSearch] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10); // Set page size
 
   const mcqListFiler = mcqList?.filter((item) => {
     if (!search && typeSearch) {
@@ -29,6 +32,16 @@ const Page = ({ params }) => {
       return item?.question?.toLowerCase().includes(search.toLowerCase());
     }
   });
+
+  // Handel pagination
+  const handlePageChange = (page, pageSize) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
+  };
+  const paginatedData = mcqListFiler?.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   // Get Tag List
   const getMCQ = async () => {
@@ -65,9 +78,17 @@ const Page = ({ params }) => {
         <Col md={12}>
           <div>
             <SubjectHeading title={slug} search={setSearch} />
-            {mcqListFiler?.map((item, i) => (
+            {paginatedData?.map((item, i) => (
               <MCQCard key={i} data={item} />
             ))}
+            <Pagination
+              align="end"
+              current={currentPage}
+              pageSize={pageSize}
+              total={mcqListFiler?.length}
+              onChange={handlePageChange}
+              showSizeChanger
+            />
           </div>
         </Col>
         <Col md={6}>
