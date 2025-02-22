@@ -12,9 +12,9 @@ import {
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 
-const SubjectHeading = ({ title }) => {
+const SubjectHeading = ({ title, search }) => {
   // Search Bar
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+  const onSearch = (value, _e, info) => search(value);
   return (
     <>
       <div

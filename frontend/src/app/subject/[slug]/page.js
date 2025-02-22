@@ -9,42 +9,70 @@ import { useRouter } from "next/router";
 const Page = ({ params }) => {
   const { slug } = use(params);
   const [mcqList, setMcqList] = useState();
+  const [search, setSearch] = useState("");
+  const [typeSearch, setTypeSearch] = useState([]);
+
+  const filterPostsByTag = (posts, tagName) => {
+    return posts.filter((post) => post.tag.some((tag) => tag.name === tagName));
+  };
+
+  const mcqListFiler = mcqList?.filter((item) => {
+    // return item?.question?.toLowerCase().includes(search.toLowerCase());
+    if (typeSearch) {
+      const typeCat = typeSearch[1];
+      const typeVal = typeSearch[0];
+      if (typeCat == "category") {
+        return item?.category?.name
+          .toLowerCase()
+          .includes(typeVal.toLowerCase());
+      } else if (typeCat == "tag") {
+        return item?.tag?.some((tags) => tags.name == typeVal);
+      } else {
+        return item?.question?.toLowerCase().includes(search.toLowerCase());
+      }
+    } else {
+      return item?.question?.toLowerCase().includes(search.toLowerCase());
+    }
+  });
+
   // Get Tag List
   const getMCQ = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/view/${slug}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await res.json();
-    setMcqList(data?.view);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/view/${slug}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await res.json();
+      const MCQAppArr = [];
+      data?.view.map((item) => {
+        item.status === "approve" && MCQAppArr.push(item);
+      });
+      setMcqList(MCQAppArr);
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
     getMCQ();
   }, []);
-  console.log(mcqList);
 
   return (
     <>
       <Row gutter={[8, 8]}>
         <Col md={6}>
-          <SideListWBadge />
+          <SideListWBadge data={mcqList} search={setTypeSearch} />
         </Col>
         <Col md={12}>
           <div>
-            <SubjectHeading title={slug} />
-            {mcqList?.map(
-              (item, i) =>
-                item?.status === "approve" && (
-                  <>
-                    <MCQCard data={item} key={i} />
-                  </>
-                )
-            )}
+            <SubjectHeading title={slug} search={setSearch} />
+            {mcqListFiler?.map((item, i) => (
+              <MCQCard key={i} data={item} />
+            ))}
           </div>
         </Col>
         <Col md={6}>

@@ -11,6 +11,8 @@ import {
   ShareAltOutlined,
   AntDesignOutlined,
   DislikeOutlined,
+  BorderOutlined,
+  CheckCircleTwoTone,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -35,8 +37,6 @@ const { Text, Title, Paragraph } = Typography;
 const { Group } = Radio;
 
 const MCQCard = ({ data }) => {
-  console.log(data);
-
   const [showDes, setShowDes] = useState(false);
   // Card Menu
   const onClick = (e) => {
@@ -77,19 +77,18 @@ const MCQCard = ({ data }) => {
 
   return (
     <>
-      <Card>
+      <Card style={{ marginBottom: "10px" }}>
         <div>
           <Row justify="space-between">
-            <Col xs={24} md={20}>
+            <Col xs={24} md={18}>
               <div>
                 <Title level={5} style={{ margin: "0" }}>
                   <span
-                    dangerouslySetInnerHTML={{ __html: data?.question }}
-                  ></span>
+                    dangerouslySetInnerHTML={{ __html: data?.question }}></span>
                 </Title>
               </div>
             </Col>
-            <Col xs={24} md={4}>
+            <Col xs={24} md={6}>
               <Menu
                 onClick={onClick}
                 mode="horizontal"
@@ -101,65 +100,26 @@ const MCQCard = ({ data }) => {
         </div>
         <Divider style={{ margin: "10px 0" }} />
         <div>
-          <Radio.Group
-            buttonStyle="solid"
-            onChange={onChange}
-            value={value}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-            }}
-            options={[
-              {
-                value: 0,
-                label: (
-                  <Flex gap="small" justify="center" align="center" vertical>
-                    <span
-                      dangerouslySetInnerHTML={{ __html: data?.options[0] }}
-                    ></span>
-                  </Flex>
-                ),
-              },
-              {
-                value: 1,
-                label: (
-                  <Flex gap="small" justify="center" align="center" vertical>
-                    <span
-                      dangerouslySetInnerHTML={{ __html: data?.options[1] }}
-                    ></span>
-                  </Flex>
-                ),
-              },
-              {
-                value: 2,
-                label: (
-                  <Flex gap="small" justify="center" align="center" vertical>
-                    <span
-                      dangerouslySetInnerHTML={{ __html: data?.options[2] }}
-                    ></span>
-                  </Flex>
-                ),
-              },
-              {
-                value: 3,
-                label: (
-                  <Flex gap="small" justify="center" align="center" vertical>
-                    <span
-                      dangerouslySetInnerHTML={{ __html: data?.options[3] }}
-                    ></span>
-                  </Flex>
-                ),
-              },
-            ]}
-          />
+          <Row>
+            {data?.options.map((opt, k) => (
+              <Col
+                key={k}
+                span={12}
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                {k === data?.ans ? <CheckCircleTwoTone /> : <BorderOutlined />}
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: opt,
+                  }}
+                />
+              </Col>
+            ))}
+          </Row>
           <div style={{ marginTop: "20px", display: "flex", gap: "5px" }}>
             {data?.tag.map((tag, j) => (
-              <>
-                <Button key={j} color="cyan" variant="outlined" size="small">
-                  <span dangerouslySetInnerHTML={{ __html: tag?.name }}></span>
-                </Button>
-              </>
+              <Button key={j} color="cyan" variant="outlined" size="small">
+                <span dangerouslySetInnerHTML={{ __html: tag?.name }} />
+              </Button>
             ))}
           </div>
           <Divider style={{ margin: "20px 0" }} />
@@ -170,8 +130,7 @@ const MCQCard = ({ data }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}
-                >
+                  onClick={() => setShowDes(!showDes)}>
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -181,24 +140,21 @@ const MCQCard = ({ data }) => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <EyeFilled /> <strong>1M</strong>
                 </Button>
                 <Button
                   color="primary"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <LikeFilled /> 120.5K
                 </Button>
                 <Button
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <ShareAltOutlined />
                 </Button>
               </div>
@@ -227,8 +183,7 @@ const MCQCard = ({ data }) => {
                                   display: "block",
                                   fontSize: "12px",
                                   color: "gray",
-                                }}
-                              >
+                                }}>
                                 1Y Ago
                               </Text>
                             </Flex>
@@ -247,8 +202,7 @@ const MCQCard = ({ data }) => {
                               color="primary"
                               variant="link"
                               size="small"
-                              style={{ gap: "2px" }}
-                            >
+                              style={{ gap: "2px" }}>
                               <small>
                                 <LikeFilled /> 120.5K
                               </small>
@@ -257,8 +211,7 @@ const MCQCard = ({ data }) => {
                               color="primary"
                               variant="link"
                               size="small"
-                              style={{ gap: "2px" }}
-                            >
+                              style={{ gap: "2px" }}>
                               <small>
                                 <DislikeOutlined /> 120.5K
                               </small>

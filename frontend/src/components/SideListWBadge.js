@@ -7,118 +7,49 @@ import {
 } from "@ant-design/icons";
 import { Menu } from "antd";
 
-const SideListWBadge = () => {
+const SideListWBadge = ({ data, search }) => {
   const handleMenu = (e) => {
-    console.log("click ", e);
+    search(e.keyPath);
   };
   // Menu List
   const items = [
     {
-      key: "sub1",
-      label: "Navigation One",
+      key: "category",
+      label: "Category",
       icon: <MailOutlined />,
       children: [
         {
-          key: "g1",
-          label: "Item 1",
-          type: "group",
-          children: [
-            {
-              key: "1",
-              label: "Option 1",
-            },
-            {
-              key: "2",
-              label: "Option 2",
-            },
-          ],
+          key: "job",
+          label: "Job",
         },
         {
-          key: "g2",
-          label: "Item 2",
-          type: "group",
-          children: [
-            {
-              key: "3",
-              label: "Option 3",
-            },
-            {
-              key: "4",
-              label: "Option 4",
-            },
-          ],
+          key: "2",
+          label: "Option 2",
         },
       ],
     },
     {
-      key: "sub2",
-      label: "Navigation Two",
+      key: "tag",
+      label: "Tag/Referance",
       icon: <AppstoreOutlined />,
       children: [
         {
-          key: "5",
-          label: "Option 5",
+          key: "১৩তম বিসিএস প্রিলিমিনারি",
+          label: "১৩তম বিসিএস প্রিলিমিনারি",
         },
         {
-          key: "6",
-          label: "Option 6",
-        },
-        {
-          key: "sub3",
-          label: "Submenu",
-          children: [
-            {
-              key: "7",
-              label: "Option 7",
-            },
-            {
-              key: "8",
-              label: "Option 8",
-            },
-          ],
+          key: "বাংলা সাহিত্য",
+          label: "বাংলা সাহিত্য",
         },
       ],
     },
     {
       type: "divider",
     },
+
     {
-      key: "sub4",
-      label: "Navigation Three",
-      icon: <SettingOutlined />,
-      children: [
-        {
-          key: "9",
-          label: "Option 9",
-        },
-        {
-          key: "10",
-          label: "Option 10",
-        },
-        {
-          key: "11",
-          label: "Option 11",
-        },
-        {
-          key: "12",
-          label: "Option 12",
-        },
-      ],
-    },
-    {
-      key: "grp",
-      label: "Group",
-      type: "group",
-      children: [
-        {
-          key: "13",
-          label: "Option 13",
-        },
-        {
-          key: "14",
-          label: "Option 14",
-        },
-      ],
+      key: "",
+      label: "Clear Filter",
     },
   ];
   return <Menu onClick={handleMenu} mode="inline" items={items} />;
