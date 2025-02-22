@@ -6,6 +6,9 @@ const tagModel = new Schema(
       type: String,
       require: true,
     },
+    slug: {
+      type: String,
+    },
     status: {
       type: String,
       enum: ["waiting", "approved", "hold", "delete"],

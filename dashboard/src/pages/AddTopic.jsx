@@ -30,6 +30,13 @@ const AddTopic = () => {
   const [search, setSearch] = useState("");
   const [tbllist, setTbllist] = useState([]);
   const [editStatus, setEditStatus] = useState(null);
+  const [slugVal, setSlugVal] = useState("");
+
+  // slug change
+  const handleTitleChange = (e) => {
+    let titleVal = e.target.value;
+    setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+  };
 
   // Add new Topic
   const onFinishNewTopic = async (values) => {
@@ -38,13 +45,15 @@ const AddTopic = () => {
       const data = await axios.post(
         `${import.meta.env.VITE_API_URL}/v1/api/topic/add`,
         {
-          name: values.topics.trim(),
-          iconUrl: values.iconUrl.trim(),
+          name: values?.topics.trim(),
+          slug: slugVal,
+          iconUrl: values?.iconUrl.trim(),
         }
       );
       setLoading(false);
       newForm.resetFields();
       message.success(data.data.message);
+      setSlugVal("");
     } catch (error) {
       setLoading(false);
       message.error(error.code);
@@ -58,34 +67,39 @@ const AddTopic = () => {
   const handleEdit = (values) => {
     setIsModalOpen(true);
     setEditItem(values);
-    setEditStatus(values.status);
+    setEditStatus(values?.status);
+    setSlugVal(values.slug);
     editForm.setFieldsValue({
-      id: values._id,
-      topics: values.name,
-      iconUrl: values.iconUrl,
-      status: values.status,
+      id: values?._id,
+      topics: values?.name,
+      slug: values?.slug,
+      iconUrl: values?.iconUrl,
+      status: values?.status,
     });
   };
 
   const onFinishEdit = async (values) => {
     setLoading(true);
     if (
-      editItem.topics !== values.topics ||
-      editItem.iconUrl !== values.iconUrl
+      editItem?.topics !== values?.topics ||
+      editItem?.slug !== slugVal ||
+      editItem?.iconUrl !== values?.iconUrl
     ) {
       try {
         const update = await axios.post(
           `${import.meta.env.VITE_API_URL}/v1/api/topic/edit`,
           {
-            id: values.id,
-            topics: values.topics,
-            iconUrl: values.iconUrl,
+            id: values?.id,
+            topics: values?.topics,
+            slug: slugVal,
+            iconUrl: values?.iconUrl,
             status: editStatus,
           }
         );
         message.success(update.data.message);
         setLoading(false);
         setIsModalOpen(false);
+        setSlugVal("");
       } catch (error) {
         setLoading(false);
         message.error(error.response.data.message);
@@ -95,6 +109,7 @@ const AddTopic = () => {
   const handleCancel = () => {
     setLoading(false);
     setIsModalOpen(false);
+    setSlugVal("");
   };
 
   // Topics Info
@@ -109,6 +124,7 @@ const AddTopic = () => {
         tableData.push({
           sl: ++i,
           topics: item?.name,
+          slug: item?.slug,
           icon: item?.iconUrl,
           status: item?.status,
           action: item,
@@ -131,6 +147,11 @@ const AddTopic = () => {
       title: "Topics Name",
       dataIndex: "topics",
       key: "topics",
+    },
+    {
+      title: "Slug",
+      dataIndex: "slug",
+      key: "slug",
     },
     {
       title: "Icon",
@@ -184,19 +205,21 @@ const AddTopic = () => {
             }}
             onFinish={onFinishNewTopic}
             onFinishFailed={onFinishNewTopicFailed}
-            autoComplete="off"
-          >
+            autoComplete="off">
             <Form.Item
               label="Topics Name"
               name="topics"
+              onChange={handleTitleChange}
               rules={[
                 {
                   required: true,
                   message: "Please input Topics Name !",
                 },
-              ]}
-            >
+              ]}>
               <Input />
+            </Form.Item>
+            <Form.Item label="Slug" name="slug">
+              <Input disabled placeholder={slugVal} />
             </Form.Item>
             <Form.Item
               label="Icon URL"
@@ -206,8 +229,7 @@ const AddTopic = () => {
                   required: true,
                   message: "Please input Icon URL !",
                 },
-              ]}
-            >
+              ]}>
               <Input />
             </Form.Item>
 
@@ -216,8 +238,7 @@ const AddTopic = () => {
                 type="primary"
                 htmlType="submit"
                 loading={loading}
-                disabled={loading}
-              >
+                disabled={loading}>
                 Add Topics
               </Button>
             </Form.Item>
@@ -254,26 +275,27 @@ const AddTopic = () => {
               title="Edit Category"
               open={isModalOpen}
               onCancel={handleCancel}
-              footer=""
-            >
+              footer="">
               <Form
                 form={editForm}
                 // layout="vertical"
                 onFinish={onFinishEdit}
                 // onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              >
+                autoComplete="off">
                 <Form.Item hidden name="id"></Form.Item>
                 <Form.Item
                   name="topics"
                   label="Topics"
+                  onChange={handleTitleChange}
                   rules={[
                     {
                       required: true,
                     },
-                  ]}
-                >
+                  ]}>
                   <Input placeholder="Topics" />
+                </Form.Item>
+                <Form.Item label="Slug" name="slug">
+                  <Input disabled placeholder={slugVal} />
                 </Form.Item>
                 <Form.Item
                   name="iconUrl"
@@ -282,8 +304,7 @@ const AddTopic = () => {
                     {
                       required: true,
                     },
-                  ]}
-                >
+                  ]}>
                   <Input placeholder="Icon URL" />
                 </Form.Item>
                 <Form.Item
@@ -293,8 +314,7 @@ const AddTopic = () => {
                     {
                       required: true,
                     },
-                  ]}
-                >
+                  ]}>
                   <Radio.Group
                     options={[
                       {
@@ -327,8 +347,7 @@ const AddTopic = () => {
                       loading={loading}
                       disabled={loading}
                       type="primary"
-                      htmlType="submit"
-                    >
+                      htmlType="submit">
                       Submit
                     </Button>
                   </Space>

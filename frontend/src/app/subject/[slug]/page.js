@@ -17,11 +17,11 @@ const Page = ({ params }) => {
       const typeCat = typeSearch[1];
       const typeVal = typeSearch[0];
       if (typeCat == "category") {
-        return item?.category?.name
+        return item?.category?.slug
           .toLowerCase()
           .includes(typeVal.toLowerCase());
       } else if (typeCat == "tag") {
-        return item?.tag?.some((tags) => tags.name == typeVal);
+        return item?.tag?.some((tags) => tags.slug == typeVal);
       } else {
         return item?.question?.toLowerCase().includes(search.toLowerCase());
       }

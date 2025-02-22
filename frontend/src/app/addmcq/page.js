@@ -29,10 +29,16 @@ const Addmcq = () => {
   const [catList, setCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
-
-  // select with new tag
-  const [name, setName] = useState([]);
+  const [tagName, setTagName] = useState([]);
   const inputRef = useRef(null);
+  const [slugVal, setSlugVal] = useState("");
+
+  // slug change
+  const handleTitleChange = (e) => {
+    let titleVal = e.target.value;
+    setTagName(titleVal);
+    setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+  };
 
   // New Tag Added server enviroment
   const postData = async (data) => {
@@ -78,7 +84,7 @@ const Addmcq = () => {
   const addItem = async (e) => {
     e.preventDefault();
     try {
-      const result = await postData({ name });
+      const result = await postData({ name: tagName, slug: slugVal });
       getTag();
       setName("");
       setTimeout(() => {
@@ -201,16 +207,14 @@ const Addmcq = () => {
                   layout="vertical"
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                >
+                  autoComplete="off">
                   <div>
                     <Form.Item
                       name="question"
                       label="Question"
                       rules={[
                         { required: true, message: "Please input Question!" },
-                      ]}
-                    >
+                      ]}>
                       <CustomEditor onChange={setQuestionVal} />
                     </Form.Item>
                     <Form.Item hidden>
@@ -228,8 +232,7 @@ const Addmcq = () => {
                         label="Option A"
                         rules={[
                           { required: true, message: "Please input Option A!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptA} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -242,8 +245,7 @@ const Addmcq = () => {
                         label="Option B"
                         rules={[
                           { required: true, message: "Please input Option B!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptB} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -256,8 +258,7 @@ const Addmcq = () => {
                         label="Option C"
                         rules={[
                           { required: true, message: "Please input Option C!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptC} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -270,8 +271,7 @@ const Addmcq = () => {
                         label="Option D"
                         rules={[
                           { required: true, message: "Please input Option D!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptD} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -286,14 +286,11 @@ const Addmcq = () => {
                         label="Correct Answer"
                         rules={[
                           { required: true, message: "Slect Correct Ans!" },
-                        ]}
-                      >
+                        ]}>
                         <Select
                           showSearch
                           placeholder="Select Answer"
                           optionFilterProp="label"
-                          // onChange={onChange}
-                          // onSearch={onSearch}
                           options={[
                             {
                               value: 0,
@@ -322,14 +319,13 @@ const Addmcq = () => {
                         style={{
                           width: 300,
                         }}
-                        rules={[{ required: true, message: "Slect Category!" }]}
-                      >
+                        rules={[
+                          { required: true, message: "Slect Category!" },
+                        ]}>
                         <Select
                           showSearch
                           placeholder="Select Category"
                           optionFilterProp="label"
-                          // onChange={onChange}
-                          // onSearch={onSearch}
                           options={catList}
                         />
                       </Form.Item>
@@ -343,14 +339,11 @@ const Addmcq = () => {
                         }}
                         rules={[
                           { required: true, message: "Slect Related Subject!" },
-                        ]}
-                      >
+                        ]}>
                         <Select
                           showSearch
                           placeholder="Select Subject"
                           optionFilterProp="label"
-                          // onChange={onChange}
-                          // onSearch={onSearch}
                           options={subjList}
                         />
                       </Form.Item>
@@ -375,20 +368,18 @@ const Addmcq = () => {
                               <Space
                                 style={{
                                   padding: "0 8px 4px",
-                                }}
-                              >
+                                }}>
                                 <Input
                                   placeholder="Please enter item"
                                   ref={inputRef}
                                   value={name}
-                                  onChange={(e) => setName(e.target.value)}
+                                  onChange={handleTitleChange}
                                   onKeyDown={(e) => e.stopPropagation()}
                                 />
                                 <Button
                                   type="text"
                                   icon={<PlusOutlined />}
-                                  onClick={addItem}
-                                >
+                                  onClick={addItem}>
                                   Add item
                                 </Button>
                               </Space>

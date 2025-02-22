@@ -14,7 +14,7 @@ import Search from "antd/es/input/Search";
 
 const SubjectHeading = ({ title, search }) => {
   // Search Bar
-  const onSearch = (value, _e, info) => search(value);
+  // const onSearch = (value, _e, info) => search(value);
   return (
     <>
       <div
@@ -58,7 +58,8 @@ const SubjectHeading = ({ title, search }) => {
               <Search
                 enterButton
                 placeholder="সার্চ করুন"
-                onSearch={onSearch}
+                // onSearch={onSearch}
+                onChange={(e) => search(e.target.value)}
                 style={{
                   width: 300,
                 }}

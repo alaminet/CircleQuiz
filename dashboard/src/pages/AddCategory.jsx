@@ -30,6 +30,13 @@ const AddCategory = () => {
   const [search, setSearch] = useState("");
   const [tbllist, setTbllist] = useState([]);
   const [editStatus, setEditStatus] = useState(null);
+  const [slugVal, setSlugVal] = useState("");
+
+  // slug change
+  const handleTitleChange = (e) => {
+    let titleVal = e.target.value;
+    setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+  };
 
   // Add new Topic
   const onFinishNewTopic = async (values) => {
@@ -39,10 +46,12 @@ const AddCategory = () => {
         `${import.meta.env.VITE_API_URL}/v1/api/category/add`,
         {
           name: values.category.trim(),
+          slug: slugVal,
           iconUrl: values.iconUrl.trim(),
         }
       );
       setLoading(false);
+      setSlugVal("");
       newForm.resetFields();
       message.success(data.data.message);
     } catch (error) {
@@ -58,34 +67,39 @@ const AddCategory = () => {
   const handleEdit = (values) => {
     setIsModalOpen(true);
     setEditItem(values);
+    setSlugVal(values?.slug);
     setEditStatus(values.status);
     editForm.setFieldsValue({
-      id: values._id,
-      category: values.name,
-      iconUrl: values.iconUrl,
-      status: values.status,
+      id: values?._id,
+      category: values?.name,
+      slug: values?.slug,
+      iconUrl: values?.iconUrl,
+      status: values?.status,
     });
   };
 
   const onFinishEdit = async (values) => {
     setLoading(true);
     if (
-      editItem.category !== values.category ||
-      editItem.iconUrl !== values.iconUrl
+      editItem?.category !== values?.category ||
+      editItem?.slug !== slugVal ||
+      editItem?.iconUrl !== values?.iconUrl
     ) {
       try {
         const update = await axios.post(
           `${import.meta.env.VITE_API_URL}/v1/api/category/edit`,
           {
-            id: values.id,
-            category: values.category,
-            iconUrl: values.iconUrl,
+            id: values?.id,
+            category: values?.category,
+            slug: slugVal,
+            iconUrl: values?.iconUrl,
             status: editStatus,
           }
         );
         message.success(update.data.message);
         setLoading(false);
         setIsModalOpen(false);
+        setSlugVal("");
       } catch (error) {
         setLoading(false);
         message.error(error.response.data.message);
@@ -95,6 +109,7 @@ const AddCategory = () => {
   const handleCancel = () => {
     setLoading(false);
     setIsModalOpen(false);
+    setSlugVal("");
   };
 
   // Topics Info
@@ -109,6 +124,7 @@ const AddCategory = () => {
         tableData.push({
           sl: ++i,
           category: item?.name,
+          slug: item?.slug,
           icon: item?.iconUrl,
           status: item?.status,
           action: item,
@@ -131,6 +147,11 @@ const AddCategory = () => {
       title: "Category Name",
       dataIndex: "category",
       key: "category",
+    },
+    {
+      title: "Slug",
+      dataIndex: "slug",
+      key: "slug",
     },
     {
       title: "Icon",
@@ -188,6 +209,7 @@ const AddCategory = () => {
             <Form.Item
               label="Category Name"
               name="category"
+              onChange={handleTitleChange}
               rules={[
                 {
                   required: true,
@@ -195,6 +217,9 @@ const AddCategory = () => {
                 },
               ]}>
               <Input />
+            </Form.Item>
+            <Form.Item label="Slug" name="slug">
+              <Input disabled placeholder={slugVal} />
             </Form.Item>
             <Form.Item
               label="Icon URL"
@@ -261,12 +286,16 @@ const AddCategory = () => {
                 <Form.Item
                   name="category"
                   label="Category"
+                  onChange={handleTitleChange}
                   rules={[
                     {
                       required: true,
                     },
                   ]}>
                   <Input placeholder="Category" />
+                </Form.Item>
+                <Form.Item label="Slug" name="slug">
+                  <Input disabled placeholder={slugVal} />
                 </Form.Item>
                 <Form.Item
                   name="iconUrl"

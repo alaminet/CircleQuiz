@@ -9,6 +9,9 @@ const categoryModel = new Schema(
     iconUrl: {
       type: String,
     },
+    slug: {
+      type: String,
+    },
     status: {
       type: String,
       enum: ["waiting", "approved", "hold", "delete"],

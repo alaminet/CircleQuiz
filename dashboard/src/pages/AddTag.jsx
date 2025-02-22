@@ -29,6 +29,13 @@ const AddTag = () => {
   const [search, setSearch] = useState("");
   const [tbllist, setTbllist] = useState([]);
   const [editStatus, setEditStatus] = useState(null);
+  const [slugVal, setSlugVal] = useState("");
+
+  // slug change
+  const handleTitleChange = (e) => {
+    let titleVal = e.target.value;
+    setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+  };
 
   // Add new Topic
   const onFinishNewTopic = async (values) => {
@@ -37,12 +44,14 @@ const AddTag = () => {
       const data = await axios.post(
         `${import.meta.env.VITE_API_URL}/v1/api/tag/add`,
         {
-          name: values.tag.trim(),
+          name: values?.tag.trim(),
+          slug: slugVal,
         }
       );
       setLoading(false);
       newForm.resetFields();
       message.success(data.data.message);
+      setSlugVal("");
     } catch (error) {
       setLoading(false);
       message.error(error.code);
@@ -57,29 +66,32 @@ const AddTag = () => {
     setIsModalOpen(true);
     setEditItem(values);
     setEditStatus(values.status);
+    setSlugVal(values?.slug);
     editForm.setFieldsValue({
-      id: values._id,
-      tag: values.name,
-      status: values.status,
+      id: values?._id,
+      tag: values?.name,
+      slug: values?.slug,
+      status: values?.status,
     });
   };
 
   const onFinishEdit = async (values) => {
     setLoading(true);
-    if (editItem.tag !== values.tag) {
+    if (editItem?.tag !== values?.tag || editItem?.slug !== values?.slug) {
       try {
         const update = await axios.post(
           `${import.meta.env.VITE_API_URL}/v1/api/tag/edit`,
           {
-            id: values.id,
-            tag: values.tag,
-
+            id: values?.id,
+            tag: values?.tag,
+            slug: slugVal,
             status: editStatus,
           }
         );
         message.success(update.data.message);
         setLoading(false);
         setIsModalOpen(false);
+        setSlugVal("");
       } catch (error) {
         setLoading(false);
         message.error(error.response.data.message);
@@ -89,6 +101,7 @@ const AddTag = () => {
   const handleCancel = () => {
     setLoading(false);
     setIsModalOpen(false);
+    setSlugVal("");
   };
 
   // Topics Info
@@ -103,7 +116,7 @@ const AddTag = () => {
         tableData.push({
           sl: ++i,
           tag: item?.name,
-
+          slug: item?.slug,
           status: item?.status,
           action: item,
         });
@@ -126,7 +139,11 @@ const AddTag = () => {
       dataIndex: "tag",
       key: "tag",
     },
-
+    {
+      title: "Slug",
+      dataIndex: "slug",
+      key: "slug",
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -176,6 +193,7 @@ const AddTag = () => {
             autoComplete="off">
             <Form.Item
               label="Tag Name"
+              onChange={handleTitleChange}
               name="tag"
               rules={[
                 {
@@ -184,6 +202,9 @@ const AddTag = () => {
                 },
               ]}>
               <Input />
+            </Form.Item>
+            <Form.Item label="Slug" name="slug">
+              <Input disabled placeholder={slugVal} />
             </Form.Item>
             <Form.Item label={null}>
               <Button
@@ -238,6 +259,7 @@ const AddTag = () => {
                 <Form.Item
                   name="tag"
                   label="Tag"
+                  onChange={handleTitleChange}
                   rules={[
                     {
                       required: true,
@@ -245,7 +267,9 @@ const AddTag = () => {
                   ]}>
                   <Input placeholder="Tag" />
                 </Form.Item>
-
+                <Form.Item label="Slug" name="slug">
+                  <Input disabled placeholder={slugVal} />
+                </Form.Item>
                 <Form.Item
                   // name="status"
                   label="Status"
@@ -279,7 +303,6 @@ const AddTag = () => {
                     buttonStyle="solid"
                   />
                 </Form.Item>
-
                 <Form.Item>
                   <Space>
                     <Button

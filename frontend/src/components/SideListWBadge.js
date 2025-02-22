@@ -1,19 +1,13 @@
 "use client";
 import React from "react";
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { AppstoreOutlined, MailOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 
 const SideListWBadge = ({ data, search }) => {
-  const dataArr = data;
-
   // Unique Data sorting
-  const itemCat = dataArr?.map((item) => {
+  const itemCat = data?.map((item) => {
     return {
-      key: item.category.name.toLowerCase(),
+      key: item.category.slug,
       label: item.category.name,
     };
   });
@@ -21,10 +15,10 @@ const SideListWBadge = ({ data, search }) => {
     ...new Map(itemCat?.map((item) => [item.key, item])).values(),
   ];
   let tArr = [];
-  const itemTag = dataArr?.map((item) => {
+  data?.map((item) => {
     item?.tag?.map((t) => {
       tArr.push({
-        key: t.name,
+        key: t.slug,
         label: t.name,
       });
     });
@@ -59,7 +53,15 @@ const SideListWBadge = ({ data, search }) => {
       label: "Clear Filter",
     },
   ];
-  return <Menu onClick={handleMenu} mode="inline" items={items} />;
+  return (
+    <Menu
+      onClick={handleMenu}
+      mode="inline"
+      items={items}
+      defaultSelectedKeys={["category"]}
+      defaultOpenKeys={["category"]}
+    />
+  );
 };
 
 export default SideListWBadge;
