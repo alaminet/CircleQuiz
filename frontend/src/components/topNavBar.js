@@ -1,7 +1,7 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Flex, Menu, Switch, Tooltip } from "antd";
+import { Avatar, Button, Drawer, Flex, Menu, Switch, Tooltip } from "antd";
 import {
   AppstoreOutlined,
   MailOutlined,
@@ -19,12 +19,14 @@ import {
   ApiOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+import LoginModal from "./LoginModal";
 const url =
   "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg";
 
 const TopNavBar = () => {
   const router = useRouter();
-  const [current, setCurrent] = useState('/');
+  const [open, setOpen] = useState(false);
+  const [current, setCurrent] = useState("/");
   const [subList, setSubjList] = useState([]);
 
   // Get Topics List
@@ -54,10 +56,19 @@ const TopNavBar = () => {
     getTopics();
   }, []);
 
+  // Login Drawer
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+
   // Handle Nav Menu
   const handleMenu = (e) => {
     let path = e?.keyPath.reverse().join("/");
-    setCurrent(`/${path}`)
+    setCurrent(`/${path}`);
     router.push(`/${path}`);
   };
 
@@ -223,9 +234,14 @@ const TopNavBar = () => {
             Add Q&A
           </Button>
         </Tooltip>
-
+        <Button type="primary" onClick={showDrawer}>
+          Login
+        </Button>
         <Avatar src={url} />
       </Flex>
+      <Drawer title="Login Your Account" onClose={onClose} open={open}>
+        <LoginModal />
+      </Drawer>
     </>
   );
 };

@@ -12,6 +12,12 @@ const MCQModel = new Schema(
     ans: {
       type: Number,
     },
+    like: {
+      type: Number,
+    },
+    views: {
+      type: Number,
+    },
     des: {
       type: String,
     },

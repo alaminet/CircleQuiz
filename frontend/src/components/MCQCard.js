@@ -189,13 +189,7 @@ const MCQCard = ({ data }) => {
                             </Flex>
                           </Flex>
                         </div>
-                        <div>
-                          In the process of internal desktop applications
-                          development, many different design specs and
-                          implementations would be involved, which might cause
-                          designers and developers difficulties and duplication
-                          and reduce the efficiency of development.
-                        </div>
+                        <div dangerouslySetInnerHTML={{ __html: data?.des }} />
                         <Row>
                           <Col>
                             <Button
