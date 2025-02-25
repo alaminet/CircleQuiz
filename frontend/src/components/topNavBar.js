@@ -1,6 +1,7 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Avatar, Button, Drawer, Flex, Menu, Switch, Tooltip } from "antd";
 import {
   AppstoreOutlined,
@@ -24,6 +25,7 @@ const url =
   "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg";
 
 const TopNavBar = () => {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState("/");
@@ -234,10 +236,29 @@ const TopNavBar = () => {
             Add Q&A
           </Button>
         </Tooltip>
-        <Button type="primary" onClick={showDrawer}>
-          Login
-        </Button>
-        <Avatar src={url} />
+        {status === "authenticated" ? (
+          <>
+            <Button
+              type="primary"
+              onClick={() => {
+                signOut();
+              }}>
+              Log out
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              type="primary"
+              onClick={() => {
+                signIn("google");
+              }}>
+              Login
+            </Button>
+          </>
+        )}
+
+        <Avatar src={session?.user?.image} />
       </Flex>
       <Drawer title="Login Your Account" onClose={onClose} open={open}>
         <LoginModal />
