@@ -1,16 +1,10 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Avatar, Button, Drawer, Flex, Menu, Switch, Tooltip } from "antd";
+import { Button, Flex, Menu, Tooltip } from "antd";
 import {
   AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-  MoonOutlined,
-  MoonFilled,
   HomeOutlined,
-  CopyOutlined,
   SearchOutlined,
   PlusCircleOutlined,
   SnippetsOutlined,
@@ -20,12 +14,9 @@ import {
   ApiOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import LoginModal from "./LoginModal";
-const url =
-  "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg";
+import LoginBtn from "./LoginBtn";
 
 const TopNavBar = () => {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState("/");
@@ -223,7 +214,7 @@ const TopNavBar = () => {
           justifyContent: "center",
         }}
       />
-      <Flex gap={5}>
+      <Flex gap={10} align="center">
         <Tooltip title="search">
           <Button shape="circle" icon={<SearchOutlined />} />
         </Tooltip>
@@ -236,33 +227,8 @@ const TopNavBar = () => {
             Add Q&A
           </Button>
         </Tooltip>
-        {status === "authenticated" ? (
-          <>
-            <Button
-              type="primary"
-              onClick={() => {
-                signOut();
-              }}>
-              Log out
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              type="primary"
-              onClick={() => {
-                signIn("google");
-              }}>
-              Login
-            </Button>
-          </>
-        )}
-
-        <Avatar src={session?.user?.image} />
+        <LoginBtn />
       </Flex>
-      <Drawer title="Login Your Account" onClose={onClose} open={open}>
-        <LoginModal />
-      </Drawer>
     </>
   );
 };

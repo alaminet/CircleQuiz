@@ -12,10 +12,6 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
     role: {
       type: String,
       enum: ["free", "paid", "instructor", "editor", "admin", "hold"],
@@ -28,15 +24,7 @@ const userSchema = new Schema(
     //     ref: "Course",
     //   },
     // ],
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
     token: {
-      type: String,
-      required: true,
-    },
-    otp: {
       type: String,
     },
   },

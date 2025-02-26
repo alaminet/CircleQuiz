@@ -1,8 +1,7 @@
 const express = require("express");
+const UserNewController = require("../../controllers/UserNewController");
 const route = express.Router();
 
-route.get("/adduser", function (req, res) {
-  res.send("add folder");
-});
+route.post("/add", UserNewController);
 
 module.exports = route;

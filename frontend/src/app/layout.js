@@ -22,11 +22,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${notoSerifBengali.variable} `}>
-        <SessionProvider>
-          <AntdRegistry>
+        <AntdRegistry>
+          <SessionProvider>
             <NavLayout>{children}</NavLayout>
-          </AntdRegistry>
-        </SessionProvider>
+          </SessionProvider>
+        </AntdRegistry>
       </body>
     </html>
   );
