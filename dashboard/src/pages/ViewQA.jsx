@@ -54,7 +54,6 @@ const ViewQA = () => {
   const [optB, setOptB] = useState(editItem?.options[1]);
   const [optC, setOptC] = useState(editItem?.options[2]);
   const [optD, setOptD] = useState(editItem?.options[3]);
-  const [details, setDetails] = useState(editItem?.des);
   const [catList, setCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
@@ -113,12 +112,6 @@ const ViewQA = () => {
       render: (ans) => <div dangerouslySetInnerHTML={{ __html: ans }} />,
     },
     {
-      title: "Details",
-      dataIndex: "des",
-      key: "des",
-      render: (des) => <div dangerouslySetInnerHTML={{ __html: des }} />,
-    },
-    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -169,7 +162,6 @@ const ViewQA = () => {
       topic: values?.topic._id,
       category: values?.category._id,
       tag: values?.tag.map((item) => item._id),
-      des: values?.des,
       status: values?.status,
     });
   };
@@ -181,7 +173,6 @@ const ViewQA = () => {
     if (
       editItem.ans !== values.answer ||
       editItem.category._id !== values.category ||
-      editItem.des !== values.details ||
       editItem.options[0] !== values.optA ||
       editItem.options[1] !== values.optB ||
       editItem.options[2] !== values.optC ||
@@ -205,7 +196,6 @@ const ViewQA = () => {
               values.optD.trim(),
             ],
             ans: values.answer,
-            des: values.details?.trim(),
             topic: values.topic,
             category: values.category,
             tag: values.tag,
@@ -267,13 +257,14 @@ const ViewQA = () => {
         optC: item?.options[2],
         optD: item?.options[3],
         ans: item?.options[item?.ans],
-        des: item?.des[0]?.post,
         status: item?.status,
         action: item,
       });
       setQAList(tableData);
     });
   }
+  // console.log(qaList);
+
   // Get Category List
   const getCategory = async () => {
     const res = await axios.get(
@@ -359,7 +350,8 @@ const ViewQA = () => {
             open={isModalOpen}
             width="80%"
             onCancel={handleCancel}
-            footer="">
+            footer=""
+          >
             <Form form={editForm} layout="vertical" onFinish={onFinishEdit}>
               <Form.Item hidden name="id"></Form.Item>
               <div>
@@ -368,7 +360,8 @@ const ViewQA = () => {
                   label="Question"
                   rules={[
                     { required: true, message: "Please input Question!" },
-                  ]}>
+                  ]}
+                >
                   <CKEditorInput
                     onChange={setQuestionVal}
                     defaultData={editItem?.question}
@@ -385,7 +378,8 @@ const ViewQA = () => {
                     label="Option A"
                     rules={[
                       { required: true, message: "Please input Option A!" },
-                    ]}>
+                    ]}
+                  >
                     <CKEditorInput
                       onChange={setOptA}
                       defaultData={editItem?.options[0]}
@@ -401,7 +395,8 @@ const ViewQA = () => {
                     label="Option B"
                     rules={[
                       { required: true, message: "Please input Option B!" },
-                    ]}>
+                    ]}
+                  >
                     <CKEditorInput
                       onChange={setOptB}
                       defaultData={editItem?.options[1]}
@@ -417,7 +412,8 @@ const ViewQA = () => {
                     label="Option C"
                     rules={[
                       { required: true, message: "Please input Option C!" },
-                    ]}>
+                    ]}
+                  >
                     <CKEditorInput
                       onChange={setOptC}
                       defaultData={editItem?.options[2]}
@@ -433,7 +429,8 @@ const ViewQA = () => {
                     label="Option D"
                     rules={[
                       { required: true, message: "Please input Option D!" },
-                    ]}>
+                    ]}
+                  >
                     <CKEditorInput
                       onChange={setOptD}
                       defaultData={editItem?.options[3]}
@@ -449,7 +446,8 @@ const ViewQA = () => {
                   <Form.Item
                     name="answer"
                     label="Correct Answer"
-                    rules={[{ required: true, message: "Slect Correct Ans!" }]}>
+                    rules={[{ required: true, message: "Slect Correct Ans!" }]}
+                  >
                     <Select
                       showSearch
                       placeholder="Select Answer"
@@ -482,7 +480,8 @@ const ViewQA = () => {
                     style={{
                       width: 300,
                     }}
-                    rules={[{ required: true, message: "Slect Category!" }]}>
+                    rules={[{ required: true, message: "Slect Category!" }]}
+                  >
                     <Select
                       showSearch
                       placeholder="Select Category"
@@ -500,7 +499,8 @@ const ViewQA = () => {
                     }}
                     rules={[
                       { required: true, message: "Slect Related Subject!" },
-                    ]}>
+                    ]}
+                  >
                     <Select
                       showSearch
                       placeholder="Select Subject"
@@ -529,7 +529,8 @@ const ViewQA = () => {
                           <Space
                             style={{
                               padding: "0 8px 4px",
-                            }}>
+                            }}
+                          >
                             <Input
                               placeholder="Please enter item"
                               ref={inputRef}
@@ -540,7 +541,8 @@ const ViewQA = () => {
                             <Button
                               type="text"
                               icon={<PlusOutlined />}
-                              onClick={addItem}>
+                              onClick={addItem}
+                            >
                               Add item
                             </Button>
                           </Space>
@@ -551,17 +553,7 @@ const ViewQA = () => {
                   </Form.Item>
                 </Col>
               </Row>
-              <div>
-                <Form.Item name="details" label="Details">
-                  <CKEditorInput
-                    onChange={setDetails}
-                    defaultData={editItem?.des}
-                  />
-                </Form.Item>
-                <Form.Item hidden>
-                  <Input type="hidden" name="details" value={details} />
-                </Form.Item>
-              </div>
+
               <Form.Item
                 name="status"
                 label="Status"
@@ -569,7 +561,8 @@ const ViewQA = () => {
                   {
                     required: true,
                   },
-                ]}>
+                ]}
+              >
                 <Radio.Group
                   options={[
                     {
@@ -600,7 +593,8 @@ const ViewQA = () => {
                     loading={loading}
                     disabled={loading}
                     type="primary"
-                    htmlType="submit">
+                    htmlType="submit"
+                  >
                     Q&A Update
                   </Button>
                 </Space>

@@ -23,7 +23,11 @@ const MCQModel = new Schema(
     des: [
       {
         post: String,
-        postBy: {
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        posted: {
           type: Schema.Types.ObjectId,
           ref: "Users",
         },
@@ -48,7 +52,7 @@ const MCQModel = new Schema(
       enum: ["waiting", "approved", "hold", "delete"],
       default: "waiting",
     },
-    createdBy: {
+    created: {
       type: Schema.Types.ObjectId,
       ref: "Users",
     },

@@ -33,13 +33,13 @@ import {
   LineChartOutlined,
   PieChartOutlined,
 } from "@ant-design/icons";
+import moment from "moment";
 const { Text, Title, Paragraph } = Typography;
 const { Group } = Radio;
 
 const MCQCard = ({ data }) => {
-  console.log(data);
-
   const [showDes, setShowDes] = useState(false);
+
   // Card Menu
   const onClick = (e) => {
     console.log("click ", e);
@@ -81,7 +81,8 @@ const MCQCard = ({ data }) => {
               <div>
                 <Title level={5} style={{ margin: "0" }}>
                   <span
-                    dangerouslySetInnerHTML={{ __html: data?.question }}></span>
+                    dangerouslySetInnerHTML={{ __html: data?.question }}
+                  ></span>
                 </Title>
               </div>
             </Col>
@@ -102,7 +103,8 @@ const MCQCard = ({ data }) => {
               <Col
                 key={k}
                 span={12}
-                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}
+              >
                 {k === data?.ans ? <CheckCircleTwoTone /> : <BorderOutlined />}
                 <span
                   dangerouslySetInnerHTML={{
@@ -127,7 +129,8 @@ const MCQCard = ({ data }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}>
+                  onClick={() => setShowDes(!showDes)}
+                >
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -137,21 +140,24 @@ const MCQCard = ({ data }) => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <EyeFilled /> <strong>1M</strong>
                 </Button>
                 <Button
                   color="primary"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <LikeFilled /> 120.5K
                 </Button>
                 <Button
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <ShareAltOutlined />
                 </Button>
               </div>
@@ -161,61 +167,72 @@ const MCQCard = ({ data }) => {
             <>
               <div>
                 <Card type="inner" style={{ backgroundColor: "#fafafa" }}>
-                  <div>
-                    <Paragraph>
-                      <blockquote>
-                        <div>
-                          <Flex align="center" gap={10}>
-                            <Avatar
-                              size={{
-                                xs: 24,
-                                sm: 24,
-                              }}
-                              icon={<AntDesignOutlined />}
-                            />
-                            <Flex justify="space-between" align="center">
-                              <Text>{data?.created} |</Text>
-                              <Text
+                  {data?.des?.map((desc, d) => (
+                    <div key={d}>
+                      <Paragraph>
+                        <blockquote>
+                          <div>
+                            <Flex align="center" gap={10}>
+                              <Avatar
+                                size={{
+                                  xs: 24,
+                                  sm: 24,
+                                }}
                                 style={{
-                                  display: "block",
-                                  fontSize: "12px",
-                                  color: "gray",
-                                }}>
-                                1Y Ago
-                              </Text>
+                                  backgroundColor: "#fde3cf",
+                                  color: "#f56a00",
+                                }}
+                                // icon={<AntDesignOutlined />}
+                              >
+                                {desc?.posted?.name.charAt(0)}
+                              </Avatar>
+                              <Flex justify="space-between" align="center">
+                                <Text>{desc?.posted?.name} |</Text>
+                                <Text
+                                  style={{
+                                    display: "block",
+                                    fontSize: "12px",
+                                    color: "gray",
+                                  }}
+                                >
+                                  {moment(desc?.createdAt).fromNow()}
+                                </Text>
+                              </Flex>
                             </Flex>
-                          </Flex>
-                        </div>
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: data?.des[0]?.post,
-                          }}
-                        />
-                        <Row>
-                          <Col>
-                            <Button
-                              color="primary"
-                              variant="link"
-                              size="small"
-                              style={{ gap: "2px" }}>
-                              <small>
-                                <LikeFilled /> 120.5K
-                              </small>
-                            </Button>
-                            <Button
-                              color="primary"
-                              variant="link"
-                              size="small"
-                              style={{ gap: "2px" }}>
-                              <small>
-                                <DislikeOutlined /> 120.5K
-                              </small>
-                            </Button>
-                          </Col>
-                        </Row>
-                      </blockquote>
-                    </Paragraph>
-                  </div>
+                          </div>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: desc?.post,
+                            }}
+                          />
+                          <Row>
+                            <Col>
+                              <Button
+                                color="primary"
+                                variant="link"
+                                size="small"
+                                style={{ gap: "2px" }}
+                              >
+                                <small>
+                                  <LikeFilled /> 120.5K
+                                </small>
+                              </Button>
+                              <Button
+                                color="primary"
+                                variant="link"
+                                size="small"
+                                style={{ gap: "2px" }}
+                              >
+                                <small>
+                                  <DislikeOutlined /> 120.5K
+                                </small>
+                              </Button>
+                            </Col>
+                          </Row>
+                        </blockquote>
+                      </Paragraph>
+                    </div>
+                  ))}
                 </Card>
               </div>
             </>

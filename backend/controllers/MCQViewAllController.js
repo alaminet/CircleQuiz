@@ -6,9 +6,9 @@ const MCQViewAllController = async (req, res) => {
       .populate("topic")
       .populate("category")
       .populate("tag")
-      .populate("createdBy")
-      .populate("des.postBy");
-    res.status(200).send({ view });
+      .populate("des.posted")
+      .populate("created");
+    await res.status(200).send({ view });
   } catch (error) {
     await res.status(404).send({ error });
   }

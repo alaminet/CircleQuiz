@@ -18,7 +18,7 @@ import CustomEditor from "@/components/CustomEditor";
 import { useSelector } from "react-redux";
 
 const Addmcq = () => {
-  const user = useSelector((user) => user.loginSlice.login);
+  const user = useSelector((user) => user?.loginSlice?.login);
   const [ckForm] = Form.useForm();
   const [error, setError] = useState(null);
   const [loadings, setLoadings] = useState(false);
@@ -100,10 +100,11 @@ const Addmcq = () => {
   // Form Submit
   const onFinish = async (values) => {
     setLoadings(true);
-    // console.log("Success:", values);
+    let completeValues = { ...values, createdBy: user._id };
+    // console.log("Success:", completeValues);
     try {
       setError(null);
-      const result = await postMCQData({ data: values });
+      const result = await postMCQData({ data: completeValues });
       message.success(result.message);
       ckForm.resetFields();
       setLoadings(false);
@@ -189,7 +190,6 @@ const Addmcq = () => {
     getTopics();
     getTag();
   }, []);
-
   return (
     <>
       <div>
@@ -210,17 +210,16 @@ const Addmcq = () => {
                   layout="vertical"
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off">
+                  autoComplete="off"
+                >
                   <div>
-                    <Form.Item hidden name="createdBy" initialValue={user?._id}>
-                      <Input disabled />
-                    </Form.Item>
                     <Form.Item
                       name="question"
                       label="Question"
                       rules={[
                         { required: true, message: "Please input Question!" },
-                      ]}>
+                      ]}
+                    >
                       <CustomEditor onChange={setQuestionVal} />
                     </Form.Item>
                     <Form.Item hidden>
@@ -238,7 +237,8 @@ const Addmcq = () => {
                         label="Option A"
                         rules={[
                           { required: true, message: "Please input Option A!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptA} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -251,7 +251,8 @@ const Addmcq = () => {
                         label="Option B"
                         rules={[
                           { required: true, message: "Please input Option B!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptB} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -264,7 +265,8 @@ const Addmcq = () => {
                         label="Option C"
                         rules={[
                           { required: true, message: "Please input Option C!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptC} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -277,7 +279,8 @@ const Addmcq = () => {
                         label="Option D"
                         rules={[
                           { required: true, message: "Please input Option D!" },
-                        ]}>
+                        ]}
+                      >
                         <CustomEditor onChange={setOptD} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -292,7 +295,8 @@ const Addmcq = () => {
                         label="Correct Answer"
                         rules={[
                           { required: true, message: "Slect Correct Ans!" },
-                        ]}>
+                        ]}
+                      >
                         <Select
                           showSearch
                           placeholder="Select Answer"
@@ -325,9 +329,8 @@ const Addmcq = () => {
                         style={{
                           width: 300,
                         }}
-                        rules={[
-                          { required: true, message: "Slect Category!" },
-                        ]}>
+                        rules={[{ required: true, message: "Slect Category!" }]}
+                      >
                         <Select
                           showSearch
                           placeholder="Select Category"
@@ -345,7 +348,8 @@ const Addmcq = () => {
                         }}
                         rules={[
                           { required: true, message: "Slect Related Subject!" },
-                        ]}>
+                        ]}
+                      >
                         <Select
                           showSearch
                           placeholder="Select Subject"
@@ -374,7 +378,8 @@ const Addmcq = () => {
                               <Space
                                 style={{
                                   padding: "0 8px 4px",
-                                }}>
+                                }}
+                              >
                                 <Input
                                   placeholder="Please enter item"
                                   ref={inputRef}
@@ -385,7 +390,8 @@ const Addmcq = () => {
                                 <Button
                                   type="text"
                                   icon={<PlusOutlined />}
-                                  onClick={addItem}>
+                                  onClick={addItem}
+                                >
                                   Add item
                                 </Button>
                               </Space>

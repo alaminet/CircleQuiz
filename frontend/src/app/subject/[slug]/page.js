@@ -2,7 +2,7 @@
 import React, { useEffect, use, useState } from "react";
 import MCQCard from "@/components/MCQCard";
 import SubjectHeading from "@/components/SubjectHeading";
-import { Col, Row } from "antd";
+import { Col, Row, Skeleton } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import CardBasicWMore from "@/components/CardBasicWMore";
 import { Pagination } from "antd";
@@ -77,18 +77,24 @@ const Page = ({ params }) => {
         </Col>
         <Col md={12}>
           <div>
-            <SubjectHeading title={slug} search={setSearch} />
-            {paginatedData?.map((item, i) => (
-              <MCQCard key={i} data={item} />
-            ))}
-            <Pagination
-              align="end"
-              current={currentPage}
-              pageSize={pageSize}
-              total={mcqListFiler?.length}
-              onChange={handlePageChange}
-              showSizeChanger
-            />
+            <SubjectHeading title={slug} search={setSearch} count={mcqList?.length} />
+            {!paginatedData ? (
+              <Skeleton active />
+            ) : (
+              paginatedData?.map((item, i) => (
+                <div key={i}>
+                  <MCQCard data={item} />
+                  <Pagination
+                    align="end"
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={mcqListFiler?.length}
+                    onChange={handlePageChange}
+                    showSizeChanger
+                  />
+                </div>
+              ))
+            )}
           </div>
         </Col>
         <Col md={6}>

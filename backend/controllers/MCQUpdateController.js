@@ -1,7 +1,7 @@
 const MCQ = require("../model/MCQModel");
 
 const MCQUpdateController = async (req, res) => {
-  const { id, question, options, ans, des, topic, status, category, tag } =
+  const { id, question, options, ans, topic, status, category, tag } =
     req.body;
 
   try {
@@ -12,7 +12,6 @@ const MCQUpdateController = async (req, res) => {
           question: question,
           options: options,
           ans: ans,
-          des: des,
           topic: topic,
           status: status,
           category: category,
