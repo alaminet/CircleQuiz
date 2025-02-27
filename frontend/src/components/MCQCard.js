@@ -37,6 +37,8 @@ const { Text, Title, Paragraph } = Typography;
 const { Group } = Radio;
 
 const MCQCard = ({ data }) => {
+  console.log(data);
+
   const [showDes, setShowDes] = useState(false);
   // Card Menu
   const onClick = (e) => {
@@ -69,11 +71,6 @@ const MCQCard = ({ data }) => {
       ),
     },
   ];
-  // Radio Value
-  const [value, setValue] = useState(null);
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
 
   return (
     <>
@@ -177,7 +174,7 @@ const MCQCard = ({ data }) => {
                               icon={<AntDesignOutlined />}
                             />
                             <Flex justify="space-between" align="center">
-                              <Text>Comment Name |</Text>
+                              <Text>{data?.created} |</Text>
                               <Text
                                 style={{
                                   display: "block",
@@ -189,7 +186,11 @@ const MCQCard = ({ data }) => {
                             </Flex>
                           </Flex>
                         </div>
-                        <div dangerouslySetInnerHTML={{ __html: data?.des }} />
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: data?.des[0]?.post,
+                          }}
+                        />
                         <Row>
                           <Col>
                             <Button

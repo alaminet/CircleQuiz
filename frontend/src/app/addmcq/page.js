@@ -15,8 +15,10 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
 import CustomEditor from "@/components/CustomEditor";
+import { useSelector } from "react-redux";
 
 const Addmcq = () => {
+  const user = useSelector((user) => user.loginSlice.login);
   const [ckForm] = Form.useForm();
   const [error, setError] = useState(null);
   const [loadings, setLoadings] = useState(false);
@@ -187,6 +189,7 @@ const Addmcq = () => {
     getTopics();
     getTag();
   }, []);
+
   return (
     <>
       <div>
@@ -209,6 +212,9 @@ const Addmcq = () => {
                   onFinishFailed={onFinishFailed}
                   autoComplete="off">
                   <div>
+                    <Form.Item hidden name="createdBy" initialValue={user?._id}>
+                      <Input disabled />
+                    </Form.Item>
                     <Form.Item
                       name="question"
                       label="Question"

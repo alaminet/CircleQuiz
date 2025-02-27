@@ -12,7 +12,6 @@ const LoginBtn = () => {
   const dispatch = useDispatch();
   const user = useSelector((user) => user.loginSlice.login);
   const { data: session, status } = useSession();
-  const [users, SetUsers] = useState();
 
   useEffect(() => {
     if (session && !user) {
@@ -30,10 +29,7 @@ const LoginBtn = () => {
           );
           const feedback = await response.json();
           // console.log("Server response:", feedback.dataExist);
-          SetUsers({
-            ...feedback?.dataExist,
-            userImg: session?.user?.image,
-          });
+
           dispatch(
             Loginuser({
               ...feedback?.dataExist,
@@ -61,8 +57,6 @@ const LoginBtn = () => {
     localStorage.removeItem("user");
     dispatch(Loginuser(null));
   };
-
-  console.log(user);
 
   return (
     <>

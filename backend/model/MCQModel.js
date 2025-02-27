@@ -8,9 +8,11 @@ const MCQModel = new Schema(
     },
     options: {
       type: Array,
+      require: true,
     },
     ans: {
       type: Number,
+      require: true,
     },
     like: {
       type: Number,
@@ -25,8 +27,6 @@ const MCQModel = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Users",
         },
-        createdAt: Date,
-        updatedAt: Date,
       },
     ],
     topic: {
@@ -48,7 +48,7 @@ const MCQModel = new Schema(
       enum: ["waiting", "approved", "hold", "delete"],
       default: "waiting",
     },
-    postBy: {
+    createdBy: {
       type: Schema.Types.ObjectId,
       ref: "Users",
     },
