@@ -3,43 +3,19 @@
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Avatar, Button, Flex } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { Loginuser } from "@/lib/features/slice/userSlice";
 const url =
   "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg";
 
-// function getFirstTwoCapitalLetters(str?: string | null) {
-//     const match = (str ?? "").match(/[A-Z]/g);
-//     return match ? match.slice(0, 2).join("") : "GT";
-// }
-
 const LoginBtn = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((user) => user.loginSlice.login);
   const { data: session, status } = useSession();
   const [users, SetUsers] = useState();
 
-  // user add data fetch
-  const userData = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ data: session }),
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message);
-      }
-      return await response.json();
-    } catch (error) {
-      throw error;
-    }
-  };
-
   useEffect(() => {
-    if (session && !users) {
+    if (session && !user) {
       const sendLoginDetails = async (data) => {
         try {
           const response = await fetch(
@@ -54,7 +30,23 @@ const LoginBtn = () => {
           );
           const feedback = await response.json();
           // console.log("Server response:", feedback.dataExist);
-          SetUsers({ ...feedback?.dataExist, userImg: session?.user?.image });
+          SetUsers({
+            ...feedback?.dataExist,
+            userImg: session?.user?.image,
+          });
+          dispatch(
+            Loginuser({
+              ...feedback?.dataExist,
+              userImg: session?.user?.image,
+            })
+          );
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              ...feedback?.dataExist,
+              userImg: session?.user?.image,
+            })
+          );
         } catch (error) {
           console.error("Error sending login details:", error);
         }
@@ -62,21 +54,24 @@ const LoginBtn = () => {
       sendLoginDetails(session);
     }
   }, [session]);
-  console.log(users);
+
+  // Logout Handeller
+  const handleLogout = async () => {
+    signOut();
+    localStorage.removeItem("user");
+    dispatch(Loginuser(null));
+  };
+
+  console.log(user);
 
   return (
     <>
       {status === "authenticated" ? (
         <Flex gap={10}>
-          <Button
-            type="primary"
-            onClick={() => {
-              signOut();
-            }}
-          >
+          <Button type="primary" onClick={handleLogout}>
             Log out
           </Button>
-          <Avatar src={session?.user?.image || url} alt="avater" />
+          <Avatar src={user?.userImg || url} alt="avater" />
         </Flex>
       ) : (
         <Flex>

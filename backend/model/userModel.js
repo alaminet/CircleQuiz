@@ -14,16 +14,10 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["free", "paid", "instructor", "editor", "admin", "hold"],
-      default: "free",
+      enum: ["student", "instructor", "editor", "admin", "hold"],
+      default: "student",
       required: true,
     },
-    // courses: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Course",
-    //   },
-    // ],
     token: {
       type: String,
     },
