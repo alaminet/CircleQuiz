@@ -39,7 +39,7 @@ const LoginBtn = () => {
   };
 
   useEffect(() => {
-    if (session) {
+    if (session && !users) {
       const sendLoginDetails = async (data) => {
         try {
           const response = await fetch(
@@ -53,7 +53,8 @@ const LoginBtn = () => {
             }
           );
           const feedback = await response.json();
-          console.log("Server response:", feedback.dataExist);
+          // console.log("Server response:", feedback.dataExist);
+          SetUsers({ ...feedback?.dataExist, userImg: session?.user?.image });
         } catch (error) {
           console.error("Error sending login details:", error);
         }
@@ -61,6 +62,7 @@ const LoginBtn = () => {
       sendLoginDetails(session);
     }
   }, [session]);
+  console.log(users);
 
   return (
     <>
@@ -70,7 +72,8 @@ const LoginBtn = () => {
             type="primary"
             onClick={() => {
               signOut();
-            }}>
+            }}
+          >
             Log out
           </Button>
           <Avatar src={session?.user?.image || url} alt="avater" />
