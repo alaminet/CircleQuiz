@@ -1,4 +1,4 @@
-const Tag = require("../model/tagModel");
+const Tag = require("../../model/tagModel");
 
 const TagNewController = async (req, res) => {
   try {

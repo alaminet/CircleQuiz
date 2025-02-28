@@ -1,4 +1,4 @@
-const MCQ = require("../model/MCQModel");
+const MCQ = require("../../model/MCQModel");
 
 const MCQNewController = async (req, res) => {
   try {

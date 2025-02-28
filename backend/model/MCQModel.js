@@ -14,16 +14,26 @@ const MCQModel = new Schema(
       type: Number,
       require: true,
     },
-    like: {
-      type: Number,
-    },
+    like: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+      },
+    ],
     views: {
       type: Number,
+      default: 0,
     },
     des: [
       {
         post: String,
         createdAt: Date,
+        like: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Users",
+          },
+        ],
         posted: {
           type: Schema.Types.ObjectId,
           ref: "Users",

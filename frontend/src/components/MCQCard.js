@@ -13,6 +13,8 @@ import {
   DislikeOutlined,
   BorderOutlined,
   CheckCircleTwoTone,
+  CheckCircleFilled,
+  CheckSquareFilled,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -105,7 +107,11 @@ const MCQCard = ({ data }) => {
                 span={12}
                 style={{ display: "flex", gap: "4px", alignItems: "center" }}
               >
-                {k === data?.ans ? <CheckCircleTwoTone /> : <BorderOutlined />}
+                {k === data?.ans ? (
+                  <CheckSquareFilled style={{ color: "green" }} />
+                ) : (
+                  <BorderOutlined />
+                )}
                 <span
                   dangerouslySetInnerHTML={{
                     __html: opt,

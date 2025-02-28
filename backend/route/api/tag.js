@@ -1,7 +1,8 @@
 const express = require("express");
-const TagNewController = require("../../controllers/TagNewController");
-const TagViewAllController = require("../../controllers/TagViewAllController");
-const TagUpdateController = require("../../controllers/TagUpdateController");
+const TagNewController = require("../../controllers/Tag/TagNewController");
+const TagViewAllController = require("../../controllers/Tag/TagViewAllController");
+const TagUpdateController = require("../../controllers/Tag/TagUpdateController");
+
 const route = express.Router();
 
 route.post("/add", TagNewController);

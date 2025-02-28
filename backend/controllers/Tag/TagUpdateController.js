@@ -1,4 +1,4 @@
-const Tag = require("../model/tagModel");
+const Tag = require("../../model/tagModel");
 
 const TagUpdateController = async (req, res) => {
   const { id, tag, slug, status } = req.body;

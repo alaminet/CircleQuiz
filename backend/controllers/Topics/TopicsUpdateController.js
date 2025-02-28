@@ -1,4 +1,4 @@
-const Topics = require("../model/topicsModel");
+const Topics = require("../../model/topicsModel");
 
 const TopicsUpdateController = async (req, res) => {
   const { id, topics, slug, iconUrl, status } = req.body;

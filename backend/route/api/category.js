@@ -1,7 +1,7 @@
 const express = require("express");
-const CategoryNewController = require("../../controllers/CategoryNewController");
-const CategoryViewAllController = require("../../controllers/CategoryViewAllController");
-const CategoryUpdateController = require("../../controllers/CategoryUpdateController");
+const CategoryNewController = require("../../controllers/Category/CategoryNewController");
+const CategoryViewAllController = require("../../controllers/Category/CategoryViewAllController");
+const CategoryUpdateController = require("../../controllers/Category/CategoryUpdateController");
 
 const route = express.Router();
 

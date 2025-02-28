@@ -1,7 +1,8 @@
 const express = require("express");
-const TopicsNewController = require("../../controllers/TopicsNewController");
-const TopicsViewAllController = require("../../controllers/TopicsViewAllController");
-const TopicsUpdateController = require("../../controllers/TopicsUpdateController");
+const TopicsNewController = require("../../controllers/Topics/TopicsNewController");
+const TopicsViewAllController = require("../../controllers/Topics/TopicsViewAllController");
+const TopicsUpdateController = require("../../controllers/Topics/TopicsUpdateController");
+
 const route = express.Router();
 
 route.post("/add", TopicsNewController);

@@ -1,19 +1,19 @@
-const Topics = require("../model/topicsModel");
+const Category = require("../../model/categoryModel");
 
-const TopicsNewController = async (req, res) => {
+const CategoryNewController = async (req, res) => {
   try {
-    const { name,slug, iconUrl } = req.body;
-    const dataExist = await Topics.findOne({ slug: slug });
+    const { name, slug, iconUrl } = req.body;
+    const dataExist = await Category.findOne({ slug: slug });
 
     if (!name || !iconUrl || !slug) {
       return res.status(404).send({ message: "Data Not Found" });
     } else if (!dataExist) {
-      const addnew = await new Topics({
+      const addnew = await new Category({
         name: name,
         slug: slug,
         iconUrl: iconUrl,
       }).save();
-      res.status(200).send({ addnew, message: "New Topics Added" });
+      res.status(200).send({ addnew, message: "New Category Added" });
     } else {
       res.status(400).send({ addnew, message: "Duplicate Data" });
     }
@@ -22,4 +22,4 @@ const TopicsNewController = async (req, res) => {
   }
 };
 
-module.exports = TopicsNewController;
+module.exports = CategoryNewController;

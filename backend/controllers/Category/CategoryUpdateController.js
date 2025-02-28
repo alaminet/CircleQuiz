@@ -1,4 +1,4 @@
-const Category = require("../model/categoryModel");
+const Category = require("../../model/categoryModel");
 
 const CategoryUpdateController = async (req, res) => {
   const { id, category, slug, iconUrl, status } = req.body;

@@ -1,4 +1,4 @@
-const Topics = require("../model/topicsModel");
+const Topics = require("../../model/topicsModel");
 
 const TopicsViewAllController = async (req, res) => {
   try {

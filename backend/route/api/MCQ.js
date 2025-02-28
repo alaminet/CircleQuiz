@@ -1,8 +1,9 @@
 const express = require("express");
-const MCQNewController = require("../../controllers/MCQNewController");
-const MCQViewAllController = require("../../controllers/MCQViewAllController");
-const MCQUpdateController = require("../../controllers/MCQUpdateController");
-const MCQViewTopicsWiseController = require("../../controllers/MCQViewTopicsWiseController");
+const MCQNewController = require("../../controllers/MCQ/MCQNewController");
+const MCQViewAllController = require("../../controllers/MCQ/MCQViewAllController");
+const MCQViewTopicsWiseController = require("../../controllers/MCQ/MCQViewTopicsWiseController");
+const MCQUpdateController = require("../../controllers/MCQ/MCQUpdateController");
+
 const route = express.Router();
 
 route.post("/add", MCQNewController);

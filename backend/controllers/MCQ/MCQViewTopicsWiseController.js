@@ -1,5 +1,5 @@
-const MCQ = require("../model/MCQModel");
-const Topics = require("../model/topicsModel");
+const MCQ = require("../../model/MCQModel");
+const Topics = require("../../model/topicsModel");
 
 const MCQViewTopicsWiseController = async (req, res) => {
   const { topic } = req.params;
