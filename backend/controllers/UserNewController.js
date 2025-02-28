@@ -13,9 +13,9 @@ const UserNewController = async (req, res) => {
         name: data?.user?.name,
         email: data?.user?.email,
       }).save();
-      res.status(200).send({ addnew, message: "New User" });
+      await res.status(200).send({ addnew, message: "New User" });
     } else {
-      res.status(200).send({ dataExist, message: "Existing User" });
+      await res.status(200).send({ dataExist, message: "Existing User" });
     }
   } catch (error) {
     await res.status(404).send({ error });

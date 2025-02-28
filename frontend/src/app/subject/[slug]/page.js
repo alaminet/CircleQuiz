@@ -77,24 +77,28 @@ const Page = ({ params }) => {
         </Col>
         <Col md={12}>
           <div>
-            <SubjectHeading title={slug} search={setSearch} count={mcqList?.length} />
+            <SubjectHeading
+              title={slug}
+              search={setSearch}
+              count={mcqList?.length}
+            />
             {!paginatedData ? (
               <Skeleton active />
             ) : (
               paginatedData?.map((item, i) => (
                 <div key={i}>
                   <MCQCard data={item} />
-                  <Pagination
-                    align="end"
-                    current={currentPage}
-                    pageSize={pageSize}
-                    total={mcqListFiler?.length}
-                    onChange={handlePageChange}
-                    showSizeChanger
-                  />
                 </div>
               ))
             )}
+            <Pagination
+              align="end"
+              current={currentPage}
+              pageSize={pageSize}
+              total={mcqListFiler?.length}
+              onChange={handlePageChange}
+              showSizeChanger
+            />
           </div>
         </Col>
         <Col md={6}>

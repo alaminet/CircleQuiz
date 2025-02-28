@@ -23,10 +23,7 @@ const MCQModel = new Schema(
     des: [
       {
         post: String,
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
+        createdAt: Date,
         posted: {
           type: Schema.Types.ObjectId,
           ref: "Users",

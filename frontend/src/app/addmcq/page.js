@@ -100,8 +100,8 @@ const Addmcq = () => {
   // Form Submit
   const onFinish = async (values) => {
     setLoadings(true);
-    let completeValues = { ...values, createdBy: user._id };
-    // console.log("Success:", completeValues);
+    let completeValues = { ...values, createdBy: user?._id };
+    // console.log("Success:", user);
     try {
       setError(null);
       const result = await postMCQData({ data: completeValues });

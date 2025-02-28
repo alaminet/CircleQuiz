@@ -3,6 +3,7 @@ const MCQ = require("../model/MCQModel");
 const MCQNewController = async (req, res) => {
   try {
     const { data } = req.body;
+    const createdAt = Date.now();
     const dataExist = await MCQ.findOne({ question: data.question });
     if (
       !data.question ||
@@ -23,7 +24,14 @@ const MCQNewController = async (req, res) => {
         topic: data.subject,
         category: data.category,
         tag: data.tag || null,
-        des: [{ post: data.details, posted: data.createdBy }] || null,
+        des:
+          [
+            {
+              post: data.details,
+              posted: data.createdBy,
+              createdAt: createdAt,
+            },
+          ] || null,
       }).save();
       await res.status(200).send({ addnew, message: "New Q&A Added" });
     } else {
