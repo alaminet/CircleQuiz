@@ -20,6 +20,7 @@ const MCQModel = new Schema(
         ref: "Users",
       },
     ],
+
     views: {
       type: Number,
       default: 0,

@@ -15,6 +15,7 @@ import {
   CheckCircleTwoTone,
   CheckCircleFilled,
   CheckSquareFilled,
+  LikeOutlined,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -43,6 +44,7 @@ const { Group } = Radio;
 const MCQCard = ({ data }) => {
   const user = useSelector((user) => user.loginSlice.login);
   const [showDes, setShowDes] = useState(false);
+  const likeExist = data?.like?.some((l) => l == user?._id);
 
   // Card Menu
   const onClick = (e) => {
@@ -113,8 +115,7 @@ const MCQCard = ({ data }) => {
               <div>
                 <Title level={5} style={{ margin: "0" }}>
                   <span
-                    dangerouslySetInnerHTML={{ __html: data?.question }}
-                  ></span>
+                    dangerouslySetInnerHTML={{ __html: data?.question }}></span>
                 </Title>
               </div>
             </Col>
@@ -135,8 +136,7 @@ const MCQCard = ({ data }) => {
               <Col
                 key={k}
                 span={12}
-                style={{ display: "flex", gap: "4px", alignItems: "center" }}
-              >
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                 {k === data?.ans ? (
                   <CheckSquareFilled style={{ color: "green" }} />
                 ) : (
@@ -165,36 +165,43 @@ const MCQCard = ({ data }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}
-                >
+                  onClick={() => setShowDes(!showDes)}>
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
               </div>
               <div>
-                {/* <Button
+                <Button
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
-                  <EyeFilled /> <strong>1M</strong>
-                </Button> */}
-                <Button
-                  color="primary"
-                  variant="link"
-                  size="small"
-                  onClick={handleMCQLike}
-                  style={{ gap: "2px" }}
-                >
-                  <LikeFilled /> 120.5K
+                  style={{ gap: "2px" }}>
+                  <EyeFilled /> <strong>{data?.views}</strong>
                 </Button>
+                {likeExist ? (
+                  <Button
+                    color="primary"
+                    variant="link"
+                    size="small"
+                    style={{ gap: "2px" }}>
+                    <LikeFilled /> {data?.like.length}
+                  </Button>
+                ) : (
+                  <Button
+                    color="primary"
+                    variant="link"
+                    size="small"
+                    onClick={handleMCQLike}
+                    style={{ gap: "2px" }}>
+                    <LikeOutlined /> {data?.like.length}
+                  </Button>
+                )}
+
                 <Button
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <ShareAltOutlined />
                 </Button>
               </div>
@@ -230,8 +237,7 @@ const MCQCard = ({ data }) => {
                                     display: "block",
                                     fontSize: "12px",
                                     color: "gray",
-                                  }}
-                                >
+                                  }}>
                                   {moment(desc?.createdAt).fromNow()}
                                 </Text>
                               </Flex>
@@ -248,8 +254,7 @@ const MCQCard = ({ data }) => {
                                 color="primary"
                                 variant="link"
                                 size="small"
-                                style={{ gap: "2px" }}
-                              >
+                                style={{ gap: "2px" }}>
                                 <small>
                                   <LikeFilled /> 120.5K
                                 </small>
@@ -258,8 +263,7 @@ const MCQCard = ({ data }) => {
                                 color="primary"
                                 variant="link"
                                 size="small"
-                                style={{ gap: "2px" }}
-                              >
+                                style={{ gap: "2px" }}>
                                 <small>
                                   <DislikeOutlined /> 120.5K
                                 </small>

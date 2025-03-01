@@ -2,28 +2,20 @@ const MCQ = require("../../model/MCQModel");
 
 const MCQLikeController = async (req, res) => {
   const { postID, likedID } = req.body;
-  console.log(postID, likedID);
 
-  //   try {
-  //     await MCQ.findByIdAndUpdate(
-  //       id,
-  //       {
-  //         $set: {
-  //           question: question,
-  //           options: options,
-  //           ans: ans,
-  //           topic: topic,
-  //           status: status,
-  //           category: category,
-  //           tag: tag,
-  //         },
-  //       },
-  //       { new: true }
-  //     );
-  //     res.status(200).send({ message: "MCQ Updated" });
-  //   } catch (error) {
-  //     res.status(401).send(error);
-  //   }
+  try {
+    const likeExist = await MCQ.findOne({ _id: postID, like: likedID });
+    !likeExist &&
+      (await MCQ.findOneAndUpdate(
+        { _id: postID },
+        { $push: { like: likedID } },
+        { new: true }
+      ));
+    await res.status(200).send({ message: "MCQ Liked" });
+  } catch (error) {
+    await res.status(401).send(error);
+    console.log(error);
+  }
 };
 
 module.exports = MCQLikeController;
