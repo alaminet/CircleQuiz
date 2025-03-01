@@ -36,10 +36,12 @@ import {
   PieChartOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
+import { useSelector } from "react-redux";
 const { Text, Title, Paragraph } = Typography;
 const { Group } = Radio;
 
 const MCQCard = ({ data }) => {
+  const user = useSelector((user) => user.loginSlice.login);
   const [showDes, setShowDes] = useState(false);
 
   // Card Menu
@@ -73,7 +75,35 @@ const MCQCard = ({ data }) => {
       ),
     },
   ];
+  // like server enviroment
+  const postLike = async (data) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/mcqlike`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
+  };
 
+  // MCQ like Handeller
+  const handleMCQLike = async () => {
+    const likeData = { postID: data._id, likedID: user._id };
+    console.log(likeData);
+
+    try {
+      likeData && (await postLike(likeData));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <Card style={{ marginBottom: "10px" }}>
@@ -142,18 +172,19 @@ const MCQCard = ({ data }) => {
                 </Button>
               </div>
               <div>
-                <Button
+                {/* <Button
                   color="default"
                   variant="link"
                   size="small"
                   style={{ gap: "2px" }}
                 >
                   <EyeFilled /> <strong>1M</strong>
-                </Button>
+                </Button> */}
                 <Button
                   color="primary"
                   variant="link"
                   size="small"
+                  onClick={handleMCQLike}
                   style={{ gap: "2px" }}
                 >
                   <LikeFilled /> 120.5K

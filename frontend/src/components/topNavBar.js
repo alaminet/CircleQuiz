@@ -218,15 +218,7 @@ const TopNavBar = () => {
         <Tooltip title="search">
           <Button shape="circle" icon={<SearchOutlined />} />
         </Tooltip>
-        <Tooltip title="Add Q&A">
-          <Button
-            onClick={() => router.push("/addmcq")}
-            type="primary"
-            shape="round"
-            icon={<PlusCircleOutlined />}>
-            Add Q&A
-          </Button>
-        </Tooltip>
+        
         <LoginBtn />
       </Flex>
     </>
