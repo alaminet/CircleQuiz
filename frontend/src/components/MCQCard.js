@@ -9,11 +9,7 @@ import {
   LikeFilled,
   PlusSquareFilled,
   ShareAltOutlined,
-  AntDesignOutlined,
-  DislikeOutlined,
   BorderOutlined,
-  CheckCircleTwoTone,
-  CheckCircleFilled,
   CheckSquareFilled,
   LikeOutlined,
 } from "@ant-design/icons";
@@ -30,16 +26,10 @@ import {
   Col,
   Typography,
 } from "antd";
-import {
-  BarChartOutlined,
-  DotChartOutlined,
-  LineChartOutlined,
-  PieChartOutlined,
-} from "@ant-design/icons";
-import moment from "moment";
+
 import { useSelector } from "react-redux";
-const { Text, Title, Paragraph } = Typography;
-const { Group } = Radio;
+import MCQDescCard from "./MCQDescCard";
+const {  Title, } = Typography;
 
 const MCQCard = ({ data }) => {
   const user = useSelector((user) => user.loginSlice.login);
@@ -192,7 +182,6 @@ const MCQCard = ({ data }) => {
                     <LikeOutlined /> {likeCount}
                   </Button>
                 )}
-
                 <Button
                   color="default"
                   variant="link"
@@ -209,65 +198,7 @@ const MCQCard = ({ data }) => {
                 <Card type="inner" style={{ backgroundColor: "#fafafa" }}>
                   {data?.des?.map((desc, d) => (
                     <div key={d}>
-                      <Paragraph>
-                        <blockquote>
-                          <div>
-                            <Flex align="center" gap={10}>
-                              <Avatar
-                                size={{
-                                  xs: 24,
-                                  sm: 24,
-                                }}
-                                style={{
-                                  backgroundColor: "#fde3cf",
-                                  color: "#f56a00",
-                                }}
-                                // icon={<AntDesignOutlined />}
-                              >
-                                {desc?.posted?.name.charAt(0)}
-                              </Avatar>
-                              <Flex justify="space-between" align="center">
-                                <Text>{desc?.posted?.name} |</Text>
-                                <Text
-                                  style={{
-                                    display: "block",
-                                    fontSize: "12px",
-                                    color: "gray",
-                                  }}>
-                                  {moment(desc?.createdAt).fromNow()}
-                                </Text>
-                              </Flex>
-                            </Flex>
-                          </div>
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: desc?.post,
-                            }}
-                          />
-                          <Row>
-                            <Col>
-                              <Button
-                                color="primary"
-                                variant="link"
-                                size="small"
-                                style={{ gap: "2px" }}>
-                                <small>
-                                  <LikeFilled /> 120.5K
-                                </small>
-                              </Button>
-                              <Button
-                                color="primary"
-                                variant="link"
-                                size="small"
-                                style={{ gap: "2px" }}>
-                                <small>
-                                  <DislikeOutlined /> 120.5K
-                                </small>
-                              </Button>
-                            </Col>
-                          </Row>
-                        </blockquote>
-                      </Paragraph>
+                      <MCQDescCard data={desc} />
                     </div>
                   ))}
                 </Card>
