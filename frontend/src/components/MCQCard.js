@@ -45,6 +45,8 @@ const MCQCard = ({ data }) => {
   const user = useSelector((user) => user.loginSlice.login);
   const [showDes, setShowDes] = useState(false);
   const likeExist = data?.like?.some((l) => l == user?._id);
+  const [liked, setLiked] = useState(likeExist);
+  const [likeCount, setLikeCount] = useState(data?.like.length);
 
   // Card Menu
   const onClick = (e) => {
@@ -102,6 +104,8 @@ const MCQCard = ({ data }) => {
 
     try {
       likeData && (await postLike(likeData));
+      setLiked(true);
+      setLikeCount(likeCount + 1);
     } catch (error) {
       console.log(error);
     }
@@ -170,30 +174,22 @@ const MCQCard = ({ data }) => {
                   <CaretRightOutlined />
                 </Button>
               </div>
-              <div>
-                <Button
-                  color="default"
-                  variant="link"
-                  size="small"
-                  style={{ gap: "2px" }}>
+              <Flex gap={10}>
+                <span style={{ gap: "2px" }}>
                   <EyeFilled /> <strong>{data?.views}</strong>
-                </Button>
-                {likeExist ? (
-                  <Button
-                    color="primary"
-                    variant="link"
-                    size="small"
-                    style={{ gap: "2px" }}>
-                    <LikeFilled /> {data?.like.length}
-                  </Button>
+                </span>
+                {liked ? (
+                  <span style={{ color: "#1677ff" }}>
+                    <LikeFilled /> {likeCount}
+                  </span>
                 ) : (
                   <Button
                     color="primary"
                     variant="link"
                     size="small"
                     onClick={handleMCQLike}
-                    style={{ gap: "2px" }}>
-                    <LikeOutlined /> {data?.like.length}
+                    style={{ gap: "2px", alignItems: "baseline" }}>
+                    <LikeOutlined /> {likeCount}
                   </Button>
                 )}
 
@@ -204,7 +200,7 @@ const MCQCard = ({ data }) => {
                   style={{ gap: "2px" }}>
                   <ShareAltOutlined />
                 </Button>
-              </div>
+              </Flex>
             </Flex>
           </div>
           {showDes && (
