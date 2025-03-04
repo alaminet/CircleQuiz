@@ -167,8 +167,8 @@ const ViewQA = () => {
   };
 
   const onFinishEdit = async (values) => {
-    console.log("prev", editItem);
-    console.log("edit", values);
+    // console.log("prev", editItem);
+    // console.log("edit", values);
     setLoading(true);
     if (
       editItem.ans !== values.answer ||

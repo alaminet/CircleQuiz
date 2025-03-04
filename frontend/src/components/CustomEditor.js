@@ -31,7 +31,7 @@ import {
 } from "ckeditor5";
 import MathType from "@wiris/mathtype-ckeditor5/dist/index.js";
 
-const CustomEditor = ({ onChange }) => {
+const CustomEditor = ({ onChange, defaultData }) => {
   return (
     <>
       <CKEditor
@@ -106,7 +106,7 @@ const CustomEditor = ({ onChange }) => {
             ],
             tableToolbar: ["bold", "italic"],
           },
-          initialData: "",
+          initialData: defaultData || "",
         }}
       />
     </>

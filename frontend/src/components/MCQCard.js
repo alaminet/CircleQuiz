@@ -1,6 +1,6 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CaretRightOutlined,
   CopyFilled,
@@ -25,37 +25,45 @@ import {
   Row,
   Col,
   Typography,
+  Modal,
 } from "antd";
 
 import { useSelector } from "react-redux";
 import MCQDescCard from "./MCQDescCard";
-const {  Title, } = Typography;
+import MCQEditModal from "./MCQEditModal";
+import { useRouter } from "next/navigation";
+const { Title, Text } = Typography;
 
 const MCQCard = ({ data }) => {
   const user = useSelector((user) => user.loginSlice.login);
+  const contentRef = useRef(null);
+  const router = useRouter();
   const [showDes, setShowDes] = useState(false);
   const likeExist = data?.like?.some((l) => l == user?._id);
   const [liked, setLiked] = useState(likeExist);
   const [likeCount, setLikeCount] = useState(data?.like.length);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const permalink = `${process.env.NEXT_PUBLIC_API_HOST}/bangla`;
 
   // Card Menu
   const onClick = (e) => {
     console.log("click ", e);
+    if (e.key === "edit") {
+      // setIsModalOpen(true);
+      const id = data?._id;
+      const type = "mcq";
+      const path = `/edit/id=${id}&type=${type}`;
+      console.log(path);
+
+      router.push(path);
+    }
   };
   const menutItem = [
-    {
-      key: "discription",
-      icon: (
-        <Tooltip title="ডিস্ক্রিপশন যুক্ত করুন">
-          <PlusSquareFilled style={{ marginRight: "5px" }} /> Dis.
-        </Tooltip>
-      ),
-    },
     {
       key: "edit",
       icon: (
         <Tooltip title="সংশোধন">
-          <EditFilled style={{ marginRight: "5px" }} /> Edit
+          <EditFilled style={{ marginLeft: "5px" }} />
         </Tooltip>
       ),
     },
@@ -63,8 +71,20 @@ const MCQCard = ({ data }) => {
       key: "copy",
       icon: (
         <Tooltip title="কপি">
-          <CopyFilled style={{ marginRight: "5px" }} />
-          Copy
+          <Text
+            copyable={{
+              tooltips: false,
+              text: async () =>
+                new Promise((resolve) => {
+                  const CopyText = `Qn: ${data?.question}\nAns: ${
+                    data?.options[data?.ans]
+                  }\nSource: ${permalink}`;
+                  let cleanText = CopyText.replace(/<[^>]*>?/gm, "");
+                  setTimeout(() => {
+                    resolve(`${cleanText}`);
+                  }, 500);
+                }),
+            }}></Text>
         </Tooltip>
       ),
     },
@@ -100,12 +120,31 @@ const MCQCard = ({ data }) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const handleCopy = (e) => {
+      const selectedText = window.getSelection().toString();
+      const fullContent = `${selectedText}\nSource: ${permalink}`;
+
+      e.preventDefault();
+      e.clipboardData.setData("text/html", fullContent);
+      e.clipboardData.setData("text/plain", fullContent);
+    };
+
+    const contentElement = contentRef.current;
+    contentElement.addEventListener("copy", handleCopy);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      contentElement.removeEventListener("copy", handleCopy);
+    };
+  }, []);
   return (
     <>
-      <Card style={{ marginBottom: "10px" }}>
+      <Card style={{ marginBottom: "10px" }} ref={contentRef}>
         <div>
           <Row justify="space-between">
-            <Col xs={24} md={18}>
+            <Col xs={24} md={16}>
               <div>
                 <Title level={5} style={{ margin: "0" }}>
                   <span
@@ -113,7 +152,7 @@ const MCQCard = ({ data }) => {
                 </Title>
               </div>
             </Col>
-            <Col xs={24} md={6}>
+            <Col xs={24} md={8}>
               <Menu
                 onClick={onClick}
                 mode="horizontal"
@@ -207,6 +246,11 @@ const MCQCard = ({ data }) => {
           )}
         </div>
       </Card>
+      <MCQEditModal
+        ModalOpen={isModalOpen}
+        setModalOpen={setIsModalOpen}
+        data={data}
+      />
     </>
   );
 };
