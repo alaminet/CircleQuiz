@@ -19,6 +19,7 @@ import CustomEditor from "@/components/CustomEditor";
 const MCQEdit = ({ id }) => {
   const user = useSelector((user) => user?.loginSlice?.login);
   const [ckForm] = Form?.useForm();
+  const [editItem, setEditItem] = useState();
   const [error, setError] = useState(null);
   const [loadings, setLoadings] = useState(false);
   const [questionVal, setQuestionVal] = useState("");
@@ -33,7 +34,6 @@ const MCQEdit = ({ id }) => {
   const [tagName, setTagName] = useState([]);
   const inputRef = useRef(null);
   const [slugVal, setSlugVal] = useState("");
-  const [editItem, setEditItem] = useState();
 
   // slug change
   const handleTitleChange = (e) => {
@@ -100,13 +100,12 @@ const MCQEdit = ({ id }) => {
   // Form Submit
   const onFinish = async (values) => {
     setLoadings(true);
-    let completeValues = { ...values, createdBy: user?._id };
-    // console.log("Success:", user);
     try {
       setError(null);
-      const result = await postMCQData({ data: completeValues });
+      const result = await postMCQData(values);
+      console.log(result);
+
       message.success(result.message);
-      ckForm.resetFields();
       setLoadings(false);
     } catch (error) {
       setError(error.message);
@@ -199,9 +198,15 @@ const MCQEdit = ({ id }) => {
       );
       const data = await res.json();
       setEditItem(data?.view);
+
       ckForm?.setFieldsValue({
         id: data?.view?._id,
         answer: data?.view?.ans,
+        question: data?.view?.question,
+        optA: data?.view?.options[0],
+        optB: data?.view?.options[1],
+        optC: data?.view?.options[2],
+        optD: data?.view?.options[3],
         subject: data?.view?.topic._id,
         category: data?.view?.category._id,
         tag: data?.view?.tag.map((item) => item._id),
@@ -216,7 +221,6 @@ const MCQEdit = ({ id }) => {
     getTopics();
     getTag();
   }, []);
-  console.log(editItem);
 
   return (
     <>
@@ -241,6 +245,9 @@ const MCQEdit = ({ id }) => {
                       onFinish={onFinish}
                       onFinishFailed={onFinishFailed}
                       autoComplete="off">
+                      <Form.Item name="id" hidden>
+                        <Input />
+                      </Form.Item>
                       <div>
                         <Form.Item
                           name="question"
@@ -256,6 +263,7 @@ const MCQEdit = ({ id }) => {
                             defaultData={editItem?.question}
                           />
                         </Form.Item>
+
                         <Form.Item hidden>
                           <Input
                             type="hidden"

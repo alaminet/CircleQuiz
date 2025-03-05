@@ -53,8 +53,6 @@ const MCQCard = ({ data }) => {
       const id = data?._id;
       const type = "mcq";
       const path = `/edit/id=${id}&type=${type}`;
-      console.log(path);
-
       router.push(path);
     }
   };
