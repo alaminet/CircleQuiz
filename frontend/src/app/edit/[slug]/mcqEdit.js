@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   Button,
@@ -34,13 +34,6 @@ const MCQEdit = ({ id }) => {
   const [tagName, setTagName] = useState([]);
   const inputRef = useRef(null);
   const [slugVal, setSlugVal] = useState("");
-
-  // slug change
-  const handleTitleChange = (e) => {
-    let titleVal = e.target.value;
-    setTagName(titleVal);
-    setSlugVal(titleVal.split(" ").join("-").toLowerCase());
-  };
 
   // New Tag Added server enviroment
   const postData = async (data) => {

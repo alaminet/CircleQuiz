@@ -1,10 +1,21 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
-import { LikeFilled, LikeOutlined } from "@ant-design/icons";
-import { Avatar, Button, Flex, Row, Col, Typography } from "antd";
+import { EditTwoTone, LikeFilled, LikeOutlined } from "@ant-design/icons";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Row,
+  Col,
+  Typography,
+  Tooltip,
+  Modal,
+  message,
+} from "antd";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import CustomEditor from "./CustomEditor";
 const { Text, Paragraph } = Typography;
 
 const MCQDescCard = ({ data }) => {
@@ -12,6 +23,8 @@ const MCQDescCard = ({ data }) => {
   const likeExist = data?.like?.some((l) => l == user?._id);
   const [liked, setLiked] = useState(likeExist);
   const [likeCount, setLikeCount] = useState(data?.like.length);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [details, setDetails] = useState(data?.post);
   // like server enviroment
   const postLike = async (data) => {
     const response = await fetch(
@@ -43,6 +56,37 @@ const MCQDescCard = ({ data }) => {
       console.log(error);
     }
   };
+
+  // like server enviroment
+  const postUpdate = async (data) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/desupdate`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
+  };
+
+  const handleEdit = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = async () => {
+    const updateData = { postID: data?._id, post: details };
+    const res = await postUpdate(updateData);
+    setIsModalOpen(false);
+    res && message.success(res?.message);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
       <div>
@@ -73,12 +117,17 @@ const MCQDescCard = ({ data }) => {
                     }}>
                     {moment(data.createdAt).fromNow()}
                   </Text>
+                  {user._id === data.posted?._id && (
+                    <Tooltip title="সংশোধন" onClick={handleEdit}>
+                      <EditTwoTone style={{ marginLeft: "5px" }} />
+                    </Tooltip>
+                  )}
                 </Flex>
               </Flex>
             </div>
             <div
               dangerouslySetInnerHTML={{
-                __html: data.post,
+                __html: details || data.post,
               }}
             />
             <Row>
@@ -103,6 +152,15 @@ const MCQDescCard = ({ data }) => {
             </Row>
           </blockquote>
         </Paragraph>
+      </div>
+      <div>
+        <Modal
+          title="Basic Modal"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}>
+          <CustomEditor defaultData={data?.post} onChange={setDetails} />
+        </Modal>
       </div>
     </>
   );

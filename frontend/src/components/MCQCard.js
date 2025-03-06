@@ -3,29 +3,24 @@ import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useRef, useState } from "react";
 import {
   CaretRightOutlined,
-  CopyFilled,
-  EditFilled,
   EyeFilled,
   LikeFilled,
-  PlusSquareFilled,
   ShareAltOutlined,
   BorderOutlined,
   CheckSquareFilled,
   LikeOutlined,
+  EditTwoTone,
 } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
   Card,
   Flex,
-  Radio,
   Tooltip,
   Divider,
   Menu,
   Row,
   Col,
   Typography,
-  Modal,
 } from "antd";
 
 import { useSelector } from "react-redux";
@@ -61,7 +56,7 @@ const MCQCard = ({ data }) => {
       key: "edit",
       icon: (
         <Tooltip title="সংশোধন">
-          <EditFilled style={{ marginLeft: "5px" }} />
+          <EditTwoTone style={{ marginLeft: "5px" }} />
         </Tooltip>
       ),
     },
@@ -82,7 +77,8 @@ const MCQCard = ({ data }) => {
                     resolve(`${cleanText}`);
                   }, 500);
                 }),
-            }}></Text>
+            }}
+          />
         </Tooltip>
       ),
     },
