@@ -105,7 +105,7 @@ const MCQDescCard = ({ data }) => {
                   }}
                   // icon={<AntDesignOutlined />}
                 >
-                  {data.posted?.name.charAt(0)}
+                  {data.posted?.userImg || data.posted?.name.charAt(0)}
                 </Avatar>
                 <Flex justify="space-between" align="center">
                   <Text>{data.posted?.name} |</Text>
@@ -114,7 +114,8 @@ const MCQDescCard = ({ data }) => {
                       display: "block",
                       fontSize: "12px",
                       color: "gray",
-                    }}>
+                    }}
+                  >
                     {moment(data.createdAt).fromNow()}
                   </Text>
                   {user._id === data.posted?._id && (
@@ -143,7 +144,8 @@ const MCQDescCard = ({ data }) => {
                       variant="link"
                       size="small"
                       onClick={handleMCQLike}
-                      style={{ gap: "2px", alignItems: "baseline" }}>
+                      style={{ gap: "2px", alignItems: "baseline" }}
+                    >
                       <LikeOutlined /> {likeCount}
                     </Button>
                   )}
@@ -155,10 +157,11 @@ const MCQDescCard = ({ data }) => {
       </div>
       <div>
         <Modal
-          title="Basic Modal"
+          title="Edit Details"
           open={isModalOpen}
           onOk={handleOk}
-          onCancel={handleCancel}>
+          onCancel={handleCancel}
+        >
           <CustomEditor defaultData={data?.post} onChange={setDetails} />
         </Modal>
       </div>

@@ -1,3 +1,5 @@
+"use client";
+import "@ant-design/v5-patch-for-react-19";
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -139,14 +141,16 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
           open={ModalOpen}
           width="80%"
           onCancel={handleCancel}
-          footer="">
+          footer=""
+        >
           <Form form={editForm} layout="vertical" onFinish={handleOk}>
             <Form.Item hidden name="id"></Form.Item>
             <div>
               <Form.Item
                 name="question"
                 label="Question"
-                rules={[{ required: true, message: "Please input Question!" }]}>
+                rules={[{ required: true, message: "Please input Question!" }]}
+              >
                 <CustomEditor
                   onChange={setQuestionVal}
                   defaultData={editItem?.question}
@@ -163,7 +167,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                   label="Option A"
                   rules={[
                     { required: true, message: "Please input Option A!" },
-                  ]}>
+                  ]}
+                >
                   <CustomEditor
                     onChange={setOptA}
                     defaultData={editItem?.options[0]}
@@ -179,7 +184,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                   label="Option B"
                   rules={[
                     { required: true, message: "Please input Option B!" },
-                  ]}>
+                  ]}
+                >
                   <CustomEditor
                     onChange={setOptB}
                     defaultData={editItem?.options[1]}
@@ -195,7 +201,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                   label="Option C"
                   rules={[
                     { required: true, message: "Please input Option C!" },
-                  ]}>
+                  ]}
+                >
                   <CustomEditor
                     onChange={setOptC}
                     defaultData={editItem?.options[2]}
@@ -211,7 +218,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                   label="Option D"
                   rules={[
                     { required: true, message: "Please input Option D!" },
-                  ]}>
+                  ]}
+                >
                   <CustomEditor
                     onChange={setOptD}
                     defaultData={editItem?.options[3]}
@@ -227,7 +235,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                 <Form.Item
                   name="answer"
                   label="Correct Answer"
-                  rules={[{ required: true, message: "Slect Correct Ans!" }]}>
+                  rules={[{ required: true, message: "Slect Correct Ans!" }]}
+                >
                   <Select
                     showSearch
                     placeholder="Select Answer"
@@ -260,7 +269,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                   style={{
                     width: 300,
                   }}
-                  rules={[{ required: true, message: "Slect Category!" }]}>
+                  rules={[{ required: true, message: "Slect Category!" }]}
+                >
                   <Select
                     showSearch
                     placeholder="Select Category"
@@ -278,7 +288,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                   }}
                   rules={[
                     { required: true, message: "Slect Related Subject!" },
-                  ]}>
+                  ]}
+                >
                   <Select
                     showSearch
                     placeholder="Select Subject"
@@ -307,7 +318,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                         <Space
                           style={{
                             padding: "0 8px 4px",
-                          }}>
+                          }}
+                        >
                           <Input
                             placeholder="Please enter item"
                             ref={inputRef}
@@ -318,7 +330,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                           <Button
                             type="text"
                             icon={<PlusOutlined />}
-                            onClick={addItem}>
+                            onClick={addItem}
+                          >
                             Add item
                           </Button>
                         </Space>
@@ -337,7 +350,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                 {
                   required: true,
                 },
-              ]}>
+              ]}
+            >
               <Radio.Group
                 options={[
                   {
@@ -368,7 +382,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
                   loading={loading}
                   disabled={loading}
                   type="primary"
-                  htmlType="submit">
+                  htmlType="submit"
+                >
                   Q&A Update
                 </Button>
               </Space>

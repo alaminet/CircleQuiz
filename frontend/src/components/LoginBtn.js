@@ -35,14 +35,14 @@ const LoginBtn = () => {
 
           dispatch(
             Loginuser({
-              ...feedback?.dataExist,
+              ...feedback?.userExist,
               userImg: session?.user?.image,
             })
           );
           localStorage.setItem(
             "user",
             JSON.stringify({
-              ...feedback?.dataExist,
+              ...feedback?.userExist,
               userImg: session?.user?.image,
             })
           );
@@ -66,18 +66,19 @@ const LoginBtn = () => {
       {status === "authenticated" ? (
         <Flex gap={10}>
           <Tooltip title="Add Q&A">
-          <Button
-            onClick={() => router.push("/addmcq")}
-            type="primary"
-            shape="round"
-            icon={<PlusCircleOutlined />}>
-            Add Q&A
-          </Button>
-        </Tooltip>
+            <Button
+              onClick={() => router.push("/addmcq")}
+              type="primary"
+              shape="round"
+              icon={<PlusCircleOutlined />}
+            >
+              Add Q&A
+            </Button>
+          </Tooltip>
           <Button type="primary" onClick={handleLogout}>
             Log out
           </Button>
-          <Avatar src={user?.userImg || url} alt="avater" />
+          <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
         </Flex>
       ) : (
         <Flex>

@@ -10,6 +10,8 @@ import {
   CheckSquareFilled,
   LikeOutlined,
   EditTwoTone,
+  PlusSquareOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -21,12 +23,15 @@ import {
   Row,
   Col,
   Typography,
+  Modal,
+  message,
 } from "antd";
 
 import { useSelector } from "react-redux";
 import MCQDescCard from "./MCQDescCard";
 import MCQEditModal from "./MCQEditModal";
 import { useRouter } from "next/navigation";
+import CustomEditor from "./CustomEditor";
 const { Title, Text } = Typography;
 
 const MCQCard = ({ data }) => {
@@ -38,10 +43,12 @@ const MCQCard = ({ data }) => {
   const [liked, setLiked] = useState(likeExist);
   const [likeCount, setLikeCount] = useState(data?.like.length);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPostModal, setIsPostModal] = useState(false);
+  const [details, setDetails] = useState();
   const permalink = `${process.env.NEXT_PUBLIC_API_HOST}/bangla`;
 
   // Card Menu
-  const onClick = (e) => {
+  const onClick = async (e) => {
     console.log("click ", e);
     if (e.key === "edit") {
       // setIsModalOpen(true);
@@ -50,13 +57,24 @@ const MCQCard = ({ data }) => {
       const path = `/edit/id=${id}&type=${type}`;
       router.push(path);
     }
+    if (e.key === "addDes") {
+      setIsPostModal(true);
+    }
   };
   const menutItem = [
+    {
+      key: "addDes",
+      icon: (
+        <Tooltip title="বিস্তারিত">
+          <PlusSquareOutlined />
+        </Tooltip>
+      ),
+    },
     {
       key: "edit",
       icon: (
         <Tooltip title="সংশোধন">
-          <EditTwoTone style={{ marginLeft: "5px" }} />
+          <EditTwoTone />
         </Tooltip>
       ),
     },
@@ -83,6 +101,33 @@ const MCQCard = ({ data }) => {
       ),
     },
   ];
+  // Add Des. server enviroment
+  const addDesPost = async (data) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/adddes`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
+  };
+  // New Post Handler
+  const handlePostOk = async () => {
+    const newData = { postID: data?._id, posted: user?._id, post: details };
+    const res = await addDesPost(newData);
+    setIsPostModal(false);
+    res && message.success(res?.message);
+  };
+  const handlePostCancel = () => {
+    setIsPostModal(false);
+  };
   // like server enviroment
   const postLike = async (data) => {
     const response = await fetch(
@@ -142,7 +187,8 @@ const MCQCard = ({ data }) => {
               <div>
                 <Title level={5} style={{ margin: "0" }}>
                   <span
-                    dangerouslySetInnerHTML={{ __html: data?.question }}></span>
+                    dangerouslySetInnerHTML={{ __html: data?.question }}
+                  ></span>
                 </Title>
               </div>
             </Col>
@@ -163,7 +209,8 @@ const MCQCard = ({ data }) => {
               <Col
                 key={k}
                 span={12}
-                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}
+              >
                 {k === data?.ans ? (
                   <CheckSquareFilled style={{ color: "green" }} />
                 ) : (
@@ -192,7 +239,8 @@ const MCQCard = ({ data }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}>
+                  onClick={() => setShowDes(!showDes)}
+                >
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -211,7 +259,8 @@ const MCQCard = ({ data }) => {
                     variant="link"
                     size="small"
                     onClick={handleMCQLike}
-                    style={{ gap: "2px", alignItems: "baseline" }}>
+                    style={{ gap: "2px", alignItems: "baseline" }}
+                  >
                     <LikeOutlined /> {likeCount}
                   </Button>
                 )}
@@ -219,7 +268,8 @@ const MCQCard = ({ data }) => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <ShareAltOutlined />
                 </Button>
               </Flex>
@@ -245,6 +295,16 @@ const MCQCard = ({ data }) => {
         setModalOpen={setIsModalOpen}
         data={data}
       />
+      <div>
+        <Modal
+          title="Add Details"
+          open={isPostModal}
+          onOk={handlePostOk}
+          onCancel={handlePostCancel}
+        >
+          <CustomEditor onChange={setDetails} />
+        </Modal>
+      </div>
     </>
   );
 };

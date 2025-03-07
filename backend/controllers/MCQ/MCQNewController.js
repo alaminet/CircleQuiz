@@ -3,6 +3,8 @@ const MCQ = require("../../model/MCQModel");
 const MCQNewController = async (req, res) => {
   try {
     const { data } = req.body;
+    console.log(data);
+
     const createdAt = Date.now();
     const dataExist = await MCQ.findOne({ question: data.question });
     if (

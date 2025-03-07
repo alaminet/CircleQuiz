@@ -13,19 +13,7 @@ const MCQUpdateSingleController = async (req, res) => {
     category,
     tag,
   } = req.body;
-  //   console.log(
-  //     id,
-  //     question,
-  //     optA,
-  //     optB,
-  //     optC,
-  //     optD,
-  //     ans,
-  //     subject,
-  //     category,
-  //     tag
-  //   );
-
+  
   try {
     await MCQ.findByIdAndUpdate(
       id,

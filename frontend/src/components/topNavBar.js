@@ -218,7 +218,6 @@ const TopNavBar = () => {
         <Tooltip title="search">
           <Button shape="circle" icon={<SearchOutlined />} />
         </Tooltip>
-        
         <LoginBtn />
       </Flex>
     </>
