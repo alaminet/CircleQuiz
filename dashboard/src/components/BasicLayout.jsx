@@ -65,9 +65,9 @@ const items = [
         label: "Add Single Q&A",
       },
       {
-        key: "addqabulk",
+        key: "viewdetails",
         icon: <QuestionCircleOutlined />,
-        label: "Add bulk Q&A",
+        label: "View Details",
       },
       {
         key: "viewqa",
@@ -133,7 +133,8 @@ const BasicLayout = () => {
         }}
         onCollapse={(collapsed, type) => {
           // console.log(collapsed, type);
-        }}>
+        }}
+      >
         {/* <div>
           <p style={{ color: "white" }}>logo</p>
         </div> */}
@@ -151,11 +152,13 @@ const BasicLayout = () => {
           style={{
             padding: 0,
             background: colorBgContainer,
-          }}>
+          }}
+        >
           <Row
             justify="space-between"
             align="middle"
-            style={{ padding: "0 10px" }}>
+            style={{ padding: "0 10px" }}
+          >
             <Col xs={20} style={{ overflow: "hidden" }}>
               <Typography>
                 <Title
@@ -163,7 +166,8 @@ const BasicLayout = () => {
                   style={{
                     margin: 0,
                     color: "#1C1C1C",
-                  }}>
+                  }}
+                >
                   Hello; {user.name}
                 </Title>
                 <Text type="secondary" style={{ textWrap: "nowrap" }}>
@@ -186,21 +190,24 @@ const BasicLayout = () => {
         <Content
           style={{
             margin: "24px 16px 0",
-          }}>
+          }}
+        >
           <div
             style={{
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-            }}>
+            }}
+          >
             <Outlet />
           </div>
         </Content>
         <Footer
           style={{
             textAlign: "center",
-          }}>
+          }}
+        >
           CircleQuiz ©{new Date().getFullYear()} Created by CircleThemeBD
         </Footer>
       </Layout>

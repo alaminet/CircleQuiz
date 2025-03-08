@@ -20,6 +20,7 @@ import ViewQA from "./pages/ViewQA";
 import Exam from "./pages/Exam";
 import AddCategory from "./pages/AddCategory";
 import AddTag from "./pages/AddTag";
+import ViewDetails from "./pages/ViewDetails";
 
 function App() {
   const router = createBrowserRouter(
@@ -34,6 +35,7 @@ function App() {
             <Route path="addtag" element={<AddTag />}></Route>
             <Route path="addexam" element={<AddExam />}></Route>
             <Route path="addqa" element={<AddQA />}></Route>
+            <Route path="viewdetails" element={<ViewDetails />}></Route>
             <Route path="viewqa" element={<ViewQA />}></Route>
             <Route path="subjects" element={<TopicsHome />}></Route>
             <Route path="bookmarks" element={<Bookmarks />}></Route>

@@ -279,11 +279,14 @@ const MCQCard = ({ data }) => {
             <>
               <div>
                 <Card type="inner" style={{ backgroundColor: "#fafafa" }}>
-                  {data?.des?.map((desc, d) => (
-                    <div key={d}>
-                      <MCQDescCard data={desc} />
-                    </div>
-                  ))}
+                  {data?.des?.map(
+                    (desc, d) =>
+                      desc?.status === "approved" && (
+                        <div key={d}>
+                          <MCQDescCard data={desc} />
+                        </div>
+                      )
+                  )}
                 </Card>
               </div>
             </>

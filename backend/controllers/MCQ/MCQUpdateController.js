@@ -1,8 +1,7 @@
 const MCQ = require("../../model/MCQModel");
 
 const MCQUpdateController = async (req, res) => {
-  const { id, question, options, ans, topic, status, category, tag } =
-    req.body;
+  const { id, question, options, ans, topic, status, category, tag } = req.body;
 
   try {
     await MCQ.findByIdAndUpdate(

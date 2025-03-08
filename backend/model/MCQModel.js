@@ -39,6 +39,11 @@ const MCQModel = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Users",
         },
+        status: {
+          type: String,
+          enum: ["waiting", "approved", "hold", "delete"],
+          default: "waiting",
+        },
       },
     ],
     topic: {
