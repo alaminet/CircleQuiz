@@ -45,50 +45,44 @@ const ExamFinished = () => {
         <>
           <div>
             {examResult?.map((item, i) => (
-              <>
-                <div key={i}>
-                  <p style={{ display: "flex", gap: "10px" }}>
-                    <span>{i + 1 + ". "}</span>
-                    <span>{item?.content}</span>
-                  </p>
-                  <p style={{ display: "flex", gap: "10px", margin: "0" }}>
-                    <span style={{ fontWeight: "bold" }}>Options:</span>
-                    {item?.options?.map((opt, j) => (
-                      <>
-                        <div key={j} style={{ display: "flex", gap: "5px" }}>
-                          <span>{j + 1 + ". "}</span>
+              <div key={i}>
+                <p style={{ display: "flex", gap: "10px" }}>
+                  <span>{i + 1 + ". "}</span>
+                  <span>{item?.content}</span>
+                </p>
+                <p style={{ display: "flex", gap: "10px", margin: "0" }}>
+                  <span style={{ fontWeight: "bold" }}>Options:</span>
+                  {item?.options?.map((opt, j) => (
+                    <div key={j} style={{ display: "flex", gap: "5px" }}>
+                      <span>{j + 1 + ". "}</span>
 
-                          {/* <Radio.Group
-                              buttonSolidCheckedActiveBg="#fff"
-                              type="select"
-                              value={item.ansSelect}
-                              options={[opt]}
-                            /> */}
-                          <div>
-                            <span>{opt?.label} </span>
-                            {item?.ansSelect === opt?.value && (
-                              <CheckOutlined style={{ fontWeight: "bold" }} />
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    ))}
-                  </p>
-                  <p style={{ marginTop: "0", display: "flex", gap: "5px" }}>
-                    <span style={{ fontWeight: "bold" }}>Ans:</span>
-                    <span
-                      style={{
-                        color:
-                          item?.ansCorrect === item?.ansSelect
-                            ? "green"
-                            : "red",
-                      }}
-                    >
-                      {item?.options[item?.ansCorrect - 1].label}
-                    </span>
-                  </p>
-                </div>
-              </>
+                      {/* <Radio.Group
+                      buttonSolidCheckedActiveBg="#fff"
+                      type="select"
+                      value={item.ansSelect}
+                      options={[opt]}
+                    /> */}
+                      <div>
+                        <span>{opt?.label} </span>
+                        {item?.ansSelect === opt?.value && (
+                          <CheckOutlined style={{ fontWeight: "bold" }} />
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </p>
+                <p style={{ marginTop: "0", display: "flex", gap: "5px" }}>
+                  <span style={{ fontWeight: "bold" }}>Ans:</span>
+                  <span
+                    style={{
+                      color:
+                        item?.ansCorrect === item?.ansSelect ? "green" : "red",
+                    }}
+                  >
+                    {item?.options[item?.ansCorrect - 1].label}
+                  </span>
+                </p>
+              </div>
             ))}
           </div>
         </>

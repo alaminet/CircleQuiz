@@ -14,7 +14,6 @@ const MCQLikeController = async (req, res) => {
     await res.status(200).send({ message: "MCQ Liked" });
   } catch (error) {
     await res.status(401).send(error);
-    console.log(error);
   }
 };
 

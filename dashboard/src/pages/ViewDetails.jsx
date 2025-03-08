@@ -9,16 +9,23 @@ import {
   Table,
   Tooltip,
   Flex,
+  Modal,
+  Select,
 } from "antd";
-import { EditTwoTone, PlusOutlined, DeleteTwoTone } from "@ant-design/icons";
+import { EditTwoTone, DeleteTwoTone } from "@ant-design/icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import CKEditorInput from "../components/CKEditorInput";
 
 const ViewDetails = () => {
   const user = useSelector((user) => user.loginSlice.login);
   const [form] = Form.useForm();
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [queryData, setQueryData] = useState([]);
+  const [isPostModal, setIsPostModal] = useState(false);
+  const [editItem, setEditItem] = useState();
+  const [editDtls, setEditDtls] = useState(editItem?.post);
 
   // table arrangment
   const columns = [
@@ -51,6 +58,31 @@ const ViewDetails = () => {
       dataIndex: "status",
       key: "status",
       width: 100,
+      render: (status, record) => (
+        <Select
+          defaultValue={status}
+          style={{ minWidth: "100px" }}
+          onChange={(e) => handleStatus(e, record.action._id)}
+          options={[
+            {
+              label: "Approve",
+              value: "approved",
+            },
+            {
+              label: "Waiting",
+              value: "waiting",
+            },
+            {
+              label: "Hold",
+              value: "hold",
+            },
+            {
+              label: "Delete",
+              value: "delete",
+            },
+          ]}
+        />
+      ),
     },
     {
       title: "Action",
@@ -70,7 +102,7 @@ const ViewDetails = () => {
               </Tooltip>
               <Tooltip title="Delete">
                 <Button
-                  // onClick={() => handleDelete(record)}
+                  onClick={() => handleDelete(record.action._id)}
                   icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
                 />
               </Tooltip>
@@ -83,6 +115,7 @@ const ViewDetails = () => {
   // Add new Topic
   const handleFind = async (values) => {
     setLoading(true);
+    setQueryData(null);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/v1/api/mcq/viewdesstatus`,
@@ -91,24 +124,17 @@ const ViewDetails = () => {
           status: values?.status,
         }
       );
-
       setLoading(false);
-      form.resetFields();
       message.success(res.data.message);
       let tableArr = [];
       let y = 1;
-      //   console.log(res?.data);
-
       res?.data?.viewArr?.map((item) => {
-        item.map((q) => {
-          console.log(q);
-          tableArr.push({
-            sl: y++,
-            question: q?.qn,
-            details: q?.details.post,
-            status: q?.details.status,
-            action: q?.details,
-          });
+        tableArr.push({
+          sl: y++,
+          question: item?.qn,
+          details: item?.details.post,
+          status: item?.details.status,
+          action: item?.details,
         });
 
         setQueryData(tableArr);
@@ -120,6 +146,60 @@ const ViewDetails = () => {
   };
   const handleFindFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+  };
+
+  // Edit Post Handler
+  const handleEdit = (values) => {
+    setIsPostModal(true);
+    setEditItem(values);
+    setEditDtls(values.post);
+  };
+  const handlePostOk = async () => {
+    try {
+      if (editItem?.post !== editDtls) {
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_URL}/v1/api/mcq/desupdate`,
+          {
+            postID: editItem?._id,
+            post: editDtls,
+          }
+        );
+        res && message.success(res?.data?.message);
+      }
+      setIsPostModal(false);
+    } catch (error) {
+      console.log(error);
+      setIsPostModal(false);
+    }
+  };
+  const handlePostCancel = () => {
+    setEditItem(null);
+    setIsPostModal(false);
+  };
+
+  // Post Status updated
+  const handleStatus = async (status, postID) => {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/desupdate`,
+      {
+        postID: postID,
+        status: status,
+      }
+    );
+    res && message.success(res?.data?.message);
+  };
+
+  // Post Deleted
+  const handleDelete = async (data) => {
+    // postdlt
+    console.log(data);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/postdlt`,
+      {
+        postID: data,
+      }
+    );
+    res && message.success(res?.data?.message);
   };
 
   return (
@@ -194,24 +274,34 @@ const ViewDetails = () => {
         <div>
           <Input
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Find by Q&A"
+            placeholder="Find by Post"
             variant="filled"
             style={{ marginBottom: "15px" }}
           />
           <Table
             columns={columns}
             tableLayout="auto"
-            dataSource={queryData}
-            // dataSource={
-            //     queryData !== "" &&
-            //     queryData.filter((item) =>
-            //     item.post.toLowerCase().includes(search.toLowerCase())
-            //   )
-            // }
+            // dataSource={queryData}
+            dataSource={
+              queryData !== "" &&
+              queryData?.filter((item) =>
+                item?.details.toLowerCase().includes(search.toLowerCase())
+              )
+            }
             pagination={true}
             bordered
           />
         </div>
+      </div>
+      <div>
+        <Modal
+          title="Edit Details"
+          open={isPostModal}
+          onOk={handlePostOk}
+          onCancel={handlePostCancel}
+        >
+          <CKEditorInput defaultData={editDtls} onChange={setEditDtls} />
+        </Modal>
       </div>
     </>
   );

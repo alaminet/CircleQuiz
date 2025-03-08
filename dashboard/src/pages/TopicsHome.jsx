@@ -32,52 +32,50 @@ const TopicsHome = () => {
       <div>
         <Row gutter={[16, 16]} justify="start" align="middle">
           {tbllist?.map((item, i) => (
-            <>
-              <Col key={i} xs={12} lg={6}>
-                <Flex
-                  justify="space-between"
-                  wrap
-                  gap="small"
-                  style={{
-                    boxShadow: "rgba(0, 0, 0, 0.09) 0px 5px 12px 4px",
-                    borderRadius: "14px",
-                    margin: "0 auto",
-                    textAlign: "center",
-                  }}
-                >
-                  <Card style={{ width: "100%" }} bordered={false}>
+            <Col key={i} xs={12} lg={6}>
+              <Flex
+                justify="space-between"
+                wrap
+                gap="small"
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.09) 0px 5px 12px 4px",
+                  borderRadius: "14px",
+                  margin: "0 auto",
+                  textAlign: "center",
+                }}
+              >
+                <Card style={{ width: "100%" }} bordered={false}>
+                  <div>
                     <div>
-                      <div>
-                        <img src={item?.icon} alt={item?.topics} />
-                      </div>
-                      <div>
-                        <p
-                          style={{
-                            fontSize: "16px",
-                            margin: "0",
-                            lineHeight: "17px",
-                            fontWeight: "500",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          {item?.topics}
-                        </p>
-                        {/* <p
+                      <img src={item?.icon} alt={item?.topics} />
+                    </div>
+                    <div>
+                      <p
                         style={{
-                          fontSize: "18px",
+                          fontSize: "16px",
                           margin: "0",
-                          fontWeight: "bold",
-                          color: "#3EB8D4",
+                          lineHeight: "17px",
+                          fontWeight: "500",
+                          textTransform: "uppercase",
                         }}
                       >
-                        {item?.topic} topics
-                      </p> */}
-                      </div>
+                        {item?.topics}
+                      </p>
+                      {/* <p
+                    style={{
+                      fontSize: "18px",
+                      margin: "0",
+                      fontWeight: "bold",
+                      color: "#3EB8D4",
+                    }}
+                  >
+                    {item?.topic} topics
+                  </p> */}
                     </div>
-                  </Card>
-                </Flex>
-              </Col>
-            </>
+                  </div>
+                </Card>
+              </Flex>
+            </Col>
           ))}
         </Row>
       </div>

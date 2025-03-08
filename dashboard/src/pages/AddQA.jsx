@@ -117,7 +117,7 @@ const AddQA = () => {
     );
 
     const tableData = [];
-    data?.data?.view?.map((item, i) => {
+    data?.data?.view?.map((item) => {
       tableData.push({
         label: item?.name,
         value: item?._id,

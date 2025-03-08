@@ -6,20 +6,22 @@ const MCQViewDesStatusController = async (req, res) => {
   try {
     if (type === "MCQ") {
       const viewMCQ = await MCQ.find({ "des.status": status });
-      const viewArr = viewMCQ.map((item) =>
-        item?.des.map(
-          (desc) =>
-            desc.status == status && { qn: item.question, details: desc }
-        )
-      );
-      //   console.log(viewArr);
-
-      return res.status(200).send({ viewArr, message: "Data Query Done!" });
+      const viewArr = [];
+      const viewflt = viewMCQ.map((item) => {
+        item?.des.map((desc) => {
+          if (desc.status == status) {
+            viewArr.push({ qn: item.question, details: desc });
+          }
+        });
+      });
+      return await res
+        .status(200)
+        .send({ viewArr, message: "Data Query Done!" });
     } else {
       return res.status(404).send({ message: "Invalid Data Query" });
     }
   } catch (error) {
-    return res.status(404).send({ error });
+    return await res.status(404).send({ error });
   }
 };
 

@@ -10,6 +10,7 @@ const MCQUpdateSingleController = require("../../controllers/MCQ/MCQUpdateSingle
 const MCQDesPostUpdateController = require("../../controllers/MCQ/MCQDesPostUpdateController");
 const MCQNewDesController = require("../../controllers/MCQ/MCQNewDesController");
 const MCQViewDesStatusController = require("../../controllers/MCQ/MCQViewDesStatusController");
+const MCQDesPostDeleteController = require("../../controllers/MCQ/MCQDesPostDeleteController");
 
 const route = express.Router();
 
@@ -23,6 +24,7 @@ route.post("/mcqlike", MCQLikeController);
 route.post("/desclike", MCQDesLikeController);
 route.post("/desupdate", MCQDesPostUpdateController);
 route.post("/viewdesstatus", MCQViewDesStatusController);
+route.post("/postdlt", MCQDesPostDeleteController);
 route.post("/adddes", MCQNewDesController);
 
 module.exports = route;
