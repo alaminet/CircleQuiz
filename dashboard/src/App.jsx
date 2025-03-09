@@ -21,6 +21,7 @@ import Exam from "./pages/Exam";
 import AddCategory from "./pages/AddCategory";
 import AddTag from "./pages/AddTag";
 import ViewDetails from "./pages/ViewDetails";
+import AddSubCategory from "./pages/AddSubCategory";
 
 function App() {
   const router = createBrowserRouter(
@@ -31,6 +32,7 @@ function App() {
             <Route path="*" element={<Home />}></Route>
             <Route path="" element={<Home />}></Route>
             <Route path="addcategory" element={<AddCategory />}></Route>
+            <Route path="addsubcategory" element={<AddSubCategory />}></Route>
             <Route path="addtopics" element={<AddTopic />}></Route>
             <Route path="addtag" element={<AddTag />}></Route>
             <Route path="addexam" element={<AddExam />}></Route>

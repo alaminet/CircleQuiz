@@ -5,6 +5,7 @@ const CategoryUpdateController = require("../../controllers/Category/CategoryUpd
 
 const route = express.Router();
 
+// Main Category
 route.post("/add", CategoryNewController);
 route.get("/view", CategoryViewAllController);
 route.post("/edit", CategoryUpdateController);
