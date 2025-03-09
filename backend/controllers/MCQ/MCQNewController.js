@@ -3,8 +3,6 @@ const MCQ = require("../../model/MCQModel");
 const MCQNewController = async (req, res) => {
   try {
     const { data } = req.body;
-    console.log(data);
-
     const createdAt = Date.now();
     const dataExist = await MCQ.findOne({ question: data.question });
     if (
@@ -14,6 +12,7 @@ const MCQNewController = async (req, res) => {
       !data.optC ||
       !data.optD ||
       !data.answer ||
+      !data.subcategory ||
       !data.createdBy
     ) {
       return res.status(404).send({ message: "Invalid Data Inserted" });
@@ -25,6 +24,7 @@ const MCQNewController = async (req, res) => {
         ans: data.answer,
         topic: data.subject,
         category: data.category,
+        subcategory: data.subcategory,
         tag: data.tag || null,
         des:
           [

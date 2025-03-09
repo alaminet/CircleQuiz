@@ -29,11 +29,13 @@ const Addmcq = () => {
   const [optD, setOptD] = useState("");
   const [details, setDetails] = useState("");
   const [catList, setCatList] = useState([]);
+  const [subCatList, setSubCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
   const [tagName, setTagName] = useState([]);
   const inputRef = useRef(null);
   const [slugVal, setSlugVal] = useState("");
+  const [catCng, setCatCng] = useState("");
 
   // slug change
   const handleTitleChange = (e) => {
@@ -102,7 +104,7 @@ const Addmcq = () => {
     setLoadings(true);
 
     let completeValues = { ...values, createdBy: user?._id };
-    console.log(user);
+   
     // console.log("Success:", user);
     try {
       setError(null);
@@ -135,7 +137,7 @@ const Addmcq = () => {
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
-      item.status === "approve" &&
+      item.status === "approved" &&
         tableData.push({
           label: item?.name,
           value: item?._id,
@@ -143,6 +145,32 @@ const Addmcq = () => {
       setCatList(tableData);
     });
   };
+
+  // Get Sub-Category List
+
+  const getSubCategory = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/subcategory/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    const tableData = [];
+    data?.view?.map((item) => {
+      item.status === "approved" &&
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+          cat: item?.category?._id,
+        });
+      setSubCatList(tableData);
+    });
+  };
+
   // Get Topics List
   const getTopics = async () => {
     const res = await fetch(
@@ -157,7 +185,7 @@ const Addmcq = () => {
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
-      item.status === "approve" &&
+      item.status === "approved" &&
         tableData.push({
           label: item?.name,
           value: item?._id,
@@ -189,9 +217,11 @@ const Addmcq = () => {
 
   useEffect(() => {
     getCategory();
+    getSubCategory();
     getTopics();
     getTag();
   }, []);
+
   return (
     <>
       <div>
@@ -212,16 +242,14 @@ const Addmcq = () => {
                   layout="vertical"
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                >
+                  autoComplete="off">
                   <div>
                     <Form.Item
                       name="question"
                       label="Question"
                       rules={[
                         { required: true, message: "Please input Question!" },
-                      ]}
-                    >
+                      ]}>
                       <CustomEditor onChange={setQuestionVal} />
                     </Form.Item>
                     <Form.Item hidden>
@@ -239,8 +267,7 @@ const Addmcq = () => {
                         label="Option A"
                         rules={[
                           { required: true, message: "Please input Option A!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptA} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -253,8 +280,7 @@ const Addmcq = () => {
                         label="Option B"
                         rules={[
                           { required: true, message: "Please input Option B!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptB} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -267,8 +293,7 @@ const Addmcq = () => {
                         label="Option C"
                         rules={[
                           { required: true, message: "Please input Option C!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptC} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -281,8 +306,7 @@ const Addmcq = () => {
                         label="Option D"
                         rules={[
                           { required: true, message: "Please input Option D!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setOptD} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -297,8 +321,7 @@ const Addmcq = () => {
                         label="Correct Answer"
                         rules={[
                           { required: true, message: "Slect Correct Ans!" },
-                        ]}
-                      >
+                        ]}>
                         <Select
                           showSearch
                           placeholder="Select Answer"
@@ -331,13 +354,39 @@ const Addmcq = () => {
                         style={{
                           width: 300,
                         }}
-                        rules={[{ required: true, message: "Slect Category!" }]}
-                      >
+                        rules={[
+                          { required: true, message: "Slect Category!" },
+                        ]}>
                         <Select
                           showSearch
                           placeholder="Select Category"
                           optionFilterProp="label"
+                          onChange={(e) => setCatCng(e)}
                           options={catList}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col>
+                      <Form.Item
+                        name="subcategory"
+                        label="Sub Category"
+                        style={{
+                          width: 300,
+                        }}
+                        rules={[
+                          { required: true, message: "Slect Sub-Category!" },
+                        ]}>
+                        <Select
+                          showSearch
+                          placeholder="Select Sub-Category"
+                          optionFilterProp="label"
+                          options={
+                            subCatList !== "" &&
+                            subCatList?.filter((item) =>
+                              item?.cat.includes(catCng)
+                            )
+                          }
+                          // options={subCatList}
                         />
                       </Form.Item>
                     </Col>
@@ -350,8 +399,7 @@ const Addmcq = () => {
                         }}
                         rules={[
                           { required: true, message: "Slect Related Subject!" },
-                        ]}
-                      >
+                        ]}>
                         <Select
                           showSearch
                           placeholder="Select Subject"
@@ -380,8 +428,7 @@ const Addmcq = () => {
                               <Space
                                 style={{
                                   padding: "0 8px 4px",
-                                }}
-                              >
+                                }}>
                                 <Input
                                   placeholder="Please enter item"
                                   ref={inputRef}
@@ -392,8 +439,7 @@ const Addmcq = () => {
                                 <Button
                                   type="text"
                                   icon={<PlusOutlined />}
-                                  onClick={addItem}
-                                >
+                                  onClick={addItem}>
                                   Add item
                                 </Button>
                               </Space>

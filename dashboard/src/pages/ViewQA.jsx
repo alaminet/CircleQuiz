@@ -55,6 +55,7 @@ const ViewQA = () => {
   const [optC, setOptC] = useState(editItem?.options[2]);
   const [optD, setOptD] = useState(editItem?.options[3]);
   const [catList, setCatList] = useState([]);
+  const [subCatList, setSubCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
   const [tagnName, setTagName] = useState([]);
@@ -147,6 +148,7 @@ const ViewQA = () => {
   // edit table data
   const handleEdit = (values) => {
     getCategory();
+    getSubCategory();
     getTopics();
     getTag();
     setIsModalOpen(true);
@@ -161,6 +163,7 @@ const ViewQA = () => {
       answer: values?.ans,
       topic: values?.topic._id,
       category: values?.category._id,
+      subcategory: values?.subcategory._id,
       tag: values?.tag.map((item) => item._id),
       status: values?.status,
     });
@@ -272,12 +275,27 @@ const ViewQA = () => {
     );
     const tableData = [];
     res?.data?.view?.map((item) => {
-      item.status === "approve" &&
+      item.status === "approved" &&
         tableData.push({
           label: item?.name,
           value: item?._id,
         });
       setCatList(tableData);
+    });
+  };
+  // Get Category List
+  const getSubCategory = async () => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/v1/api/subcategory/view`
+    );
+    const tableData = [];
+    res?.data?.view?.map((item) => {
+      item.status === "approved" &&
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+        });
+      setSubCatList(tableData);
     });
   };
   // Get Topics List
@@ -287,7 +305,7 @@ const ViewQA = () => {
     );
     const tableData = [];
     res?.data?.view?.map((item) => {
-      item.status === "approve" &&
+      item.status === "approved" &&
         tableData.push({
           label: item?.name,
           value: item?._id,
@@ -350,8 +368,7 @@ const ViewQA = () => {
             open={isModalOpen}
             width="80%"
             onCancel={handleCancel}
-            footer=""
-          >
+            footer="">
             <Form form={editForm} layout="vertical" onFinish={onFinishEdit}>
               <Form.Item hidden name="id"></Form.Item>
               <div>
@@ -360,8 +377,7 @@ const ViewQA = () => {
                   label="Question"
                   rules={[
                     { required: true, message: "Please input Question!" },
-                  ]}
-                >
+                  ]}>
                   <CKEditorInput
                     onChange={setQuestionVal}
                     defaultData={editItem?.question}
@@ -378,8 +394,7 @@ const ViewQA = () => {
                     label="Option A"
                     rules={[
                       { required: true, message: "Please input Option A!" },
-                    ]}
-                  >
+                    ]}>
                     <CKEditorInput
                       onChange={setOptA}
                       defaultData={editItem?.options[0]}
@@ -395,8 +410,7 @@ const ViewQA = () => {
                     label="Option B"
                     rules={[
                       { required: true, message: "Please input Option B!" },
-                    ]}
-                  >
+                    ]}>
                     <CKEditorInput
                       onChange={setOptB}
                       defaultData={editItem?.options[1]}
@@ -412,8 +426,7 @@ const ViewQA = () => {
                     label="Option C"
                     rules={[
                       { required: true, message: "Please input Option C!" },
-                    ]}
-                  >
+                    ]}>
                     <CKEditorInput
                       onChange={setOptC}
                       defaultData={editItem?.options[2]}
@@ -429,8 +442,7 @@ const ViewQA = () => {
                     label="Option D"
                     rules={[
                       { required: true, message: "Please input Option D!" },
-                    ]}
-                  >
+                    ]}>
                     <CKEditorInput
                       onChange={setOptD}
                       defaultData={editItem?.options[3]}
@@ -446,8 +458,7 @@ const ViewQA = () => {
                   <Form.Item
                     name="answer"
                     label="Correct Answer"
-                    rules={[{ required: true, message: "Slect Correct Ans!" }]}
-                  >
+                    rules={[{ required: true, message: "Slect Correct Ans!" }]}>
                     <Select
                       showSearch
                       placeholder="Select Answer"
@@ -480,13 +491,28 @@ const ViewQA = () => {
                     style={{
                       width: 300,
                     }}
-                    rules={[{ required: true, message: "Slect Category!" }]}
-                  >
+                    rules={[{ required: true, message: "Slect Category!" }]}>
                     <Select
                       showSearch
                       placeholder="Select Category"
                       optionFilterProp="label"
                       options={catList}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name="subcategory"
+                    label="Sub Category"
+                    style={{
+                      width: 300,
+                    }}
+                    rules={[{ required: true, message: "Slect Category!" }]}>
+                    <Select
+                      showSearch
+                      placeholder="Select Category"
+                      optionFilterProp="label"
+                      options={subCatList}
                     />
                   </Form.Item>
                 </Col>
@@ -499,8 +525,7 @@ const ViewQA = () => {
                     }}
                     rules={[
                       { required: true, message: "Slect Related Subject!" },
-                    ]}
-                  >
+                    ]}>
                     <Select
                       showSearch
                       placeholder="Select Subject"
@@ -529,8 +554,7 @@ const ViewQA = () => {
                           <Space
                             style={{
                               padding: "0 8px 4px",
-                            }}
-                          >
+                            }}>
                             <Input
                               placeholder="Please enter item"
                               ref={inputRef}
@@ -541,8 +565,7 @@ const ViewQA = () => {
                             <Button
                               type="text"
                               icon={<PlusOutlined />}
-                              onClick={addItem}
-                            >
+                              onClick={addItem}>
                               Add item
                             </Button>
                           </Space>
@@ -561,13 +584,12 @@ const ViewQA = () => {
                   {
                     required: true,
                   },
-                ]}
-              >
+                ]}>
                 <Radio.Group
                   options={[
                     {
                       label: "Approve",
-                      value: "approve",
+                      value: "approved",
                     },
                     {
                       label: "Waiting",
@@ -593,8 +615,7 @@ const ViewQA = () => {
                     loading={loading}
                     disabled={loading}
                     type="primary"
-                    htmlType="submit"
-                  >
+                    htmlType="submit">
                     Q&A Update
                   </Button>
                 </Space>

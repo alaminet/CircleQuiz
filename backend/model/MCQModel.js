@@ -54,6 +54,10 @@ const MCQModel = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Category",
     },
+    subcategory: {
+      type: Schema.Types.ObjectId,
+      ref: "Subcategory",
+    },
     tag: [
       {
         type: Schema.Types.ObjectId,

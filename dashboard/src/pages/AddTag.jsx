@@ -282,7 +282,7 @@ const AddTag = () => {
                     options={[
                       {
                         label: "Approve",
-                        value: "approve",
+                        value: "approved",
                       },
                       {
                         label: "Waiting",

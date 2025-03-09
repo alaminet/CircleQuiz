@@ -51,8 +51,6 @@ const AddSubCategory = () => {
           category: values.category,
         }
       );
-      console.log(data.data);
-
       setLoading(false);
       setSlugVal("");
       newForm.resetFields();
@@ -68,8 +66,6 @@ const AddSubCategory = () => {
 
   // edit table data
   const handleEdit = (values) => {
-    console.log(values);
-
     setIsModalOpen(true);
     setEditItem(values);
     setSlugVal(values?.slug);
@@ -383,7 +379,7 @@ const AddSubCategory = () => {
                     options={[
                       {
                         label: "Approve",
-                        value: "approve",
+                        value: "approved",
                       },
                       {
                         label: "Waiting",
