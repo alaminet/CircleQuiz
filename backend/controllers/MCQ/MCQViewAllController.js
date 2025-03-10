@@ -5,6 +5,7 @@ const MCQViewAllController = async (req, res) => {
     const view = await MCQ.find()
       .populate("topic")
       .populate("category")
+      .populate("subcategory")
       .populate("tag")
       .populate("des.posted")
       .populate("created");

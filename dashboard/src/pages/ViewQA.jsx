@@ -69,11 +69,7 @@ const ViewQA = () => {
       fixed: "left",
       width: 50,
     },
-    {
-      title: "Topics Name",
-      dataIndex: "topics",
-      key: "topics",
-    },
+
     {
       title: "Question",
       dataIndex: "question",
@@ -113,6 +109,24 @@ const ViewQA = () => {
       render: (ans) => <div dangerouslySetInnerHTML={{ __html: ans }} />,
     },
     {
+      title: "Topics",
+      dataIndex: "topics",
+      key: "topics",
+      width: 120,
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      width: 120,
+    },
+    {
+      title: "Sub Category",
+      dataIndex: "subcategory",
+      key: "subcategory",
+      width: 120,
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -145,83 +159,6 @@ const ViewQA = () => {
     },
   ];
 
-  // edit table data
-  const handleEdit = (values) => {
-    getCategory();
-    getSubCategory();
-    getTopics();
-    getTag();
-    setIsModalOpen(true);
-    setEditItem(values);
-    editForm.setFieldsValue({
-      id: values?._id,
-      question: values?.question,
-      optA: values?.options[0],
-      optB: values?.options[1],
-      optC: values?.options[2],
-      optD: values?.options[3],
-      answer: values?.ans,
-      topic: values?.topic._id,
-      category: values?.category._id,
-      subcategory: values?.subcategory._id,
-      tag: values?.tag.map((item) => item._id),
-      status: values?.status,
-    });
-  };
-
-  const onFinishEdit = async (values) => {
-    // console.log("prev", editItem);
-    // console.log("edit", values);
-    setLoading(true);
-    if (
-      editItem.ans !== values.answer ||
-      editItem.category._id !== values.category ||
-      editItem.options[0] !== values.optA ||
-      editItem.options[1] !== values.optB ||
-      editItem.options[2] !== values.optC ||
-      editItem.options[3] !== values.optD ||
-      editItem.question !== values.question ||
-      editItem.status !== values.status ||
-      editItem.tag.map((item) => item._id) !== values.tag ||
-      editItem.topic?._id !== values.topic
-    ) {
-      try {
-        // id, question, options, ans, des, topic, status,category,tag
-        const update = await axios.post(
-          `${import.meta.env.VITE_API_URL}/v1/api/mcq/edit`,
-          {
-            id: values.id,
-            question: values.question.trim(),
-            options: [
-              values.optA.trim(),
-              values.optB.trim(),
-              values.optC.trim(),
-              values.optD.trim(),
-            ],
-            ans: values.answer,
-            topic: values.topic,
-            category: values.category,
-            tag: values.tag,
-            status: values.status,
-          }
-        );
-        message.success(update.data.message);
-        setLoading(false);
-        setIsModalOpen(false);
-      } catch (error) {
-        setLoading(false);
-        message.error(error.response.data.message);
-      }
-    } else {
-      setLoading(false);
-      setIsModalOpen(false);
-    }
-  };
-  const handleCancel = () => {
-    setLoading(false);
-    setIsModalOpen(false);
-  };
-
   // Add new Tag
   const addItem = async (e) => {
     e.preventDefault();
@@ -247,6 +184,8 @@ const ViewQA = () => {
     const data = await axios.get(
       `${import.meta.env.VITE_API_URL}/v1/api/mcq/viewall`
     );
+    // console.log(data?.data?.view);
+
     const tableData = [];
     let y = 1;
     data?.data?.view?.map((item, i) => {
@@ -254,6 +193,8 @@ const ViewQA = () => {
         dataIndex: i,
         sl: y++,
         topics: item?.topic?.name,
+        category: item?.category?.name,
+        subcategory: item?.subcategory?.name,
         question: item?.question,
         optA: item?.options[0],
         optB: item?.options[1],
@@ -332,7 +273,7 @@ const ViewQA = () => {
   // Q&A Info
   useEffect(() => {
     getQAData();
-  }, [onFinishEdit]);
+  }, []);
   return (
     <>
       <div>
@@ -362,7 +303,7 @@ const ViewQA = () => {
             }}
           />
         </div>
-        <div>
+        {/* <div>
           <Modal
             title="Edit Q&A"
             open={isModalOpen}
@@ -622,7 +563,7 @@ const ViewQA = () => {
               </Form.Item>
             </Form>
           </Modal>
-        </div>
+        </div> */}
       </div>
     </>
   );
