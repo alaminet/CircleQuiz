@@ -46,18 +46,24 @@ const MCQModel = new Schema(
         },
       },
     ],
-    topic: {
-      type: Schema.Types.ObjectId,
-      ref: "Topics",
-    },
-    category: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-    },
-    subcategory: {
-      type: Schema.Types.ObjectId,
-      ref: "Subcategory",
-    },
+    topic: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Topics",
+      },
+    ],
+    category: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+    subcategory: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Subcategory",
+      },
+    ],
     tag: [
       {
         type: Schema.Types.ObjectId,

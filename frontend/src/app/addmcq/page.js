@@ -104,7 +104,7 @@ const Addmcq = () => {
     setLoadings(true);
 
     let completeValues = { ...values, createdBy: user?._id };
-   
+
     // console.log("Success:", user);
     try {
       setError(null);
@@ -358,6 +358,8 @@ const Addmcq = () => {
                           { required: true, message: "Slect Category!" },
                         ]}>
                         <Select
+                          mode="multiple"
+                          allowClear
                           showSearch
                           placeholder="Select Category"
                           optionFilterProp="label"
@@ -377,16 +379,18 @@ const Addmcq = () => {
                           { required: true, message: "Slect Sub-Category!" },
                         ]}>
                         <Select
+                          mode="multiple"
+                          allowClear
                           showSearch
                           placeholder="Select Sub-Category"
                           optionFilterProp="label"
-                          options={
-                            subCatList !== "" &&
-                            subCatList?.filter((item) =>
-                              item?.cat.includes(catCng)
-                            )
-                          }
-                          // options={subCatList}
+                          // options={
+                          //   subCatList !== "" &&
+                          //   subCatList?.filter((item) =>
+                          //     item?.cat.includes(catCng)
+                          //   )
+                          // }
+                          options={subCatList}
                         />
                       </Form.Item>
                     </Col>
@@ -401,6 +405,8 @@ const Addmcq = () => {
                           { required: true, message: "Slect Related Subject!" },
                         ]}>
                         <Select
+                          mode="multiple"
+                          allowClear
                           showSearch
                           placeholder="Select Subject"
                           optionFilterProp="label"

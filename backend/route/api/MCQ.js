@@ -11,6 +11,7 @@ const MCQDesPostUpdateController = require("../../controllers/MCQ/MCQDesPostUpda
 const MCQNewDesController = require("../../controllers/MCQ/MCQNewDesController");
 const MCQViewDesStatusController = require("../../controllers/MCQ/MCQViewDesStatusController");
 const MCQDesPostDeleteController = require("../../controllers/MCQ/MCQDesPostDeleteController");
+const MCQUpdateFieldController = require("../../controllers/MCQ/MCQUpdateFieldController");
 
 const route = express.Router();
 
@@ -20,6 +21,7 @@ route.get("/view/:topic", MCQViewTopicsWiseController);
 route.get("/viewid/:id", MCQViewIDsWiseController);
 route.post("/edit", MCQUpdateController);
 route.post("/editid", MCQUpdateSingleController);
+route.post("/editfield", MCQUpdateFieldController);
 route.post("/mcqlike", MCQLikeController);
 route.post("/desclike", MCQDesLikeController);
 route.post("/desupdate", MCQDesPostUpdateController);

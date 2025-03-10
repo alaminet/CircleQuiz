@@ -17,7 +17,7 @@ import {
   Col,
 } from "antd";
 import { useSelector } from "react-redux";
-import { EditTwoTone, PlusOutlined } from "@ant-design/icons";
+import { DeleteTwoTone, EditTwoTone, PlusOutlined } from "@ant-design/icons";
 
 // Fixed header And colum in table
 import { createStyles } from "antd-style";
@@ -108,28 +108,90 @@ const ViewQA = () => {
       key: "ans",
       render: (ans) => <div dangerouslySetInnerHTML={{ __html: ans }} />,
     },
-    {
-      title: "Topics",
-      dataIndex: "topics",
-      key: "topics",
-      width: 120,
-    },
+
     {
       title: "Category",
       dataIndex: "category",
       key: "category",
-      width: 120,
+      render: (category, item) => (
+        <Select
+          mode="multiple"
+          showSearch
+          placeholder="Category"
+          optionFilterProp="label"
+          defaultValue={category}
+          style={{ width: "220px" }}
+          onChange={(e) => handleCatCng(e, item.action._id)}
+          // onSearch={onSearch}
+          options={catList}
+        />
+      ),
     },
     {
       title: "Sub Category",
       dataIndex: "subcategory",
       key: "subcategory",
-      width: 120,
+      render: (subcategory, item) => (
+        <Select
+          mode="multiple"
+          showSearch
+          placeholder="Sub Category"
+          optionFilterProp="label"
+          defaultValue={subcategory}
+          style={{ width: "220px" }}
+          onChange={(e) => handleSubCatCng(e, item.action._id)}
+          // onSearch={onSearch}
+          options={subCatList}
+        />
+      ),
+    },
+    {
+      title: "Topics",
+      dataIndex: "topics",
+      key: "topics",
+      render: (topic, item) => (
+        <Select
+          mode="multiple"
+          showSearch
+          placeholder="Topics"
+          optionFilterProp="label"
+          defaultValue={topic}
+          style={{ width: "220px" }}
+          onChange={(e) => handleTopicCng(e, item.action._id)}
+          // onSearch={onSearch}
+          options={subjList}
+        />
+      ),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (status, record) => (
+        <Select
+          defaultValue={status}
+          style={{ minWidth: "100px" }}
+          onChange={(e) => handleStatusCng(e, record.action._id)}
+          options={[
+            {
+              label: "Approve",
+              value: "approved",
+            },
+            {
+              label: "Waiting",
+              value: "waiting",
+            },
+            {
+              label: "Hold",
+              value: "hold",
+            },
+            {
+              label: "Delete",
+              value: "delete",
+            },
+          ]}
+        />
+      ),
     },
     {
       title: "Action",
@@ -141,23 +203,90 @@ const ViewQA = () => {
         user.role === "admin" && (
           <>
             <Flex gap={4}>
-              <Tooltip title="Edit">
+              {/* <Tooltip title="Edit">
                 <Button
                   onClick={() => handleEdit(item)}
                   icon={<EditTwoTone />}
                 />
+              </Tooltip> */}
+              <Tooltip title="Delete">
+                <Button
+                  onClick={() => handleDelete(record.action._id)}
+                  icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+                />
               </Tooltip>
-              {/* <Tooltip title="Delete">
-                  <Button
-                    // onClick={() => handleDelete(record)}
-                    icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-                  />
-                </Tooltip> */}
             </Flex>
           </>
         ),
     },
   ];
+
+  // Category Change
+  // field, value, postID
+  const handleCatCng = async (values, post) => {
+    // console.log(values, post);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/editfield`,
+      {
+        field: "category",
+        postID: post,
+        value: values,
+      }
+    );
+    message.success(res?.data.message);
+  };
+
+  // Sub Category Change
+  const handleSubCatCng = async (values, post) => {
+    // console.log(values, post);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/editfield`,
+      {
+        field: "subcategory",
+        postID: post,
+        value: values,
+      }
+    );
+    message.success(res?.data.message);
+  };
+  // Topic Change
+  const handleTopicCng = async (values, post) => {
+    // console.log(values, post);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/editfield`,
+      {
+        field: "topic",
+        postID: post,
+        value: values,
+      }
+    );
+    message.success(res?.data.message);
+  };
+  // Topic Change
+  const handleStatusCng = async (values, post) => {
+    // console.log(values, post);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/editfield`,
+      {
+        field: "status",
+        postID: post,
+        value: values,
+      }
+    );
+    message.success(res?.data.message);
+  };
+  // MCQ Delete
+  const handleDelete = async (values) => {
+    console.log(values);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/editfield`,
+      {
+        field: "delete",
+        postID: values,
+      }
+    );
+    message.success(res?.data.message);
+  };
 
   // Add new Tag
   const addItem = async (e) => {
@@ -192,9 +321,9 @@ const ViewQA = () => {
       tableData.push({
         dataIndex: i,
         sl: y++,
-        topics: item?.topic?.name,
-        category: item?.category?.name,
-        subcategory: item?.subcategory?.name,
+        topics: item?.topic?.map((item) => item._id),
+        category: item?.category?.map((item) => item._id),
+        subcategory: item?.subcategory?.map((item) => item._id),
         question: item?.question,
         optA: item?.options[0],
         optB: item?.options[1],
@@ -273,6 +402,10 @@ const ViewQA = () => {
   // Q&A Info
   useEffect(() => {
     getQAData();
+    getCategory();
+    getTag();
+    getTopics();
+    getSubCategory();
   }, []);
   return (
     <>
