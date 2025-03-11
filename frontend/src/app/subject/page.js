@@ -1,7 +1,7 @@
 import React from "react";
 
 const Subject = () => {
-  return <div>Subject Home</div>;
+  return <div>Subject</div>;
 };
 
 export default Subject;

@@ -3,6 +3,8 @@ const Topics = require("../../model/topicsModel");
 
 const MCQViewTopicsWiseController = async (req, res) => {
   const { topic } = req.params;
+  console.log(topic);
+  
   const findTopic = await Topics.findOne({ slug: topic });
 
   try {

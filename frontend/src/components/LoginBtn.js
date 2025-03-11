@@ -2,13 +2,11 @@
 // import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Avatar, Button, Flex, Tooltip } from "antd";
+import { Avatar, Button, Flex, Popover, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Loginuser } from "@/lib/features/slice/userSlice";
 import { useRouter } from "next/navigation";
 import { PlusCircleOutlined } from "@ant-design/icons";
-const url =
-  "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg";
 
 const LoginBtn = () => {
   const router = useRouter();
@@ -61,6 +59,13 @@ const LoginBtn = () => {
     dispatch(Loginuser(null));
   };
 
+  const content = (
+    <div>
+      <p>Balance $0</p>
+      <p>Content</p>
+    </div>
+  );
+
   return (
     <>
       {status === "authenticated" ? (
@@ -70,15 +75,21 @@ const LoginBtn = () => {
               onClick={() => router.push("/addmcq")}
               type="primary"
               shape="round"
-              icon={<PlusCircleOutlined />}
-            >
+              icon={<PlusCircleOutlined />}>
               Add Q&A
             </Button>
           </Tooltip>
           <Button type="primary" onClick={handleLogout}>
             Log out
           </Button>
-          <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
+          <Popover
+            placement="bottomRight"
+            title={user?.name}
+            content={content}
+            trigger="click">
+            <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
+          </Popover>
+          {/* <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" /> */}
         </Flex>
       ) : (
         <Flex>

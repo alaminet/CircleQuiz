@@ -18,9 +18,12 @@ import LoginBtn from "./LoginBtn";
 
 const TopNavBar = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState("/");
   const [subList, setSubjList] = useState([]);
+  const [jobList, setJobList] = useState([]);
+  const [addmList, setAddmList] = useState([]);
+  const [accadList, setAccadList] = useState([]);
+  const [bookList, setBookList] = useState([]);
 
   // Get Topics List
   const getTopics = async () => {
@@ -44,22 +47,64 @@ const TopNavBar = () => {
       setSubjList(tableData);
     });
   };
+  // Get Category List
+  const getCategory = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/subcategory/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    const JobArr = [];
+    const AccdArr = [];
+    const AddmArr = [];
+    const BookArr = [];
+    data?.view?.map((item) => {
+      if (item.status === "approved") {
+        item.category.name === "Job" &&
+          JobArr.push({
+            label: item?.name,
+            key: item?.slug,
+          });
+        item.category.name === "Academy" &&
+          AccdArr.push({
+            label: item?.name,
+            key: item?.slug,
+          });
+        item.category.name === "Admission" &&
+          AddmArr.push({
+            label: item?.name,
+            key: item?.slug,
+          });
+        item.category.name === "Book" &&
+          BookArr.push({
+            label: item?.name,
+            key: item?.slug,
+          });
+      }
+      // setJobList setAddmList setAccadList setBookList
+      setJobList(JobArr);
+      setAddmList(AddmArr);
+      setAccadList(AccdArr);
+      setBookList(BookArr);
+    });
+  };
 
   useEffect(() => {
     getTopics();
+    getCategory();
   }, []);
-
-  // Login Drawer
-
-  const showDrawer = () => {
-    setOpen(true);
-  };
-  const onClose = () => {
-    setOpen(false);
-  };
 
   // Handle Nav Menu
   const handleMenu = (e) => {
+    // const id = data?._id;
+    // const type = "mcq";
+    // const path = `/edit/id=${id}&type=${type}`;
+
     let path = e?.keyPath.reverse().join("/");
     setCurrent(`/${path}`);
     router.push(`/${path}`);
@@ -73,9 +118,9 @@ const TopNavBar = () => {
     },
     {
       label: "Job Assistant",
-      key: "job",
+      key: "jobs",
       icon: <AppstoreOutlined />,
-      //   disabled: true,
+      children: jobList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
       label: "Subjects",
@@ -85,108 +130,21 @@ const TopNavBar = () => {
     },
     {
       label: "Academy",
-      key: "academy",
+      key: "academic",
       icon: <AimOutlined />,
-      children: [
-        {
-          type: "group",
-          label: "Item 1",
-          children: [
-            {
-              label: "Option 1",
-              key: "setting:21",
-            },
-            {
-              label: "Option 2",
-              key: "setting:22",
-            },
-          ],
-        },
-        {
-          type: "group",
-          label: "Item 2",
-          children: [
-            {
-              label: "Option 3",
-              key: "setting:23",
-            },
-            {
-              label: "Option 4",
-              key: "setting:24",
-            },
-          ],
-        },
-      ],
+      children: accadList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
       label: "Admission",
-      key: "admission",
+      key: "admissions",
       icon: <SolutionOutlined />,
-      children: [
-        {
-          type: "group",
-          label: "Item 1",
-          children: [
-            {
-              label: "Option 1",
-              key: "setting:31",
-            },
-            {
-              label: "Option 2",
-              key: "setting:32",
-            },
-          ],
-        },
-        {
-          type: "group",
-          label: "Item 2",
-          children: [
-            {
-              label: "Option 3",
-              key: "setting:33",
-            },
-            {
-              label: "Option 4",
-              key: "setting:34",
-            },
-          ],
-        },
-      ],
+      children: addmList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
       label: "Books",
       key: "books",
       icon: <ReadOutlined />,
-      children: [
-        {
-          type: "group",
-          label: "Item 1",
-          children: [
-            {
-              label: "Option 1",
-              key: "setting:41",
-            },
-            {
-              label: "Option 2",
-              key: "setting:42",
-            },
-          ],
-        },
-        {
-          type: "group",
-          label: "Item 2",
-          children: [
-            {
-              label: "Option 3",
-              key: "setting:43",
-            },
-            {
-              label: "Option 4",
-              key: "setting:44",
-            },
-          ],
-        },
-      ],
+      children: bookList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
       key: "pricing",
