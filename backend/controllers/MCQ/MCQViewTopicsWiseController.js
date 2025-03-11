@@ -11,6 +11,7 @@ const MCQViewTopicsWiseController = async (req, res) => {
       const view = await MCQ.find({ topic: findTopic._id })
         .populate("topic")
         .populate("category")
+        .populate("subcategory")
         .populate("tag")
         .populate("des.posted")
         .populate("created");

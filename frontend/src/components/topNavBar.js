@@ -36,7 +36,7 @@ const TopNavBar = () => {
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
-      item.status === "approve" &&
+      item.status === "approved" &&
         tableData.push({
           label: item?.name,
           key: item?.slug,

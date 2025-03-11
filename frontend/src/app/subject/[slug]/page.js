@@ -2,10 +2,11 @@
 import React, { useEffect, use, useState } from "react";
 import MCQCard from "@/components/MCQCard";
 import SubjectHeading from "@/components/SubjectHeading";
-import { Col, Row, Skeleton } from "antd";
+import { Col, Layout, Row, Skeleton, theme } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import CardBasicWMore from "@/components/CardBasicWMore";
 import { Pagination } from "antd";
+const { Content, Sider } = Layout;
 
 const Page = ({ params }) => {
   const { slug } = use(params);
@@ -20,11 +21,11 @@ const Page = ({ params }) => {
       const typeCat = typeSearch[1];
       const typeVal = typeSearch[0];
       if (typeCat == "category") {
-        return item?.category?.slug
-          .toLowerCase()
-          .includes(typeVal.toLowerCase());
+        return item?.category?.some((cat) => cat.slug == typeVal);
       } else if (typeCat == "tag") {
         return item?.tag?.some((tags) => tags.slug == typeVal);
+      } else if (typeCat == "subcategory") {
+        return item?.subcategory?.some((subcat) => subcat.slug == typeVal);
       } else {
         return item?.question?.toLowerCase().includes(search.toLowerCase());
       }
@@ -58,7 +59,7 @@ const Page = ({ params }) => {
       const data = await res.json();
       const MCQAppArr = [];
       data?.view.map((item) => {
-        item.status === "approve" && MCQAppArr.push(item);
+        item.status === "approved" && MCQAppArr.push(item);
       });
       setMcqList(MCQAppArr);
     } catch (error) {
@@ -69,43 +70,56 @@ const Page = ({ params }) => {
     getMCQ();
   }, []);
 
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
   return (
     <>
-      <Row gutter={[8, 8]}>
-        <Col md={6}>
+      <Layout>
+        <Sider
+          breakpoint="lg"
+          collapsedWidth="0"
+          style={{
+            background: colorBgContainer,
+          }}>
           <SideListWBadge data={mcqList} search={setTypeSearch} />
-        </Col>
-        <Col md={12}>
-          <div>
-            <SubjectHeading
-              title={slug}
-              search={setSearch}
-              count={mcqList?.length}
-            />
-            {!paginatedData ? (
-              <Skeleton active />
-            ) : (
-              paginatedData?.map((item, i) => (
-                <div key={i}>
-                  <MCQCard data={item} />
-                </div>
-              ))
-            )}
-            <Pagination
-              align="end"
-              current={currentPage}
-              pageSize={pageSize}
-              total={mcqListFiler?.length}
-              onChange={handlePageChange}
-              showSizeChanger
-            />
-          </div>
-        </Col>
-        <Col md={6}>
-          <CardBasicWMore />
-          <CardBasicWMore />
-        </Col>
-      </Row>
+        </Sider>
+        <Content>
+          <Row gutter={[8, 8]}>
+            <Col md={18}>
+              <div>
+                <SubjectHeading
+                  title={slug}
+                  search={setSearch}
+                  count={mcqList?.length}
+                />
+                {!paginatedData ? (
+                  <Skeleton active />
+                ) : (
+                  paginatedData?.map((item, i) => (
+                    <div key={i}>
+                      <MCQCard data={item} />
+                    </div>
+                  ))
+                )}
+                <Pagination
+                  align="end"
+                  current={currentPage}
+                  pageSize={pageSize}
+                  total={mcqListFiler?.length}
+                  onChange={handlePageChange}
+                  showSizeChanger
+                />
+              </div>
+            </Col>
+            <Col md={6}>
+              <CardBasicWMore />
+              <CardBasicWMore />
+            </Col>
+          </Row>
+        </Content>
+      </Layout>
     </>
   );
 };

@@ -1,19 +1,39 @@
 "use client";
 import React from "react";
 import { AppstoreOutlined, MailOutlined } from "@ant-design/icons";
-import { Menu } from "antd";
+import { Layout, Menu } from "antd";
+const { Header, Content, Footer, Sider } = Layout;
 
 const SideListWBadge = ({ data, search }) => {
-  // Unique Data sorting
-  const itemCat = data?.map((item) => {
-    return {
-      key: item.category.slug,
-      label: item.category.name,
-    };
+  // Unique Category sorting
+  let catArr = [];
+  data?.map((item) => {
+    item?.category?.map((cat) => {
+      catArr.push({
+        key: cat.slug,
+        label: cat.name,
+      });
+    });
   });
   const uniqueCat = [
-    ...new Map(itemCat?.map((item) => [item.key, item])).values(),
+    ...new Map(catArr?.map((item) => [item.key, item])).values(),
   ];
+
+  // Unique subCategory sorting
+  let subcatArr = [];
+  data?.map((item) => {
+    item?.subcategory?.map((cat) => {
+      subcatArr.push({
+        key: cat.slug,
+        label: cat.name,
+      });
+    });
+  });
+  const uniqueSubCat = [
+    ...new Map(subcatArr?.map((item) => [item.key, item])).values(),
+  ];
+
+  // Unique Tag sorting
   let tArr = [];
   data?.map((item) => {
     item?.tag?.map((t) => {
@@ -39,6 +59,12 @@ const SideListWBadge = ({ data, search }) => {
       children: uniqueCat,
     },
     {
+      key: "subcategory",
+      label: "Sub Category",
+      icon: <MailOutlined />,
+      children: uniqueSubCat,
+    },
+    {
       key: "tag",
       label: "Tag/Referance",
       icon: <AppstoreOutlined />,
@@ -54,13 +80,15 @@ const SideListWBadge = ({ data, search }) => {
     },
   ];
   return (
-    <Menu
-      onClick={handleMenu}
-      mode="inline"
-      items={items}
-      defaultSelectedKeys={["category"]}
-      defaultOpenKeys={["category"]}
-    />
+    <>
+      <Menu
+        onClick={handleMenu}
+        mode="inline"
+        items={items}
+        // defaultSelectedKeys={["category"]}
+        // defaultOpenKeys={["category"]}
+      />
+    </>
   );
 };
 
