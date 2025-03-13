@@ -6,12 +6,12 @@ import {
   AppstoreOutlined,
   HomeOutlined,
   SearchOutlined,
-  PlusCircleOutlined,
   SnippetsOutlined,
   AimOutlined,
   SolutionOutlined,
   ReadOutlined,
   ApiOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import LoginBtn from "./LoginBtn";
@@ -104,8 +104,8 @@ const TopNavBar = () => {
     // const id = data?._id;
     // const type = "mcq";
     // const path = `/edit/id=${id}&type=${type}`;
-
-    let path = e?.keyPath.reverse().join("/");
+    const newArray = e?.keyPath.filter((item) => item !== "rc-menu-more");
+    let path = newArray?.reverse().join("/");
     setCurrent(`/${path}`);
     router.push(`/${path}`);
   };
@@ -164,7 +164,7 @@ const TopNavBar = () => {
         // theme="dark"
         onClick={handleMenu}
         mode="horizontal"
-        defaultSelectedKeys={["mail"]}
+        overflowedIndicator={<MenuOutlined />}
         items={items}
         style={{
           flex: 1,

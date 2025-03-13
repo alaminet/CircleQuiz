@@ -58,7 +58,7 @@ const Page = ({ params }) => {
         }
       );
       const data = await res.json();
-      const MCQAppArr = [];
+        const MCQAppArr = [];
       data?.view.map((item) => {
         item.status === "approved" && MCQAppArr.push(item);
       });

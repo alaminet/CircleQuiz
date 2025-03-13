@@ -2,11 +2,24 @@
 // import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Avatar, Button, Flex, Popover, Tooltip } from "antd";
+import { Avatar, Button, Divider, Flex, Menu, Popover, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Loginuser } from "@/lib/features/slice/userSlice";
 import { useRouter } from "next/navigation";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  AuditOutlined,
+  FileProtectOutlined,
+  HeartOutlined,
+  LogoutOutlined,
+  MailOutlined,
+  NodeIndexOutlined,
+  PlusCircleOutlined,
+  PushpinOutlined,
+  SearchOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 const LoginBtn = () => {
   const router = useRouter();
@@ -59,10 +72,70 @@ const LoginBtn = () => {
     dispatch(Loginuser(null));
   };
 
+  const handleMenu = (e) => {
+    if ((e = "logout")) {
+      handleLogout();
+    }
+  };
+
   const content = (
     <div>
-      <p>Balance $0</p>
-      <p>Content</p>
+      <p>Balance 0.00 BDT</p>
+      <Menu
+        onClick={handleMenu}
+        // style={{
+        //   width: 256,
+        // }}
+        mode="inline"
+        items={[
+          {
+            type: "divider",
+          },
+          {
+            key: "profile",
+            label: "Profile",
+            icon: <UserOutlined />,
+          },
+          {
+            key: "course",
+            label: "Learning Courses",
+            icon: <FileProtectOutlined />,
+          },
+          {
+            key: "exam",
+            label: "Attend Exams",
+            icon: <AuditOutlined />,
+          },
+          {
+            key: "contributions",
+            label: "Contributions",
+            icon: <NodeIndexOutlined />,
+          },
+          {
+            key: "favorite",
+            label: "Favorites",
+            icon: <HeartOutlined />,
+          },
+          {
+            key: "bookmark",
+            label: "Bookmarks",
+            icon: <PushpinOutlined />,
+          },
+          {
+            key: "settings",
+            label: "Settings",
+            icon: <SettingOutlined />,
+          },
+          {
+            type: "divider",
+          },
+          {
+            key: "logout",
+            label: "Logout",
+            icon: <LogoutOutlined />,
+          },
+        ]}
+      />
     </div>
   );
 
@@ -79,9 +152,7 @@ const LoginBtn = () => {
               Add Q&A
             </Button>
           </Tooltip>
-          <Button type="primary" onClick={handleLogout}>
-            Log out
-          </Button>
+
           <Popover
             placement="bottomRight"
             title={user?.name}
