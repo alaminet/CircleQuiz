@@ -11,6 +11,7 @@ const MCQUpdateSingleController = async (req, res) => {
     answer,
     subject,
     category,
+    subcategory,
     tag,
   } = req.body;
   
@@ -25,6 +26,7 @@ const MCQUpdateSingleController = async (req, res) => {
           topic: subject,
           status: "waiting",
           category: category,
+          subcategory: subcategory,
           tag: tag,
         },
       },

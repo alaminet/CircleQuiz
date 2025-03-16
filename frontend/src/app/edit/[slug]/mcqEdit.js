@@ -291,6 +291,7 @@ const MCQEdit = ({ id }) => {
                         <Form.Item
                           name="question"
                           label="Question"
+                          initialValue={editItem?.question}
                           rules={[
                             {
                               required: true,
@@ -316,6 +317,7 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="optA"
                             label="Option A"
+                            initialValue={editItem?.options[0]}
                             rules={[
                               {
                                 required: true,
@@ -335,6 +337,7 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="optB"
                             label="Option B"
+                            initialValue={editItem?.options[1]}
                             rules={[
                               {
                                 required: true,
@@ -354,6 +357,7 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="optC"
                             label="Option C"
+                            initialValue={editItem?.options[2]}
                             rules={[
                               {
                                 required: true,
@@ -373,6 +377,7 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="optD"
                             label="Option D"
+                            initialValue={editItem?.options[3]}
                             rules={[
                               {
                                 required: true,
