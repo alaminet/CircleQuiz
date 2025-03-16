@@ -104,8 +104,8 @@ const TopNavBar = () => {
     // const id = data?._id;
     // const type = "mcq";
     // const path = `/edit/id=${id}&type=${type}`;
-    const newArray = e?.keyPath.filter((item) => item !== "rc-menu-more");
-    let path = newArray?.reverse().join("/");
+    const subjArray = e?.keyPath.filter((item) => item !== "rc-menu-more");
+    let path = subjArray?.reverse().join("/");
     setCurrent(`/${path}`);
     router.push(`/${path}`);
   };
@@ -117,31 +117,51 @@ const TopNavBar = () => {
       icon: <HomeOutlined />,
     },
     {
-      label: "Job Assistant",
+      label: (
+        <a style={{ color: "#000000e0" }} href="/jobs">
+          Job Assistant
+        </a>
+      ),
       key: "jobs",
       icon: <AppstoreOutlined />,
       children: jobList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
-      label: "Subjects",
+      label: (
+        <a style={{ color: "#000000e0" }} href="/subject">
+          Subjects
+        </a>
+      ),
       key: "subject",
       icon: <SnippetsOutlined />,
       children: subList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
-      label: "Academy",
+      label: (
+        <a style={{ color: "#000000e0" }} href="/academic">
+          Academy
+        </a>
+      ),
       key: "academic",
       icon: <AimOutlined />,
       children: accadList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
-      label: "Admission",
+      label: (
+        <a style={{ color: "#000000e0" }} href="/admissions">
+          Admission
+        </a>
+      ),
       key: "admissions",
       icon: <SolutionOutlined />,
       children: addmList?.sort((a, b) => a.label.localeCompare(b.label)),
     },
     {
-      label: "Books",
+      label: (
+        <a style={{ color: "#000000e0" }} href="/books">
+          Books
+        </a>
+      ),
       key: "books",
       icon: <ReadOutlined />,
       children: bookList?.sort((a, b) => a.label.localeCompare(b.label)),

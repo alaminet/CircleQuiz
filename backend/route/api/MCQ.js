@@ -12,12 +12,14 @@ const MCQNewDesController = require("../../controllers/MCQ/MCQNewDesController")
 const MCQViewDesStatusController = require("../../controllers/MCQ/MCQViewDesStatusController");
 const MCQDesPostDeleteController = require("../../controllers/MCQ/MCQDesPostDeleteController");
 const MCQUpdateFieldController = require("../../controllers/MCQ/MCQUpdateFieldController");
+const MCQViewFieldWiseController = require("../../controllers/MCQ/MCQViewFieldWiseController");
 
 const route = express.Router();
 
 route.post("/add", MCQNewController);
 route.get("/viewall", MCQViewAllController);
 route.get("/view/:topic", MCQViewTopicsWiseController);
+route.post("/viewfield", MCQViewFieldWiseController);
 route.get("/viewid/:id", MCQViewIDsWiseController);
 route.post("/edit", MCQUpdateController);
 route.post("/editid", MCQUpdateSingleController);

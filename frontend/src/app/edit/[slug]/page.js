@@ -1,8 +1,9 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { Suspense, use, useEffect, useState } from "react";
 
 import { Col, Row, Skeleton } from "antd";
 import MCQEdit from "./mcqEdit";
+import Loading from "@/app/loading";
 
 const Page = ({ params }) => {
   const [qaType, setQAType] = useState();
@@ -31,7 +32,9 @@ const Page = ({ params }) => {
           {/* <Col md={6}>1</Col> */}
           <Col md={24}>
             {qaType == "mcq" ? (
-              <MCQEdit id={qid} />
+              <Suspense fallback={<Loading />}>
+                <MCQEdit id={qid} />
+              </Suspense>
             ) : qaType == "written" ? (
               "written"
             ) : (

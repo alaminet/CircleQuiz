@@ -9,42 +9,42 @@ const SideListWBadge = ({ data, search }) => {
   let catArr = [];
   data?.map((item) => {
     item?.category?.map((cat) => {
-      catArr.push({
-        key: cat.slug,
-        label: cat.name,
+      catArr?.push({
+        key: cat?.slug,
+        label: cat?.name,
       });
     });
   });
   const uniqueCat = [
-    ...new Map(catArr?.map((item) => [item.key, item])).values(),
+    ...new Map(catArr?.map((item) => [item?.key, item])).values(),
   ];
 
   // Unique subCategory sorting
   let subcatArr = [];
   data?.map((item) => {
     item?.subcategory?.map((cat) => {
-      subcatArr.push({
-        key: cat.slug,
-        label: cat.name,
+      subcatArr?.push({
+        key: cat?.slug,
+        label: cat?.name,
       });
     });
   });
   const uniqueSubCat = [
-    ...new Map(subcatArr?.map((item) => [item.key, item])).values(),
+    ...new Map(subcatArr?.map((item) => [item?.key, item])).values(),
   ];
 
   // Unique Tag sorting
   let tArr = [];
   data?.map((item) => {
     item?.tag?.map((t) => {
-      tArr.push({
-        key: t.slug,
-        label: t.name,
+      tArr?.push({
+        key: t?.slug,
+        label: t?.name,
       });
     });
   });
   const uniqueTag = [
-    ...new Map(tArr?.map((item) => [item.key, item])).values(),
+    ...new Map(tArr?.map((item) => [item?.key, item])).values(),
   ];
 
   const handleMenu = (e) => {

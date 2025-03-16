@@ -285,7 +285,7 @@ const ViewDetails = () => {
             dataSource={
               queryData !== "" &&
               queryData?.filter((item) =>
-                item?.details.toLowerCase().includes(search.toLowerCase())
+                item?.details?.toLowerCase().includes(search?.toLowerCase())
               )
             }
             pagination={true}

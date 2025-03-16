@@ -74,6 +74,7 @@ const ViewQA = () => {
       title: "Question",
       dataIndex: "question",
       key: "question",
+      width: 150,
       render: (question) => (
         <div dangerouslySetInnerHTML={{ __html: question }} />
       ),
@@ -167,6 +168,25 @@ const ViewQA = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      filters: [
+        {
+          text: "Approve",
+          value: "approved",
+        },
+        {
+          text: "Waiting",
+          value: "waiting",
+        },
+        {
+          text: "Hold",
+          value: "hold",
+        },
+        {
+          text: "Delete",
+          value: "delete",
+        },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
       render: (status, record) => (
         <Select
           defaultValue={status}
@@ -424,15 +444,15 @@ const ViewQA = () => {
             tableLayout="auto"
             dataSource={
               qaList !== "" &&
-              qaList.filter((item) =>
+              qaList?.filter((item) =>
                 item.question.toLowerCase().includes(search.toLowerCase())
               )
             }
-            pagination={false}
+            pagination={true}
             bordered
             scroll={{
               x: "max-content",
-              y: 55 * 5,
+              // y: 55 * 5,
             }}
           />
         </div>

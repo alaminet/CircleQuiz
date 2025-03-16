@@ -1,6 +1,6 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import {
   Button,
   Form,
@@ -16,6 +16,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
 import CustomEditor from "@/components/CustomEditor";
 import { useSelector } from "react-redux";
+import Loading from "../loading";
 
 const Addmcq = () => {
   const user = useSelector((user) => user?.loginSlice?.login);
@@ -35,13 +36,21 @@ const Addmcq = () => {
   const [tagName, setTagName] = useState([]);
   const inputRef = useRef(null);
   const [slugVal, setSlugVal] = useState("");
-  const [catCng, setCatCng] = useState("");
+  const [subCatFlt, setSubCatFlt] = useState("");
 
   // slug change
   const handleTitleChange = (e) => {
     let titleVal = e.target.value;
     setTagName(titleVal);
     setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+  };
+
+  // Sub-Category filter
+  const handlCatCng = (e) => {
+    const subCatFilter = subCatList.filter((item) =>
+      e.some((key) => item.cat.includes(key))
+    );
+    setSubCatFlt(subCatFilter);
   };
 
   // New Tag Added server enviroment
@@ -90,7 +99,7 @@ const Addmcq = () => {
     try {
       await postData({ name: tagName, slug: slugVal });
       getTag();
-      setName("");
+      setTagName("");
       setTimeout(() => {
         inputRef.current?.focus();
       }, 0);
@@ -142,7 +151,7 @@ const Addmcq = () => {
           label: item?.name,
           value: item?._id,
         });
-      setCatList(tableData);
+      setCatList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
 
@@ -167,7 +176,7 @@ const Addmcq = () => {
           value: item?._id,
           cat: item?.category?._id,
         });
-      setSubCatList(tableData);
+      setSubCatList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
 
@@ -190,7 +199,7 @@ const Addmcq = () => {
           label: item?.name,
           value: item?._id,
         });
-      setSubjList(tableData);
+      setSubjList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
   // Get Tag List
@@ -211,7 +220,7 @@ const Addmcq = () => {
         label: item?.name,
         value: item?._id,
       });
-      setTagList(tableData);
+      setTagList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
 
@@ -232,245 +241,278 @@ const Addmcq = () => {
               <Title style={{ textAlign: "center" }} level={3}>
                 Add MCQ
               </Title>
-              <div>
-                <Form
-                  form={ckForm}
-                  name="ckForm"
-                  initialValues={{
-                    remember: true,
-                  }}
-                  layout="vertical"
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
-                  autoComplete="off">
-                  <div>
-                    <Form.Item
-                      name="question"
-                      label="Question"
-                      rules={[
-                        { required: true, message: "Please input Question!" },
-                      ]}>
-                      <CustomEditor onChange={setQuestionVal} />
-                    </Form.Item>
-                    <Form.Item hidden>
-                      <Input
-                        type="hidden"
+              <Suspense fallback={<Loading />}>
+                <div>
+                  <Form
+                    form={ckForm}
+                    name="ckForm"
+                    initialValues={{
+                      remember: true,
+                    }}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                  >
+                    <div>
+                      <Form.Item
                         name="question"
-                        value={questionVal}
-                      />
-                    </Form.Item>
-                  </div>
-                  <Row gutter={10}>
-                    <Col md={6}>
-                      <Form.Item
-                        name="optA"
-                        label="Option A"
+                        label="Question"
                         rules={[
-                          { required: true, message: "Please input Option A!" },
-                        ]}>
-                        <CustomEditor onChange={setOptA} />
+                          { required: true, message: "Please input Question!" },
+                        ]}
+                      >
+                        <CustomEditor onChange={setQuestionVal} />
                       </Form.Item>
                       <Form.Item hidden>
-                        <Input type="hidden" name="optA" value={optA} />
+                        <Input
+                          type="hidden"
+                          name="question"
+                          value={questionVal}
+                        />
                       </Form.Item>
-                    </Col>
-                    <Col md={6}>
-                      <Form.Item
-                        name="optB"
-                        label="Option B"
-                        rules={[
-                          { required: true, message: "Please input Option B!" },
-                        ]}>
-                        <CustomEditor onChange={setOptB} />
-                      </Form.Item>
-                      <Form.Item hidden>
-                        <Input type="hidden" name="optB" value={optB} />
-                      </Form.Item>
-                    </Col>
-                    <Col md={6}>
-                      <Form.Item
-                        name="optC"
-                        label="Option C"
-                        rules={[
-                          { required: true, message: "Please input Option C!" },
-                        ]}>
-                        <CustomEditor onChange={setOptC} />
-                      </Form.Item>
-                      <Form.Item hidden>
-                        <Input type="hidden" name="optC" value={optC} />
-                      </Form.Item>
-                    </Col>
-                    <Col md={6}>
-                      <Form.Item
-                        name="optD"
-                        label="Option D"
-                        rules={[
-                          { required: true, message: "Please input Option D!" },
-                        ]}>
-                        <CustomEditor onChange={setOptD} />
-                      </Form.Item>
-                      <Form.Item hidden>
-                        <Input type="hidden" name="optD" value={optD} />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row gutter={10}>
-                    <Col>
-                      <Form.Item
-                        name="answer"
-                        label="Correct Answer"
-                        rules={[
-                          { required: true, message: "Slect Correct Ans!" },
-                        ]}>
-                        <Select
-                          showSearch
-                          placeholder="Select Answer"
-                          optionFilterProp="label"
-                          options={[
+                    </div>
+                    <Row gutter={10}>
+                      <Col md={6}>
+                        <Form.Item
+                          name="optA"
+                          label="Option A"
+                          rules={[
                             {
-                              value: 0,
-                              label: "A",
-                            },
-                            {
-                              value: 1,
-                              label: "B",
-                            },
-                            {
-                              value: 2,
-                              label: "C",
-                            },
-                            {
-                              value: 3,
-                              label: "D",
+                              required: true,
+                              message: "Please input Option A!",
                             },
                           ]}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col>
-                      <Form.Item
-                        name="category"
-                        label="Category"
-                        style={{
-                          width: 300,
-                        }}
-                        rules={[
-                          { required: true, message: "Slect Category!" },
-                        ]}>
-                        <Select
-                          mode="multiple"
-                          allowClear
-                          showSearch
-                          placeholder="Select Category"
-                          optionFilterProp="label"
-                          onChange={(e) => setCatCng(e)}
-                          options={catList}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col>
-                      <Form.Item
-                        name="subcategory"
-                        label="Sub Category"
-                        style={{
-                          width: 300,
-                        }}
-                        rules={[
-                          { required: true, message: "Slect Sub-Category!" },
-                        ]}>
-                        <Select
-                          mode="multiple"
-                          allowClear
-                          showSearch
-                          placeholder="Select Sub-Category"
-                          optionFilterProp="label"
-                          // options={
-                          //   subCatList !== "" &&
-                          //   subCatList?.filter((item) =>
-                          //     item?.cat.includes(catCng)
-                          //   )
-                          // }
-                          options={subCatList}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col>
-                      <Form.Item
-                        name="subject"
-                        label="Related Subject"
-                        style={{
-                          width: 300,
-                        }}
-                        rules={[
-                          { required: true, message: "Slect Related Subject!" },
-                        ]}>
-                        <Select
-                          mode="multiple"
-                          allowClear
-                          showSearch
-                          placeholder="Select Subject"
-                          optionFilterProp="label"
-                          options={subjList}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col>
-                      <Form.Item name="tag" label="Tag/Referance">
-                        <Select
-                          mode="multiple"
-                          allowClear
+                        >
+                          <CustomEditor onChange={setOptA} />
+                        </Form.Item>
+                        <Form.Item hidden>
+                          <Input type="hidden" name="optA" value={optA} />
+                        </Form.Item>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Item
+                          name="optB"
+                          label="Option B"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input Option B!",
+                            },
+                          ]}
+                        >
+                          <CustomEditor onChange={setOptB} />
+                        </Form.Item>
+                        <Form.Item hidden>
+                          <Input type="hidden" name="optB" value={optB} />
+                        </Form.Item>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Item
+                          name="optC"
+                          label="Option C"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input Option C!",
+                            },
+                          ]}
+                        >
+                          <CustomEditor onChange={setOptC} />
+                        </Form.Item>
+                        <Form.Item hidden>
+                          <Input type="hidden" name="optC" value={optC} />
+                        </Form.Item>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Item
+                          name="optD"
+                          label="Option D"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input Option D!",
+                            },
+                          ]}
+                        >
+                          <CustomEditor onChange={setOptD} />
+                        </Form.Item>
+                        <Form.Item hidden>
+                          <Input type="hidden" name="optD" value={optD} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row gutter={10}>
+                      <Col>
+                        <Form.Item
+                          name="answer"
+                          label="Correct Answer"
+                          rules={[
+                            { required: true, message: "Slect Correct Ans!" },
+                          ]}
+                        >
+                          <Select
+                            showSearch
+                            placeholder="Select Answer"
+                            optionFilterProp="label"
+                            options={[
+                              {
+                                value: 0,
+                                label: "A",
+                              },
+                              {
+                                value: 1,
+                                label: "B",
+                              },
+                              {
+                                value: 2,
+                                label: "C",
+                              },
+                              {
+                                value: 3,
+                                label: "D",
+                              },
+                            ]}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col>
+                        <Form.Item
+                          name="category"
+                          label="Category"
                           style={{
-                            minWidth: 300,
+                            width: 300,
                           }}
-                          placeholder="Tag/Ref"
-                          dropdownRender={(menu) => (
-                            <>
-                              {menu}
-                              <Divider
-                                style={{
-                                  margin: "8px 0",
-                                }}
-                              />
-                              <Space
-                                style={{
-                                  padding: "0 8px 4px",
-                                }}>
-                                <Input
-                                  placeholder="Please enter item"
-                                  ref={inputRef}
-                                  value={name}
-                                  onChange={handleTitleChange}
-                                  onKeyDown={(e) => e.stopPropagation()}
+                          rules={[
+                            { required: true, message: "Slect Category!" },
+                          ]}
+                        >
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            showSearch
+                            onChange={handlCatCng}
+                            placeholder="Select Category"
+                            optionFilterProp="label"
+                            options={catList}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col>
+                        <Form.Item
+                          name="subcategory"
+                          label="Sub Category"
+                          style={{
+                            width: 300,
+                          }}
+                          rules={[
+                            { required: true, message: "Slect Sub-Category!" },
+                          ]}
+                        >
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            showSearch
+                            placeholder="Select Sub-Category"
+                            optionFilterProp="label"
+                            // options={
+                            //   subCatList !== "" &&
+                            //   subCatList?.filter((item) =>
+                            //     item?.cat.includes(catCng)
+                            //   )
+                            // }
+                            options={subCatFlt}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col>
+                        <Form.Item
+                          name="subject"
+                          label="Related Subject"
+                          style={{
+                            width: 300,
+                          }}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Slect Related Subject!",
+                            },
+                          ]}
+                        >
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            showSearch
+                            placeholder="Select Subject"
+                            optionFilterProp="label"
+                            options={subjList}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col>
+                        <Form.Item name="tag" label="Tag/Referance">
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{
+                              minWidth: 300,
+                            }}
+                            placeholder="Tag/Ref"
+                            dropdownRender={(menu) => (
+                              <>
+                                {menu}
+                                <Divider
+                                  style={{
+                                    margin: "8px 0",
+                                  }}
                                 />
-                                <Button
-                                  type="text"
-                                  icon={<PlusOutlined />}
-                                  onClick={addItem}>
-                                  Add item
-                                </Button>
-                              </Space>
-                            </>
-                          )}
-                          options={tagList}
-                        />
+                                <Space
+                                  style={{
+                                    padding: "0 8px 4px",
+                                  }}
+                                >
+                                  <Input
+                                    placeholder="Please enter item"
+                                    ref={inputRef}
+                                    value={tagName}
+                                    onChange={handleTitleChange}
+                                    onKeyDown={(e) => e.stopPropagation()}
+                                  />
+                                  <Button
+                                    type="text"
+                                    icon={<PlusOutlined />}
+                                    onClick={addItem}
+                                  >
+                                    Add item
+                                  </Button>
+                                </Space>
+                              </>
+                            )}
+                            options={tagList}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <div>
+                      <Form.Item name="details" label="Details">
+                        <CustomEditor onChange={setDetails} />
                       </Form.Item>
-                    </Col>
-                  </Row>
-                  <div>
-                    <Form.Item name="details" label="Details">
-                      <CustomEditor onChange={setDetails} />
+                      <Form.Item hidden>
+                        <Input type="hidden" name="details" value={details} />
+                      </Form.Item>
+                    </div>
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={loadings}
+                      >
+                        Submit
+                      </Button>
                     </Form.Item>
-                    <Form.Item hidden>
-                      <Input type="hidden" name="details" value={details} />
-                    </Form.Item>
-                  </div>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loadings}>
-                      Submit
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                  </Form>
+                </div>
+              </Suspense>
             </div>
           </Col>
           {/* <Col md={6}>3</Col> */}

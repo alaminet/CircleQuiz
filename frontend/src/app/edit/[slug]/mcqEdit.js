@@ -27,13 +27,29 @@ const MCQEdit = ({ id }) => {
   const [optB, setOptB] = useState("");
   const [optC, setOptC] = useState("");
   const [optD, setOptD] = useState("");
-  const [details, setDetails] = useState("");
   const [catList, setCatList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
   const [tagName, setTagName] = useState([]);
   const inputRef = useRef(null);
   const [slugVal, setSlugVal] = useState("");
+  const [subCatList, setSubCatList] = useState([]);
+  const [subCatFlt, setSubCatFlt] = useState("");
+
+  // slug change
+  const handleTitleChange = (e) => {
+    let titleVal = e.target.value;
+    setTagName(titleVal);
+    setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+  };
+
+  // Sub-Category filter
+  const handlCatCng = (e) => {
+    const subCatFilter = subCatList.filter((item) =>
+      e.some((key) => item.cat.includes(key))
+    );
+    setSubCatFlt(subCatFilter);
+  };
 
   // New Tag Added server enviroment
   const postData = async (data) => {
@@ -125,14 +141,40 @@ const MCQEdit = ({ id }) => {
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
-      item.status === "approve" &&
+      item.status === "approved" &&
         tableData.push({
           label: item?.name,
           value: item?._id,
         });
-      setCatList(tableData);
+      setCatList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
+
+  // Get Sub-Category List
+
+  const getSubCategory = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/subcategory/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    const tableData = [];
+    data?.view?.map((item) => {
+      item.status === "approved" &&
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+          cat: item?.category?._id,
+        });
+      setSubCatList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
+    });
+  };
+
   // Get Topics List
   const getTopics = async () => {
     const res = await fetch(
@@ -147,12 +189,12 @@ const MCQEdit = ({ id }) => {
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
-      item.status === "approve" &&
+      item.status === "approved" &&
         tableData.push({
           label: item?.name,
           value: item?._id,
         });
-      setSubjList(tableData);
+      setSubjList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
   // Get Tag List
@@ -173,7 +215,7 @@ const MCQEdit = ({ id }) => {
         label: item?.name,
         value: item?._id,
       });
-      setTagList(tableData);
+      setTagList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
 
@@ -191,26 +233,31 @@ const MCQEdit = ({ id }) => {
       );
       const data = await res.json();
       setEditItem(data?.view);
+      if (editItem) {
+        // console.log(editItem);
 
-      ckForm?.setFieldsValue({
-        id: data?.view?._id,
-        answer: data?.view?.ans,
-        question: data?.view?.question,
-        optA: data?.view?.options[0],
-        optB: data?.view?.options[1],
-        optC: data?.view?.options[2],
-        optD: data?.view?.options[3],
-        subject: data?.view?.topic._id,
-        category: data?.view?.category._id,
-        tag: data?.view?.tag.map((item) => item._id),
-      });
+        ckForm?.setFieldsValue({
+          id: editItem?._id,
+          answer: editItem?.ans,
+          question: editItem?.question,
+          optA: editItem?.options[0],
+          optB: editItem?.options[1],
+          optC: editItem?.options[2],
+          optD: editItem?.options[3],
+          subject: editItem?.topic.map((item) => item._id),
+          category: editItem?.category.map((item) => item._id),
+          tag: editItem?.tag.map((item) => item._id),
+        });
+      }             
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getMCQ(id);
     getCategory();
+    getSubCategory();
     getTopics();
     getTag();
   }, []);
@@ -230,14 +277,15 @@ const MCQEdit = ({ id }) => {
                   <div>
                     <Form
                       form={ckForm}
-                      name="ckForm"
+                      name="ckFormField"
                       initialValues={{
                         remember: true,
                       }}
                       layout="vertical"
                       onFinish={onFinish}
                       onFinishFailed={onFinishFailed}
-                      autoComplete="off">
+                      autoComplete="off"
+                    >
                       <Form.Item name="id" hidden>
                         <Input />
                       </Form.Item>
@@ -250,7 +298,8 @@ const MCQEdit = ({ id }) => {
                               required: true,
                               message: "Please input Question!",
                             },
-                          ]}>
+                          ]}
+                        >
                           <CustomEditor
                             onChange={setQuestionVal}
                             defaultData={editItem?.question}
@@ -275,7 +324,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option A!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptA}
                               defaultData={editItem?.options[0]}
@@ -294,7 +344,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option B!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptB}
                               defaultData={editItem?.options[1]}
@@ -313,7 +364,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option C!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptC}
                               defaultData={editItem?.options[2]}
@@ -332,7 +384,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option D!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptD}
                               defaultData={editItem?.options[3]}
@@ -350,7 +403,8 @@ const MCQEdit = ({ id }) => {
                             label="Correct Answer"
                             rules={[
                               { required: true, message: "Slect Correct Ans!" },
-                            ]}>
+                            ]}
+                          >
                             <Select
                               showSearch
                               placeholder="Select Answer"
@@ -385,12 +439,46 @@ const MCQEdit = ({ id }) => {
                             }}
                             rules={[
                               { required: true, message: "Slect Category!" },
-                            ]}>
+                            ]}
+                          >
                             <Select
+                              mode="multiple"
+                              allowClear
                               showSearch
+                              onChange={handlCatCng}
                               placeholder="Select Category"
                               optionFilterProp="label"
                               options={catList}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col>
+                          <Form.Item
+                            name="subcategory"
+                            label="Sub Category"
+                            style={{
+                              width: 300,
+                            }}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Slect Sub-Category!",
+                              },
+                            ]}
+                          >
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              showSearch
+                              placeholder="Select Sub-Category"
+                              optionFilterProp="label"
+                              // options={
+                              //   subCatList !== "" &&
+                              //   subCatList?.filter((item) =>
+                              //     item?.cat.includes(catCng)
+                              //   )
+                              // }
+                              options={subCatFlt}
                             />
                           </Form.Item>
                         </Col>
@@ -406,8 +494,11 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Slect Related Subject!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <Select
+                              mode="multiple"
+                              allowClear
                               showSearch
                               placeholder="Select Subject"
                               optionFilterProp="label"
@@ -435,7 +526,8 @@ const MCQEdit = ({ id }) => {
                                   <Space
                                     style={{
                                       padding: "0 8px 4px",
-                                    }}>
+                                    }}
+                                  >
                                     <Input
                                       placeholder="Please enter item"
                                       ref={inputRef}
@@ -448,7 +540,8 @@ const MCQEdit = ({ id }) => {
                                     <Button
                                       type="text"
                                       icon={<PlusOutlined />}
-                                      onClick={addItem}>
+                                      onClick={addItem}
+                                    >
                                       Add item
                                     </Button>
                                   </Space>
@@ -463,7 +556,8 @@ const MCQEdit = ({ id }) => {
                         <Button
                           type="primary"
                           htmlType="submit"
-                          loading={loadings}>
+                          loading={loadings}
+                        >
                           Submit
                         </Button>
                       </Form.Item>

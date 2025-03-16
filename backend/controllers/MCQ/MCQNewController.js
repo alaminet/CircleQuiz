@@ -11,7 +11,7 @@ const MCQNewController = async (req, res) => {
       !data.optB ||
       !data.optC ||
       !data.optD ||
-      !data.answer ||
+      !data.category ||
       !data.subcategory ||
       !data.createdBy
     ) {

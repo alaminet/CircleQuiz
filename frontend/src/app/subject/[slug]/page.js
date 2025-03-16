@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, use, useState } from "react";
+import React, { useEffect, use, useState, Suspense } from "react";
 import MCQCard from "@/components/MCQCard";
 import SubjectHeading from "@/components/SubjectHeading";
 import { Col, Layout, Row, Skeleton, theme } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import CardBasicWMore from "@/components/CardBasicWMore";
 import { Pagination } from "antd";
+import Loading from "@/app/loading";
 const { Content, Sider } = Layout;
 
 const Page = ({ params }) => {
@@ -58,7 +59,7 @@ const Page = ({ params }) => {
         }
       );
       const data = await res.json();
-        const MCQAppArr = [];
+      const MCQAppArr = [];
       data?.view.map((item) => {
         item.status === "approved" && MCQAppArr.push(item);
       });
@@ -83,7 +84,8 @@ const Page = ({ params }) => {
           collapsedWidth="0"
           style={{
             background: colorBgContainer,
-          }}>
+          }}
+        >
           <SideListWBadge data={mcqList} search={setTypeSearch} />
         </Sider>
         <Content>
@@ -95,15 +97,13 @@ const Page = ({ params }) => {
                   search={setSearch}
                   count={mcqList?.length}
                 />
-                {!paginatedData ? (
-                  <Skeleton active />
-                ) : (
-                  paginatedData?.map((item, i) => (
+                <Suspense fallback={<Loading />}>
+                  {paginatedData?.map((item, i) => (
                     <div key={i}>
                       <MCQCard data={item} />
                     </div>
-                  ))
-                )}
+                  ))}
+                </Suspense>
                 <Pagination
                   align="end"
                   current={currentPage}
