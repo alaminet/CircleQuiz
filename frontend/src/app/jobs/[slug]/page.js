@@ -46,7 +46,7 @@ const Page = ({ params }) => {
     currentPage * pageSize
   );
 
-  // Get Tag List
+  // Get MCQ List
   const getMCQ = async (getData) => {
     try {
       const res = await fetch(
@@ -60,6 +60,8 @@ const Page = ({ params }) => {
         }
       );
       const data = await res.json();
+      console.log(data);
+
       const MCQAppArr = [];
       data?.view.map((item) => {
         item.status === "approved" && MCQAppArr.push(item);
@@ -85,8 +87,7 @@ const Page = ({ params }) => {
           collapsedWidth="0"
           style={{
             background: colorBgContainer,
-          }}
-        >
+          }}>
           <SideListWBadge data={mcqList} search={setTypeSearch} />
         </Sider>
         <Content>

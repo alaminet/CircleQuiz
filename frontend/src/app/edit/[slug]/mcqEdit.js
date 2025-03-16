@@ -18,7 +18,7 @@ import CustomEditor from "@/components/CustomEditor";
 
 const MCQEdit = ({ id }) => {
   const user = useSelector((user) => user?.loginSlice?.login);
-  const [ckForm] = Form?.useForm();
+  const [ckform] = Form.useForm();
   const [editItem, setEditItem] = useState();
   const [error, setError] = useState(null);
   const [loadings, setLoadings] = useState(false);
@@ -34,7 +34,7 @@ const MCQEdit = ({ id }) => {
   const inputRef = useRef(null);
   const [slugVal, setSlugVal] = useState("");
   const [subCatList, setSubCatList] = useState([]);
-  const [subCatFlt, setSubCatFlt] = useState("");
+  const [subCatFlt, setSubCatFlt] = useState();
 
   // slug change
   const handleTitleChange = (e) => {
@@ -45,7 +45,7 @@ const MCQEdit = ({ id }) => {
 
   // Sub-Category filter
   const handlCatCng = (e) => {
-    const subCatFilter = subCatList.filter((item) =>
+    const subCatFilter = subCatList?.filter((item) =>
       e.some((key) => item.cat.includes(key))
     );
     setSubCatFlt(subCatFilter);
@@ -172,6 +172,7 @@ const MCQEdit = ({ id }) => {
           cat: item?.category?._id,
         });
       setSubCatList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
+      setSubCatFlt(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
     });
   };
 
@@ -233,22 +234,20 @@ const MCQEdit = ({ id }) => {
       );
       const data = await res.json();
       setEditItem(data?.view);
-      if (editItem) {
-        // console.log(editItem);
-
-        ckForm?.setFieldsValue({
-          id: editItem?._id,
-          answer: editItem?.ans,
-          question: editItem?.question,
-          optA: editItem?.options[0],
-          optB: editItem?.options[1],
-          optC: editItem?.options[2],
-          optD: editItem?.options[3],
-          subject: editItem?.topic.map((item) => item._id),
-          category: editItem?.category.map((item) => item._id),
-          tag: editItem?.tag.map((item) => item._id),
-        });
-      }             
+      // editItem &&
+      //   ckform.setFieldsValue({
+      //     id: data?.view?._id,
+      //     question: data?.view?.question,
+      //     optA: data?.view?.options[0],
+      //     optB: data?.view?.options[1],
+      //     optC: data?.view?.options[2],
+      //     optD: data?.view?.options[3],
+      //     answer: data?.view?.ans,
+      //     subject: data?.view?.topic?.map((item) => item._id),
+      //     category: data?.view?.category?.map((item) => item._id),
+      //     subcategory: data?.view?.subcategory?.map((item) => item._id),
+      //     tag: data?.view?.tag?.map((item) => item._id),
+      //   });
     } catch (error) {
       console.log(error);
     }
@@ -276,7 +275,7 @@ const MCQEdit = ({ id }) => {
                 <>
                   <div>
                     <Form
-                      form={ckForm}
+                      form={ckform}
                       name="ckFormField"
                       initialValues={{
                         remember: true,
@@ -284,9 +283,8 @@ const MCQEdit = ({ id }) => {
                       layout="vertical"
                       onFinish={onFinish}
                       onFinishFailed={onFinishFailed}
-                      autoComplete="off"
-                    >
-                      <Form.Item name="id" hidden>
+                      autoComplete="off">
+                      <Form.Item name="id" hidden initialValue={editItem?._id}>
                         <Input />
                       </Form.Item>
                       <div>
@@ -298,8 +296,7 @@ const MCQEdit = ({ id }) => {
                               required: true,
                               message: "Please input Question!",
                             },
-                          ]}
-                        >
+                          ]}>
                           <CustomEditor
                             onChange={setQuestionVal}
                             defaultData={editItem?.question}
@@ -324,8 +321,7 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option A!",
                               },
-                            ]}
-                          >
+                            ]}>
                             <CustomEditor
                               onChange={setOptA}
                               defaultData={editItem?.options[0]}
@@ -344,8 +340,7 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option B!",
                               },
-                            ]}
-                          >
+                            ]}>
                             <CustomEditor
                               onChange={setOptB}
                               defaultData={editItem?.options[1]}
@@ -364,8 +359,7 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option C!",
                               },
-                            ]}
-                          >
+                            ]}>
                             <CustomEditor
                               onChange={setOptC}
                               defaultData={editItem?.options[2]}
@@ -384,8 +378,7 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option D!",
                               },
-                            ]}
-                          >
+                            ]}>
                             <CustomEditor
                               onChange={setOptD}
                               defaultData={editItem?.options[3]}
@@ -401,10 +394,10 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="answer"
                             label="Correct Answer"
+                            initialValue={editItem?.ans}
                             rules={[
                               { required: true, message: "Slect Correct Ans!" },
-                            ]}
-                          >
+                            ]}>
                             <Select
                               showSearch
                               placeholder="Select Answer"
@@ -434,13 +427,15 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="category"
                             label="Category"
+                            initialValue={editItem?.category?.map(
+                              (item) => item._id
+                            )}
                             style={{
                               width: 300,
                             }}
                             rules={[
                               { required: true, message: "Slect Category!" },
-                            ]}
-                          >
+                            ]}>
                             <Select
                               mode="multiple"
                               allowClear
@@ -456,6 +451,9 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="subcategory"
                             label="Sub Category"
+                            initialValue={editItem?.subcategory?.map(
+                              (item) => item._id
+                            )}
                             style={{
                               width: 300,
                             }}
@@ -464,20 +462,13 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Slect Sub-Category!",
                               },
-                            ]}
-                          >
+                            ]}>
                             <Select
                               mode="multiple"
                               allowClear
                               showSearch
                               placeholder="Select Sub-Category"
                               optionFilterProp="label"
-                              // options={
-                              //   subCatList !== "" &&
-                              //   subCatList?.filter((item) =>
-                              //     item?.cat.includes(catCng)
-                              //   )
-                              // }
                               options={subCatFlt}
                             />
                           </Form.Item>
@@ -486,6 +477,9 @@ const MCQEdit = ({ id }) => {
                           <Form.Item
                             name="subject"
                             label="Related Subject"
+                            initialValue={editItem?.topic?.map(
+                              (item) => item._id
+                            )}
                             style={{
                               width: 300,
                             }}
@@ -494,8 +488,7 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Slect Related Subject!",
                               },
-                            ]}
-                          >
+                            ]}>
                             <Select
                               mode="multiple"
                               allowClear
@@ -507,7 +500,12 @@ const MCQEdit = ({ id }) => {
                           </Form.Item>
                         </Col>
                         <Col>
-                          <Form.Item name="tag" label="Tag/Referance">
+                          <Form.Item
+                            name="tag"
+                            label="Tag/Referance"
+                            initialValue={editItem?.tag?.map(
+                              (item) => item._id
+                            )}>
                             <Select
                               mode="multiple"
                               allowClear
@@ -526,22 +524,18 @@ const MCQEdit = ({ id }) => {
                                   <Space
                                     style={{
                                       padding: "0 8px 4px",
-                                    }}
-                                  >
+                                    }}>
                                     <Input
                                       placeholder="Please enter item"
                                       ref={inputRef}
-                                      value={tagList}
-                                      onChange={(e) =>
-                                        setTagName(e.target.value)
-                                      }
+                                      value={tagName}
+                                      onChange={handleTitleChange}
                                       onKeyDown={(e) => e.stopPropagation()}
                                     />
                                     <Button
                                       type="text"
                                       icon={<PlusOutlined />}
-                                      onClick={addItem}
-                                    >
+                                      onClick={addItem}>
                                       Add item
                                     </Button>
                                   </Space>
@@ -556,8 +550,7 @@ const MCQEdit = ({ id }) => {
                         <Button
                           type="primary"
                           htmlType="submit"
-                          loading={loadings}
-                        >
+                          loading={loadings}>
                           Submit
                         </Button>
                       </Form.Item>
