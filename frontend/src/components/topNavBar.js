@@ -15,6 +15,7 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import LoginBtn from "./LoginBtn";
+import SearchBtn from "./SearchBtn";
 
 const TopNavBar = () => {
   const router = useRouter();
@@ -195,9 +196,7 @@ const TopNavBar = () => {
         }}
       />
       <Flex gap={10} align="center">
-        <Tooltip title="search">
-          <Button shape="circle" icon={<SearchOutlined />} />
-        </Tooltip>
+        <SearchBtn/>
         <LoginBtn />
       </Flex>
     </>

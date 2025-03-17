@@ -15,7 +15,7 @@ const CardBasicWMore = ({ bgColor }) => {
           width: 300,
           backgroundColor: "#FFFDF0",
           color: "#1D1616",
-          marginBottom: "10px",
+          margin: "10px 0",
         }}>
         <p>Card content</p>
         <p>Card content</p>

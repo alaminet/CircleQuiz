@@ -41,8 +41,8 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
 
   // Edit Modal Handler
   const handleOk = (values) => {
-    console.log("prev", editItem);
-    console.log("edit", values);
+    // console.log("prev", editItem);
+    // console.log("edit", values);
     // setModalOpen(false);
   };
   const handleCancel = () => {

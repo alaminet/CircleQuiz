@@ -14,6 +14,7 @@ const MCQDesPostDeleteController = require("../../controllers/MCQ/MCQDesPostDele
 const MCQUpdateFieldController = require("../../controllers/MCQ/MCQUpdateFieldController");
 const MCQViewFieldWiseController = require("../../controllers/MCQ/MCQViewFieldWiseController");
 const secureAPI = require("../../controllers/middleware/secureAPI");
+const MCQSearchController = require("../../controllers/MCQ/MCQSearchController");
 
 const route = express.Router();
 
@@ -21,6 +22,7 @@ route.post("/add", secureAPI, MCQNewController);
 route.get("/viewall", secureAPI, MCQViewAllController);
 route.get("/view/:topic", secureAPI, MCQViewTopicsWiseController);
 route.post("/viewfield", secureAPI, MCQViewFieldWiseController);
+route.post("/search", secureAPI, MCQSearchController);
 route.get("/viewid/:id", secureAPI, MCQViewIDsWiseController);
 route.post("/edit", secureAPI, MCQUpdateController);
 route.post("/editid", secureAPI, MCQUpdateSingleController);

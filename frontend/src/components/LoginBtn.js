@@ -78,7 +78,7 @@ const LoginBtn = () => {
     }
   };
 
-  const content = (
+  const userContent = (
     <div>
       <p>Balance 0.00 BDT</p>
       <Menu
@@ -156,7 +156,7 @@ const LoginBtn = () => {
           <Popover
             placement="bottomRight"
             title={user?.name}
-            content={content}
+            content={userContent}
             trigger="click">
             <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
           </Popover>
