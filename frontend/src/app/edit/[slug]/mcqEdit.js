@@ -59,6 +59,7 @@ const MCQEdit = ({ id }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
         body: JSON.stringify(data),
       }
@@ -78,6 +79,7 @@ const MCQEdit = ({ id }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
           },
           body: JSON.stringify(data),
         }
@@ -135,6 +137,7 @@ const MCQEdit = ({ id }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -159,6 +162,7 @@ const MCQEdit = ({ id }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -184,6 +188,7 @@ const MCQEdit = ({ id }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -206,6 +211,7 @@ const MCQEdit = ({ id }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -229,6 +235,7 @@ const MCQEdit = ({ id }) => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
           },
         }
       );

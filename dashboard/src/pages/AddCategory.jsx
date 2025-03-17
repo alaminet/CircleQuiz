@@ -48,6 +48,11 @@ const AddCategory = () => {
           name: values.category.trim(),
           slug: slugVal,
           iconUrl: values.iconUrl.trim(),
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
         }
       );
       setLoading(false);
@@ -94,6 +99,11 @@ const AddCategory = () => {
             slug: slugVal,
             iconUrl: values?.iconUrl,
             status: editStatus,
+          },
+          {
+            headers: {
+              Authorization: import.meta.env.VITE_SECURE_API_KEY,
+            },
           }
         );
         message.success(update.data.message);
@@ -116,7 +126,12 @@ const AddCategory = () => {
   useEffect(() => {
     async function getData() {
       const data = await axios.get(
-        `${import.meta.env.VITE_API_URL}/v1/api/category/view`
+        `${import.meta.env.VITE_API_URL}/v1/api/category/view`,
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
+        }
       );
 
       const tableData = [];

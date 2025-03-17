@@ -13,22 +13,23 @@ const MCQViewDesStatusController = require("../../controllers/MCQ/MCQViewDesStat
 const MCQDesPostDeleteController = require("../../controllers/MCQ/MCQDesPostDeleteController");
 const MCQUpdateFieldController = require("../../controllers/MCQ/MCQUpdateFieldController");
 const MCQViewFieldWiseController = require("../../controllers/MCQ/MCQViewFieldWiseController");
+const secureAPI = require("../../controllers/middleware/secureAPI");
 
 const route = express.Router();
 
-route.post("/add", MCQNewController);
-route.get("/viewall", MCQViewAllController);
-route.get("/view/:topic", MCQViewTopicsWiseController);
-route.post("/viewfield", MCQViewFieldWiseController);
-route.get("/viewid/:id", MCQViewIDsWiseController);
-route.post("/edit", MCQUpdateController);
-route.post("/editid", MCQUpdateSingleController);
-route.post("/editfield", MCQUpdateFieldController);
-route.post("/mcqlike", MCQLikeController);
-route.post("/desclike", MCQDesLikeController);
-route.post("/desupdate", MCQDesPostUpdateController);
-route.post("/viewdesstatus", MCQViewDesStatusController);
-route.post("/postdlt", MCQDesPostDeleteController);
-route.post("/adddes", MCQNewDesController);
+route.post("/add", secureAPI, MCQNewController);
+route.get("/viewall", secureAPI, MCQViewAllController);
+route.get("/view/:topic", secureAPI, MCQViewTopicsWiseController);
+route.post("/viewfield", secureAPI, MCQViewFieldWiseController);
+route.get("/viewid/:id", secureAPI, MCQViewIDsWiseController);
+route.post("/edit", secureAPI, MCQUpdateController);
+route.post("/editid", secureAPI, MCQUpdateSingleController);
+route.post("/editfield", secureAPI, MCQUpdateFieldController);
+route.post("/mcqlike", secureAPI, MCQLikeController);
+route.post("/desclike", secureAPI, MCQDesLikeController);
+route.post("/desupdate", secureAPI, MCQDesPostUpdateController);
+route.post("/viewdesstatus", secureAPI, MCQViewDesStatusController);
+route.post("/postdlt", secureAPI, MCQDesPostDeleteController);
+route.post("/adddes", secureAPI, MCQNewDesController);
 
 module.exports = route;

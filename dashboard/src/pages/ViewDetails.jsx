@@ -122,6 +122,11 @@ const ViewDetails = () => {
         {
           type: values?.QType,
           status: values?.status,
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
         }
       );
       setLoading(false);
@@ -162,6 +167,11 @@ const ViewDetails = () => {
           {
             postID: editItem?._id,
             post: editDtls,
+          },
+          {
+            headers: {
+              Authorization: import.meta.env.VITE_SECURE_API_KEY,
+            },
           }
         );
         res && message.success(res?.data?.message);
@@ -184,6 +194,11 @@ const ViewDetails = () => {
       {
         postID: postID,
         status: status,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
       }
     );
     res && message.success(res?.data?.message);
@@ -197,6 +212,11 @@ const ViewDetails = () => {
       `${import.meta.env.VITE_API_URL}/v1/api/mcq/postdlt`,
       {
         postID: data,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
       }
     );
     res && message.success(res?.data?.message);

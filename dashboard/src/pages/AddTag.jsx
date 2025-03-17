@@ -46,6 +46,11 @@ const AddTag = () => {
         {
           name: values?.tag.trim(),
           slug: slugVal,
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
         }
       );
       setLoading(false);
@@ -86,6 +91,11 @@ const AddTag = () => {
             tag: values?.tag,
             slug: slugVal,
             status: editStatus,
+          },
+          {
+            headers: {
+              Authorization: import.meta.env.VITE_SECURE_API_KEY,
+            },
           }
         );
         message.success(update.data.message);
@@ -108,7 +118,12 @@ const AddTag = () => {
   useEffect(() => {
     async function getData() {
       const data = await axios.get(
-        `${import.meta.env.VITE_API_URL}/v1/api/tag/view`
+        `${import.meta.env.VITE_API_URL}/v1/api/tag/view`,
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
+        }
       );
 
       const tableData = [];

@@ -55,6 +55,7 @@ const Page = ({ params }) => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
           },
         }
       );

@@ -49,6 +49,11 @@ const AddSubCategory = () => {
           slug: slugVal,
           iconUrl: values.iconUrl.trim(),
           category: values.category,
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
         }
       );
       setLoading(false);
@@ -98,6 +103,11 @@ const AddSubCategory = () => {
             slug: slugVal,
             iconUrl: values?.iconUrl,
             status: editStatus,
+          },
+          {
+            headers: {
+              Authorization: import.meta.env.VITE_SECURE_API_KEY,
+            },
           }
         );
         message.success(update.data.message);
@@ -119,7 +129,12 @@ const AddSubCategory = () => {
   // Sub Category Info
   async function getSubCagegory() {
     const data = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/subcategory/view`
+      `${import.meta.env.VITE_API_URL}/v1/api/subcategory/view`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
     const tableData = [];
     data?.data?.view?.map((item, i) => {
@@ -139,7 +154,12 @@ const AddSubCategory = () => {
   // Category Info
   async function getCategory() {
     const data = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/category/view`
+      `${import.meta.env.VITE_API_URL}/v1/api/category/view`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
     const tableData = [];
     data?.data?.view?.map((item, i) => {

@@ -61,6 +61,7 @@ const Addmcq = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
         body: JSON.stringify(data),
       }
@@ -80,6 +81,7 @@ const Addmcq = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
           },
           body: JSON.stringify(data),
         }
@@ -140,6 +142,7 @@ const Addmcq = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -164,6 +167,7 @@ const Addmcq = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -188,6 +192,7 @@ const Addmcq = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -210,6 +215,7 @@ const Addmcq = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );

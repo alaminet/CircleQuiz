@@ -33,6 +33,7 @@ const MCQDescCard = ({ data }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
         body: JSON.stringify(data),
       }
@@ -65,6 +66,7 @@ const MCQDescCard = ({ data }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
         body: JSON.stringify(data),
       }

@@ -57,6 +57,7 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -79,6 +80,7 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );
@@ -101,6 +103,7 @@ const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
       }
     );

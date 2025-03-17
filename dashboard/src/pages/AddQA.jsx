@@ -52,6 +52,11 @@ const AddQA = () => {
           ans: values.ans,
           topic: values.topic,
           des: values.des.trim(),
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
         }
       );
       setLoading(false);
@@ -94,6 +99,11 @@ const AddQA = () => {
             topics: values.topics,
             iconUrl: values.iconUrl,
             status: editStatus,
+          },
+          {
+            headers: {
+              Authorization: import.meta.env.VITE_SECURE_API_KEY,
+            },
           }
         );
         message.success(update.data.message);
@@ -113,7 +123,12 @@ const AddQA = () => {
   // Get Topics List
   async function getTopicData() {
     const data = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/topic/view`
+      `${import.meta.env.VITE_API_URL}/v1/api/topic/view`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
 
     const tableData = [];

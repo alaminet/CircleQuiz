@@ -165,6 +165,24 @@ const ViewQA = () => {
       ),
     },
     {
+      title: "Ref/Tags",
+      dataIndex: "tags",
+      key: "tags",
+      render: (tags, item) => (
+        <Select
+          mode="multiple"
+          showSearch
+          placeholder="Ref/Tags"
+          optionFilterProp="label"
+          defaultValue={tags}
+          style={{ width: "220px" }}
+          onChange={(e) => handleTagCng(e, item.action._id)}
+          // onSearch={onSearch}
+          options={tagList}
+        />
+      ),
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -251,6 +269,11 @@ const ViewQA = () => {
         field: "category",
         postID: post,
         value: values,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
       }
     );
     message.success(res?.data.message);
@@ -265,6 +288,11 @@ const ViewQA = () => {
         field: "subcategory",
         postID: post,
         value: values,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
       }
     );
     message.success(res?.data.message);
@@ -278,11 +306,33 @@ const ViewQA = () => {
         field: "topic",
         postID: post,
         value: values,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
       }
     );
     message.success(res?.data.message);
   };
-  // Topic Change
+  const handleTagCng = async (values, post) => {
+    // console.log(values, post);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/editfield`,
+      {
+        field: "tag",
+        postID: post,
+        value: values,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
+    );
+    message.success(res?.data.message);
+  };
+  // Status Change
   const handleStatusCng = async (values, post) => {
     // console.log(values, post);
     const res = await axios.post(
@@ -291,6 +341,11 @@ const ViewQA = () => {
         field: "status",
         postID: post,
         value: values,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
       }
     );
     message.success(res?.data.message);
@@ -303,6 +358,11 @@ const ViewQA = () => {
       {
         field: "delete",
         postID: values,
+      },
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
       }
     );
     message.success(res?.data.message);
@@ -316,6 +376,11 @@ const ViewQA = () => {
         `${import.meta.env.VITE_API_URL}/v1/api/tag/add`,
         {
           name: tagnName,
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
         }
       );
       getTag();
@@ -331,7 +396,12 @@ const ViewQA = () => {
   // Get Q&A List
   async function getQAData() {
     const data = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/mcq/viewall`
+      `${import.meta.env.VITE_API_URL}/v1/api/mcq/viewall`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
     // console.log(data?.data?.view);
 
@@ -344,6 +414,7 @@ const ViewQA = () => {
         topics: item?.topic?.map((item) => item._id),
         category: item?.category?.map((item) => item._id),
         subcategory: item?.subcategory?.map((item) => item._id),
+        tags: item?.tag?.map((item) => item._id),
         question: item?.question,
         optA: item?.options[0],
         optB: item?.options[1],
@@ -361,7 +432,12 @@ const ViewQA = () => {
   // Get Category List
   const getCategory = async () => {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/category/view`
+      `${import.meta.env.VITE_API_URL}/v1/api/category/view`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
     const tableData = [];
     res?.data?.view?.map((item) => {
@@ -376,7 +452,12 @@ const ViewQA = () => {
   // Get Category List
   const getSubCategory = async () => {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/subcategory/view`
+      `${import.meta.env.VITE_API_URL}/v1/api/subcategory/view`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
     const tableData = [];
     res?.data?.view?.map((item) => {
@@ -391,7 +472,12 @@ const ViewQA = () => {
   // Get Topics List
   const getTopics = async () => {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/topic/view`
+      `${import.meta.env.VITE_API_URL}/v1/api/topic/view`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
     const tableData = [];
     res?.data?.view?.map((item) => {
@@ -406,7 +492,12 @@ const ViewQA = () => {
   // Get Tag List
   const getTag = async () => {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/api/tag/view`
+      `${import.meta.env.VITE_API_URL}/v1/api/tag/view`,
+      {
+        headers: {
+          Authorization: import.meta.env.VITE_SECURE_API_KEY,
+        },
+      }
     );
 
     const tableData = [];

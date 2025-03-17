@@ -26,8 +26,11 @@ const MCQViewFieldWiseController = async (req, res) => {
     } else {
       const update = {};
       update[field] = dataexsit._id;
+      // View Count
+      await MCQ.updateMany(update, { $inc: { views: 1 } });
       // Add "approved" status dynamically
       update.status = status;
+
       const view = await MCQ.find(update)
         .populate("topic")
         .populate("category")
