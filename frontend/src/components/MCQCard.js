@@ -91,9 +91,9 @@ const MCQCard = ({ data }) => {
                     data?.options[0]
                   }\nB) ${data?.options[1]}\nC) ${data?.options[2]}\nD) ${
                     data?.options[3]
-                  }\nAns: ${
+                  }\n\nAns: ${
                     data?.options[data?.ans]
-                  }\nTag: #Circle_Academy\nSource: ${permalink}`;
+                  }\n\nTag: #Circle_Academy\nSource: ${permalink}`;
                   let cleanText = CopyText.replace(/<[^>]*>?/gm, "");
                   setTimeout(() => {
                     resolve(`${cleanText}`);
