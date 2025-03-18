@@ -1,5 +1,6 @@
+require("dotenv").config();
 const secureAPI = (req, res, next) => {
-  if (req.headers.authorization === "CAt7p0qqwYALAIY") {
+  if (req.headers.authorization === process.env.API_SECRATE) {
     next();
   } else {
     res.status(401);

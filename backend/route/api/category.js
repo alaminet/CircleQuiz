@@ -2,7 +2,7 @@ const express = require("express");
 const CategoryNewController = require("../../controllers/Category/CategoryNewController");
 const CategoryViewAllController = require("../../controllers/Category/CategoryViewAllController");
 const CategoryUpdateController = require("../../controllers/Category/CategoryUpdateController");
-const secureAPI = require("../../controllers/middleware/secureAPI");
+const secureAPI = require("../../middleware/secureAPI");
 
 const route = express.Router();
 

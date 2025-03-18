@@ -207,6 +207,7 @@ const ViewQA = () => {
       onFilter: (value, record) => record.status.indexOf(value) === 0,
       render: (status, record) => (
         <Select
+          optionFilterProp="label"
           defaultValue={status}
           style={{ minWidth: "100px" }}
           onChange={(e) => handleStatusCng(e, record.action._id)}

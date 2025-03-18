@@ -4,7 +4,7 @@ const SubCategoryNewController = require("../../controllers/SubCategory/SubCateg
 const SubCategoryViewAllController = require("../../controllers/SubCategory/SubCategoryViewAllController");
 const SubCategoryUpdateController = require("../../controllers/SubCategory/SubCategoryUpdateController");
 const SubCategoryViewCatWiseController = require("../../controllers/SubCategory/SubCategoryViewCatWiseController");
-const secureAPI = require("../../controllers/middleware/secureAPI");
+const secureAPI = require("../../middleware/secureAPI");
 
 const route = express.Router();
 

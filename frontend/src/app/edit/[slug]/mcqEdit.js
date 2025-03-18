@@ -241,20 +241,6 @@ const MCQEdit = ({ id }) => {
       );
       const data = await res.json();
       setEditItem(data?.view);
-      // editItem &&
-      //   ckform.setFieldsValue({
-      //     id: data?.view?._id,
-      //     question: data?.view?.question,
-      //     optA: data?.view?.options[0],
-      //     optB: data?.view?.options[1],
-      //     optC: data?.view?.options[2],
-      //     optD: data?.view?.options[3],
-      //     answer: data?.view?.ans,
-      //     subject: data?.view?.topic?.map((item) => item._id),
-      //     category: data?.view?.category?.map((item) => item._id),
-      //     subcategory: data?.view?.subcategory?.map((item) => item._id),
-      //     tag: data?.view?.tag?.map((item) => item._id),
-      //   });
     } catch (error) {
       console.log(error);
     }
@@ -290,7 +276,8 @@ const MCQEdit = ({ id }) => {
                       layout="vertical"
                       onFinish={onFinish}
                       onFinishFailed={onFinishFailed}
-                      autoComplete="off">
+                      autoComplete="off"
+                    >
                       <Form.Item name="id" hidden initialValue={editItem?._id}>
                         <Input />
                       </Form.Item>
@@ -304,7 +291,8 @@ const MCQEdit = ({ id }) => {
                               required: true,
                               message: "Please input Question!",
                             },
-                          ]}>
+                          ]}
+                        >
                           <CustomEditor
                             onChange={setQuestionVal}
                             defaultData={editItem?.question}
@@ -330,7 +318,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option A!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptA}
                               defaultData={editItem?.options[0]}
@@ -350,7 +339,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option B!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptB}
                               defaultData={editItem?.options[1]}
@@ -370,7 +360,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option C!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptC}
                               defaultData={editItem?.options[2]}
@@ -390,7 +381,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Please input Option D!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <CustomEditor
                               onChange={setOptD}
                               defaultData={editItem?.options[3]}
@@ -409,7 +401,8 @@ const MCQEdit = ({ id }) => {
                             initialValue={editItem?.ans}
                             rules={[
                               { required: true, message: "Slect Correct Ans!" },
-                            ]}>
+                            ]}
+                          >
                             <Select
                               showSearch
                               placeholder="Select Answer"
@@ -447,7 +440,8 @@ const MCQEdit = ({ id }) => {
                             }}
                             rules={[
                               { required: true, message: "Slect Category!" },
-                            ]}>
+                            ]}
+                          >
                             <Select
                               mode="multiple"
                               allowClear
@@ -474,7 +468,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Slect Sub-Category!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <Select
                               mode="multiple"
                               allowClear
@@ -500,7 +495,8 @@ const MCQEdit = ({ id }) => {
                                 required: true,
                                 message: "Slect Related Subject!",
                               },
-                            ]}>
+                            ]}
+                          >
                             <Select
                               mode="multiple"
                               allowClear
@@ -517,7 +513,8 @@ const MCQEdit = ({ id }) => {
                             label="Tag/Referance"
                             initialValue={editItem?.tag?.map(
                               (item) => item._id
-                            )}>
+                            )}
+                          >
                             <Select
                               mode="multiple"
                               allowClear
@@ -536,7 +533,8 @@ const MCQEdit = ({ id }) => {
                                   <Space
                                     style={{
                                       padding: "0 8px 4px",
-                                    }}>
+                                    }}
+                                  >
                                     <Input
                                       placeholder="Please enter item"
                                       ref={inputRef}
@@ -547,7 +545,8 @@ const MCQEdit = ({ id }) => {
                                     <Button
                                       type="text"
                                       icon={<PlusOutlined />}
-                                      onClick={addItem}>
+                                      onClick={addItem}
+                                    >
                                       Add item
                                     </Button>
                                   </Space>
@@ -562,7 +561,8 @@ const MCQEdit = ({ id }) => {
                         <Button
                           type="primary"
                           htmlType="submit"
-                          loading={loadings}>
+                          loading={loadings}
+                        >
                           Submit
                         </Button>
                       </Form.Item>

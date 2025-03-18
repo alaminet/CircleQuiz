@@ -13,8 +13,8 @@ const MCQViewDesStatusController = require("../../controllers/MCQ/MCQViewDesStat
 const MCQDesPostDeleteController = require("../../controllers/MCQ/MCQDesPostDeleteController");
 const MCQUpdateFieldController = require("../../controllers/MCQ/MCQUpdateFieldController");
 const MCQViewFieldWiseController = require("../../controllers/MCQ/MCQViewFieldWiseController");
-const secureAPI = require("../../controllers/middleware/secureAPI");
 const MCQSearchController = require("../../controllers/MCQ/MCQSearchController");
+const secureAPI = require("../../middleware/secureAPI");
 
 const route = express.Router();
 

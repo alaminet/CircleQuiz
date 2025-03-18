@@ -2,7 +2,8 @@ const express = require("express");
 const TagNewController = require("../../controllers/Tag/TagNewController");
 const TagViewAllController = require("../../controllers/Tag/TagViewAllController");
 const TagUpdateController = require("../../controllers/Tag/TagUpdateController");
-const secureAPI = require("../../controllers/middleware/secureAPI");
+const secureAPI = require("../../middleware/secureAPI");
+
 
 const route = express.Router();
 
