@@ -112,7 +112,7 @@ const ViewDetails = () => {
     },
   ];
 
-  // Add new Topic
+  // View Status wise Details
   const handleFind = async (values) => {
     setLoading(true);
     setQueryData(null);

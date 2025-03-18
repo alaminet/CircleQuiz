@@ -15,11 +15,13 @@ const MCQUpdateFieldController = require("../../controllers/MCQ/MCQUpdateFieldCo
 const MCQViewFieldWiseController = require("../../controllers/MCQ/MCQViewFieldWiseController");
 const MCQSearchController = require("../../controllers/MCQ/MCQSearchController");
 const secureAPI = require("../../middleware/secureAPI");
+const MCQViewStatusWiseController = require("../../controllers/MCQ/MCQViewStatusWiseController");
 
 const route = express.Router();
 
 route.post("/add", secureAPI, MCQNewController);
 route.get("/viewall", secureAPI, MCQViewAllController);
+route.post("/statusview", secureAPI, MCQViewStatusWiseController);
 route.get("/view/:topic", secureAPI, MCQViewTopicsWiseController);
 route.post("/viewfield", secureAPI, MCQViewFieldWiseController);
 route.post("/search", secureAPI, MCQSearchController);
