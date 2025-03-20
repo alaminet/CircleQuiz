@@ -94,7 +94,7 @@ const MCQCard = ({ data }) => {
                   }\n\nAns: ${
                     data?.options[data?.ans]
                   }\n\nTag: #Circle_Academy\nSource: ${permalink}`;
-                  let cleanText = CopyText.replace(/<[^>]*>?/gm, "");
+                  let cleanText = CopyText.replace(/<[^>]*>?|&nbsp;/gm, "");
                   setTimeout(() => {
                     resolve(`${cleanText}`);
                   }, 500);
@@ -193,8 +193,7 @@ const MCQCard = ({ data }) => {
               <div>
                 <Title level={5} style={{ margin: "0" }}>
                   <span
-                    dangerouslySetInnerHTML={{ __html: data?.question }}
-                  ></span>
+                    dangerouslySetInnerHTML={{ __html: data?.question }}></span>
                 </Title>
               </div>
             </Col>
@@ -215,8 +214,7 @@ const MCQCard = ({ data }) => {
               <Col
                 key={k}
                 span={12}
-                style={{ display: "flex", gap: "4px", alignItems: "center" }}
-              >
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                 {k === data?.ans ? (
                   <CheckSquareFilled style={{ color: "green" }} />
                 ) : (
@@ -245,8 +243,7 @@ const MCQCard = ({ data }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}
-                >
+                  onClick={() => setShowDes(!showDes)}>
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -265,8 +262,7 @@ const MCQCard = ({ data }) => {
                     variant="link"
                     size="small"
                     onClick={handleMCQLike}
-                    style={{ gap: "2px", alignItems: "baseline" }}
-                  >
+                    style={{ gap: "2px", alignItems: "baseline" }}>
                     <LikeOutlined /> {likeCount}
                   </Button>
                 )}
@@ -274,8 +270,7 @@ const MCQCard = ({ data }) => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <ShareAltOutlined />
                 </Button>
               </Flex>
@@ -309,8 +304,7 @@ const MCQCard = ({ data }) => {
           title="Add Details"
           open={isPostModal}
           onOk={handlePostOk}
-          onCancel={handlePostCancel}
-        >
+          onCancel={handlePostCancel}>
           <CustomEditor onChange={setDetails} />
         </Modal>
       </div>

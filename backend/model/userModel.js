@@ -24,6 +24,12 @@ const userSchema = new Schema(
     token: {
       type: String,
     },
+    device: [
+      {
+        deviceID: String,
+        loginAt: Date,
+      },
+    ],
   },
   {
     timestamps: true,

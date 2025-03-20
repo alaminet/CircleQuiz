@@ -2,17 +2,24 @@
 // import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Avatar, Button, Divider, Flex, Menu, Popover, Tooltip } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Menu,
+  message,
+  Popover,
+  Tooltip,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Loginuser } from "@/lib/features/slice/userSlice";
 import { useRouter } from "next/navigation";
 import {
-  AppstoreOutlined,
   AuditOutlined,
   FileProtectOutlined,
   HeartOutlined,
   LogoutOutlined,
-  MailOutlined,
   NodeIndexOutlined,
   PlusCircleOutlined,
   PushpinOutlined,
@@ -31,14 +38,16 @@ const LoginBtn = () => {
     if (session && !user) {
       const sendLoginDetails = async (data) => {
         try {
+          const deviceID = localStorage.getItem("device-id");
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/add`,
+            `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/login`,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
               },
-              body: JSON.stringify({ data: data }),
+              body: JSON.stringify({ data: data, deviceID: deviceID }),
             }
           );
           const feedback = await response.json();
@@ -67,14 +76,35 @@ const LoginBtn = () => {
 
   // Logout Handeller
   const handleLogout = async () => {
-    signOut();
-    localStorage.removeItem("user");
-    dispatch(Loginuser(null));
+    // logout
+    const deviceID = localStorage.getItem("device-id");
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/logout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
+        },
+        body: JSON.stringify({ deviceID: deviceID, userID: user?._id }),
+      }
+    );
+    const feedback = await res.json();
+    if (feedback.message === "Logged Out Successfully") {
+      signOut();
+      localStorage.removeItem("user");
+      dispatch(Loginuser(null));
+    } else {
+      message.warning("Logout Failed");
+    }
   };
 
   const handleMenu = (e) => {
-    if ((e = "logout")) {
+    if (e.key === "logout") {
       handleLogout();
+    } else {
+      router.push(`/user/${e.key}`);
+      // console.log(e.key);
     }
   };
 
