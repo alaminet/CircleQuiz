@@ -7,11 +7,14 @@ const UserLoggedOutController = async (req, res) => {
     if (!deviceID || !userID) {
       return res.status(404).send({ message: "Data Not Found" });
     } else {
-      await User.findOneAndUpdate(
+      const updateUser = await User.findOneAndUpdate(
         { _id: userID },
-        { $pull: { device: { deviceID: deviceID } } }
+        { $pull: { device: { deviceID: deviceID } } },
+        { new: true }
       );
-      await res.status(200).send({ message: "Logged Out Successfully" });
+      await res
+        .status(200)
+        .send({ updateUser, message: "Logged Out Successfully" });
     }
   } catch (error) {
     await res.status(404).send({ error });

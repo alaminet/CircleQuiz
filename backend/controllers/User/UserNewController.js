@@ -2,7 +2,7 @@ const User = require("../../model/userModel");
 
 const UserNewController = async (req, res) => {
   try {
-    const { data, deviceID } = req.body;
+    const { data, deviceID, userAgent } = req.body;
     const loginAt = Date.now();
 
     const dataExist = await User.findOne({ email: data?.user?.email });
@@ -23,11 +23,12 @@ const UserNewController = async (req, res) => {
         device: [
           {
             deviceID: deviceID,
+            userAgent: userAgent,
             loginAt: loginAt,
           },
         ],
       }).save();
-      await res.status(200).send({ userExist, deviceID, message: "New User" });
+      await res.status(200).send({ userExist, message: "New User" });
     } else if (deviceExist) {
       const userExist = await User.findOneAndUpdate(
         { email: data?.user?.email },
@@ -38,9 +39,7 @@ const UserNewController = async (req, res) => {
         },
         { new: true }
       );
-      await res
-        .status(200)
-        .send({ userExist, deviceID, message: "Existing User" });
+      await res.status(200).send({ userExist, message: "Existing User" });
     } else {
       const userExist = await User.findOneAndUpdate(
         { email: data?.user?.email },
@@ -52,6 +51,7 @@ const UserNewController = async (req, res) => {
             device: [
               {
                 deviceID: deviceID,
+                userAgent: userAgent,
                 loginAt: loginAt,
               },
             ],
@@ -59,9 +59,7 @@ const UserNewController = async (req, res) => {
         },
         { new: true }
       );
-      await res
-        .status(200)
-        .send({ userExist, deviceID, message: "Existing User" });
+      await res.status(200).send({ userExist, message: "Existing User" });
     }
   } catch (error) {
     await res.status(404).send({ error });

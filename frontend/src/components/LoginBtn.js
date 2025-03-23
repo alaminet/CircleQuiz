@@ -34,46 +34,6 @@ const LoginBtn = () => {
   const user = useSelector((user) => user.loginSlice.login);
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (session && !user) {
-      const sendLoginDetails = async (data) => {
-        try {
-          const deviceID = localStorage.getItem("device-id");
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/login`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
-              },
-              body: JSON.stringify({ data: data, deviceID: deviceID }),
-            }
-          );
-          const feedback = await response.json();
-          // console.log("Server response:", feedback.dataExist);
-
-          dispatch(
-            Loginuser({
-              ...feedback?.userExist,
-              userImg: session?.user?.image,
-            })
-          );
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              ...feedback?.userExist,
-              userImg: session?.user?.image,
-            })
-          );
-        } catch (error) {
-          console.error("Error sending login details:", error);
-        }
-      };
-      sendLoginDetails(session);
-    }
-  }, [session]);
-
   // Logout Handeller
   const handleLogout = async () => {
     // logout
@@ -169,6 +129,55 @@ const LoginBtn = () => {
     </div>
   );
 
+  // Loging Functionality
+  const sendLoginDetails = async (data) => {
+    try {
+      const deviceID = localStorage.getItem("device-id");
+      const userAgent = navigator.userAgent;
+      const isDevice = user?.device?.filter(
+        (item) => item?.deviceID === deviceID
+      );
+      isDevice?.length == 0 && handleLogout();
+      if (session && !user) {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
+            },
+            body: JSON.stringify({
+              data: data,
+              deviceID: deviceID,
+              userAgent: userAgent,
+            }),
+          }
+        );
+        const feedback = await response.json();
+        dispatch(
+          Loginuser({
+            ...feedback?.userExist,
+            userImg: session?.user?.image,
+          })
+        );
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...feedback?.userExist,
+            userImg: session?.user?.image,
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error sending login details:", error);
+    }
+  };
+
+  useEffect(() => {
+    sendLoginDetails(session);
+  }, [session, handleMenu]);
+
   return (
     <>
       {status === "authenticated" ? (
@@ -178,7 +187,8 @@ const LoginBtn = () => {
               onClick={() => router.push("/addmcq")}
               type="primary"
               shape="round"
-              icon={<PlusCircleOutlined />}>
+              icon={<PlusCircleOutlined />}
+            >
               Add Q&A
             </Button>
           </Tooltip>
@@ -187,7 +197,8 @@ const LoginBtn = () => {
             placement="bottomRight"
             title={user?.name}
             content={userContent}
-            trigger="click">
+            trigger="click"
+          >
             <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
           </Popover>
           {/* <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" /> */}

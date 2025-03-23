@@ -8,14 +8,14 @@ const UserInfoUpdateController = async (req, res) => {
     if (!field || !value || !userID) {
       return res.status(404).send({ message: "Data Not Found" });
     } else {
-      await User.findByIdAndUpdate(
+      const updateUser = await User.findByIdAndUpdate(
         userID,
         {
           $set: update,
         },
         { new: true }
       );
-      await res.status(200).send({ message: "User Updated" });
+      await res.status(200).send({ updateUser, message: "User Updated" });
     }
   } catch (error) {
     res.status(401).send(error);
