@@ -13,10 +13,14 @@ const MCQSearchController = async (req, res) => {
       .split(" ")
       .map((word) => `(${word})`)
       .join("|"); // Create regex for all query words
-    const mcqview = await MCQ.find({
-      question: { $regex: regexPattern, $options: "i" },
-      status: status,
-    })
+    const mcqview = await MCQ.findOneAndUpdate(
+      {
+        question: { $regex: regexPattern, $options: "i" },
+        status: status,
+      },
+      { $inc: { views: 1 } },
+      { new: true }
+    )
       .populate("topic")
       .populate("category")
       .populate("subcategory")

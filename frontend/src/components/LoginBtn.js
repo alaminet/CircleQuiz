@@ -50,7 +50,8 @@ const LoginBtn = () => {
       }
     );
     const feedback = await res.json();
-    if (feedback.message === "Logged Out Successfully") {
+    message.info(feedback?.message);
+    if (feedback?.message === "Logged Out Successfully") {
       signOut();
       localStorage.removeItem("user");
       dispatch(Loginuser(null));
@@ -60,6 +61,7 @@ const LoginBtn = () => {
   };
 
   const handleMenu = (e) => {
+    userExistCk();
     if (e.key === "logout") {
       handleLogout();
     } else {
@@ -129,6 +131,33 @@ const LoginBtn = () => {
     </div>
   );
 
+  const userExistCk = async () => {
+    try {
+      const deviceID = localStorage.getItem("device-id");
+      // userExist
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/userExist`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
+          },
+          body: JSON.stringify({
+            userID: user?._id,
+          }),
+        }
+      );
+      const feedback = await res?.json();
+      const isDevice = feedback?.userExist?.device?.filter(
+        (item) => item?.deviceID === deviceID
+      );
+      isDevice?.length == 0 && handleLogout();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Loging Functionality
   const sendLoginDetails = async (data) => {
     try {
@@ -155,19 +184,9 @@ const LoginBtn = () => {
           }
         );
         const feedback = await response.json();
-        dispatch(
-          Loginuser({
-            ...feedback?.userExist,
-            userImg: session?.user?.image,
-          })
-        );
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            ...feedback?.userExist,
-            userImg: session?.user?.image,
-          })
-        );
+        dispatch(Loginuser(feedback?.userExist));
+        localStorage.setItem("user", JSON.stringify(feedback?.userExist));
+        message.info(feedback?.message);
       }
     } catch (error) {
       console.error("Error sending login details:", error);
@@ -176,6 +195,7 @@ const LoginBtn = () => {
 
   useEffect(() => {
     sendLoginDetails(session);
+    userExistCk();
   }, [session, handleMenu]);
 
   return (
@@ -187,8 +207,7 @@ const LoginBtn = () => {
               onClick={() => router.push("/addmcq")}
               type="primary"
               shape="round"
-              icon={<PlusCircleOutlined />}
-            >
+              icon={<PlusCircleOutlined />}>
               Add Q&A
             </Button>
           </Tooltip>
@@ -197,8 +216,7 @@ const LoginBtn = () => {
             placement="bottomRight"
             title={user?.name}
             content={userContent}
-            trigger="click"
-          >
+            trigger="click">
             <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
           </Popover>
           {/* <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" /> */}

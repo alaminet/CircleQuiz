@@ -32,6 +32,7 @@ import MCQDescCard from "./MCQDescCard";
 import MCQEditModal from "./MCQEditModal";
 import { useRouter } from "next/navigation";
 import CustomEditor from "./CustomEditor";
+import Link from "next/link";
 const { Title, Text } = Typography;
 
 const MCQCard = ({ data }) => {
@@ -93,7 +94,7 @@ const MCQCard = ({ data }) => {
                     data?.options[3]
                   }\n\nAns: ${
                     data?.options[data?.ans]
-                  }\n\nTag: #Circle_Academy\nSource: ${permalink}`;
+                  }\nTag: #Circle_Academy\nSource: ${permalink}`;
                   let cleanText = CopyText.replace(/<[^>]*>?|&nbsp;/gm, "");
                   setTimeout(() => {
                     resolve(`${cleanText}`);
@@ -154,7 +155,7 @@ const MCQCard = ({ data }) => {
 
   // MCQ like Handeller
   const handleMCQLike = async () => {
-    const likeData = { postID: data._id, likedID: user._id };
+    const likeData = { postID: data?._id, likedID: user?._id };
     console.log(likeData);
 
     try {
@@ -191,10 +192,14 @@ const MCQCard = ({ data }) => {
           <Row justify="space-between">
             <Col xs={24} md={16}>
               <div>
-                <Title level={5} style={{ margin: "0" }}>
-                  <span
-                    dangerouslySetInnerHTML={{ __html: data?.question }}></span>
-                </Title>
+                <Link href={`/view/id=${data?._id}&type=mcq`}>
+                  <Title level={5} style={{ margin: "0", color: "blueviolet" }}>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: data?.question,
+                      }}></span>
+                  </Title>
+                </Link>
               </div>
             </Col>
             <Col xs={24} md={8}>

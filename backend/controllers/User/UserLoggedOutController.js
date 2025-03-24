@@ -1,5 +1,4 @@
 const User = require("../../model/userModel");
-const { v4: uuidv4 } = require("uuid");
 
 const UserLoggedOutController = async (req, res) => {
   try {

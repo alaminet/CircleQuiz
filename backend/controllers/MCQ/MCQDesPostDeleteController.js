@@ -2,7 +2,6 @@ const MCQ = require("../../model/MCQModel");
 
 const MCQDesPostDeleteController = async (req, res) => {
   const { postID } = req.body;
-  console.log(postID);
 
   try {
     await MCQ.findOneAndUpdate(

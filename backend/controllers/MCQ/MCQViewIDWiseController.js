@@ -3,10 +3,11 @@ const MCQ = require("../../model/MCQModel");
 const MCQViewIDsWiseController = async (req, res) => {
   const { id } = req.params;
 
-  const dataExist = await MCQ.findById(id);
-
   try {
-    if (dataExist) {
+    const dataExist = await MCQ.findById(id);
+    if (!dataExist) {
+      res.status(404).send({ message: "Invalid Data Query" });
+    } else {
       await MCQ.updateOne({ _id: id }, { $inc: { views: 1 } });
       const view = await MCQ.findById(id)
         .populate("topic")
@@ -15,12 +16,10 @@ const MCQViewIDsWiseController = async (req, res) => {
         .populate("tag")
         .populate("des.posted")
         .populate("created");
-      return res.status(200).send({ view, message: "Data Query Done!" });
-    } else {
-      return res.status(404).send({ message: "Invalid Data Query" });
+      res.status(200).send({ view, message: "Data Query Done!" });
     }
   } catch (error) {
-    return res.status(404).send({ error });
+    res.status(404).send({ error });
   }
 };
 

@@ -3,9 +3,8 @@ const Topics = require("../../model/topicsModel");
 
 const MCQViewTopicsWiseController = async (req, res) => {
   const { topic } = req.params;
-  const findTopic = await Topics.findOne({ slug: topic });
-
   try {
+    const findTopic = await Topics.findOne({ slug: topic });
     if (findTopic) {
       await MCQ.updateMany(
         { topic: findTopic, status: "approved" },

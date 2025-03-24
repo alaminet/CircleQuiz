@@ -21,6 +21,12 @@ const userSchema = new Schema(
       default: "student",
       required: true,
     },
+    plan: {
+      type: String,
+      enum: ["free", "paid", "limited", "hold"],
+      default: "free",
+      required: true,
+    },
     token: {
       type: String,
     },

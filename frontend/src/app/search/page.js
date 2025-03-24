@@ -111,7 +111,7 @@ const Page = () => {
         </Sider>
         <Content>
           <Row gutter={[8, 8]}>
-            {dataList?.length !== 0 ? (
+            {dataList ? (
               <Col md={18}>
                 <div>
                   <SubjectHeading

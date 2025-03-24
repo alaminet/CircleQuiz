@@ -86,7 +86,6 @@ const Page = () => {
     }
   };
   const cancel = (e) => {
-    console.log(e);
     message.error("Click on No");
   };
 
@@ -113,8 +112,7 @@ const Page = () => {
                   />
                 </Badge.Ribbon>
               </>
-            }
-          >
+            }>
             <Meta
               avatar={<Avatar src={user?.userImg || user?.name.charAt(0)} />}
               title={user?.name}
@@ -129,7 +127,7 @@ const Page = () => {
         </Col>
         <Col span={14}>
           <Title level={4}>General Information</Title>
-          <Row style={{ alignItems: "center" }}>
+          <Row style={{ alignItems: "center", marginBottom: "5px" }}>
             <Col span={3}>Name</Col>
             <Col span={1}>:</Col>
             <Col span={8}>
@@ -137,20 +135,19 @@ const Page = () => {
                 style={{ margin: "0" }}
                 editable={{
                   onChange: handleName,
-                }}
-              >
+                }}>
                 {editName}
               </Paragraph>
             </Col>
           </Row>
-          <Row style={{ alignItems: "center" }}>
+          <Row style={{ alignItems: "center", marginBottom: "5px" }}>
             <Col span={3}>Email</Col>
             <Col span={1}>:</Col>
             <Col span={8}>
               <Paragraph style={{ margin: "0" }}>{user?.email}</Paragraph>
             </Col>
           </Row>
-          <Row style={{ alignItems: "center" }}>
+          <Row style={{ alignItems: "center", marginBottom: "5px" }}>
             <Col span={3}>Active Device</Col>
             <Col span={1}>:</Col>
             <Col span={8}>
@@ -174,8 +171,7 @@ const Page = () => {
                           onConfirm={() => handleDltConfirm(item)}
                           onCancel={cancel}
                           okText="Yes"
-                          cancelText="No"
-                        >
+                          cancelText="No">
                           <DeleteTwoTone twoToneColor="#eb2f96" />
                         </Popconfirm>
                       </Paragraph>
@@ -185,7 +181,7 @@ const Page = () => {
               </Row>
             </Col>
           </Row>
-          <Row style={{ alignItems: "center" }}>
+          <Row style={{ alignItems: "center", marginBottom: "5px" }}>
             <Col span={3}>Current Plan</Col>
             <Col span={1}>:</Col>
             <Col span={8}>
