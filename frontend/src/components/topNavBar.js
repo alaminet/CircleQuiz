@@ -16,6 +16,7 @@ import {
 import { useRouter } from "next/navigation";
 import LoginBtn from "./LoginBtn";
 import SearchBtn from "./SearchBtn";
+import Link from "next/link";
 
 const TopNavBar = () => {
   const router = useRouter();
@@ -121,9 +122,9 @@ const TopNavBar = () => {
     },
     {
       label: (
-        <a style={{ color: "#000000e0" }} href="/jobs">
+        <Link style={{ color: "#000000e0" }} href="/jobs">
           Job Assistant
-        </a>
+        </Link>
       ),
       key: "jobs",
       icon: <AppstoreOutlined />,
@@ -131,9 +132,9 @@ const TopNavBar = () => {
     },
     {
       label: (
-        <a style={{ color: "#000000e0" }} href="/subject">
+        <Link style={{ color: "#000000e0" }} href="/subject">
           Subjects
-        </a>
+        </Link>
       ),
       key: "subject",
       icon: <SnippetsOutlined />,
@@ -141,9 +142,9 @@ const TopNavBar = () => {
     },
     {
       label: (
-        <a style={{ color: "#000000e0" }} href="/academic">
+        <Link style={{ color: "#000000e0" }} href="/academic">
           Academy
-        </a>
+        </Link>
       ),
       key: "academic",
       icon: <AimOutlined />,
@@ -151,9 +152,9 @@ const TopNavBar = () => {
     },
     {
       label: (
-        <a style={{ color: "#000000e0" }} href="/admissions">
+        <Link style={{ color: "#000000e0" }} href="/admissions">
           Admission
-        </a>
+        </Link>
       ),
       key: "admissions",
       icon: <SolutionOutlined />,
@@ -161,9 +162,9 @@ const TopNavBar = () => {
     },
     {
       label: (
-        <a style={{ color: "#000000e0" }} href="/books">
+        <Link style={{ color: "#000000e0" }} href="/books">
           Books
-        </a>
+        </Link>
       ),
       key: "books",
       icon: <ReadOutlined />,
@@ -173,9 +174,9 @@ const TopNavBar = () => {
       key: "pricing",
       icon: <ApiOutlined />,
       label: (
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <Link href="#" target="_blank" rel="noopener noreferrer">
           Pricing
-        </a>
+        </Link>
       ),
     },
   ];
