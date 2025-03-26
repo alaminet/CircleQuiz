@@ -66,6 +66,7 @@ const Page = () => {
 
   // Get MCQ List
   const getData = async (qdata) => {
+    setDataList(null);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/search`,
@@ -79,20 +80,24 @@ const Page = () => {
         }
       );
       const data = await res.json();
+
+      // Removing duplicates based on 'id'
+      const uniqueArray = data?.uniqueArray.filter(
+        (obj, index, self) => index === self.findIndex((o) => o._id === obj._id)
+      );
       const dataViewArr = [];
-      data?.mcqview.map((item) => {
-        item.status === "approved" && dataViewArr.push(item);
+      uniqueArray?.map((item) => {
+        dataViewArr.push(item);
       });
       setDataList(dataViewArr);
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
-    if (query !== "") {
-      getData({ value: query, status: "approved" });
-    }
-  }, [query]);
+    getData({ value: query, status: "approved" });
+  }, [searchParams]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -106,12 +111,13 @@ const Page = () => {
           collapsedWidth="0"
           style={{
             background: colorBgContainer,
-          }}>
+          }}
+        >
           <SideListWBadge data={dataList} search={setTypeSearch} />
         </Sider>
         <Content>
           <Row gutter={[8, 8]}>
-            {dataList ? (
+            {dataList?.length > 0 ? (
               <Col md={18}>
                 <div>
                   <SubjectHeading

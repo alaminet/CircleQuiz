@@ -59,7 +59,6 @@ const SubjectHeading = ({ title, search, count }) => {
               <Search
                 enterButton
                 placeholder="সার্চ করুন"
-                // onSearch={onSearch}
                 onChange={(e) => search(e.target.value)}
                 style={{
                   width: 300,
