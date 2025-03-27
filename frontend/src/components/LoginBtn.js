@@ -37,7 +37,9 @@ const LoginBtn = () => {
   // Logout Handeller
   const handleLogout = async () => {
     // logout
-    const deviceID = localStorage?.getItem("device-id");
+
+    const deviceID =
+      typeof window !== "undefined" ? localStorage?.getItem("device-id") : null;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/logout`,
       {
@@ -53,7 +55,8 @@ const LoginBtn = () => {
     message.info(feedback?.message);
     if (feedback?.message === "Logged Out Successfully") {
       signOut();
-      localStorage?.removeItem("user");
+
+      typeof window !== "undefined" ? localStorage?.removeItem("user") : null;
       dispatch(Loginuser(null));
     } else {
       message.warning("Logout Failed");
@@ -133,7 +136,10 @@ const LoginBtn = () => {
 
   const userExistCk = async () => {
     try {
-      const deviceID = localStorage?.getItem("device-id");
+      const deviceID =
+        typeof window !== "undefined"
+          ? localStorage?.getItem("device-id")
+          : null;
       // userExist
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/userExist`,
@@ -161,7 +167,10 @@ const LoginBtn = () => {
   // Loging Functionality
   const sendLoginDetails = async (data) => {
     try {
-      const deviceID = localStorage?.getItem("device-id");
+      const deviceID =
+        typeof window !== "undefined"
+          ? localStorage?.getItem("device-id")
+          : null;
       const userAgent = navigator.userAgent;
       const isDevice = user?.device?.filter(
         (item) => item?.deviceID === deviceID
@@ -185,7 +194,10 @@ const LoginBtn = () => {
         );
         const feedback = await response.json();
         dispatch(Loginuser(feedback?.userExist));
-        localStorage?.setItem("user", JSON.stringify(feedback?.userExist));
+
+        typeof window !== "undefined"
+          ? localStorage?.setItem("user", JSON.stringify(feedback?.userExist))
+          : null;
         message.info(feedback?.message);
       }
     } catch (error) {

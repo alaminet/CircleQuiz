@@ -23,7 +23,9 @@ const Page = () => {
   const user = useSelector((user) => user?.loginSlice?.login);
   const dispatch = useDispatch();
   const [editName, setEditName] = useState(user?.name);
-  const deviceID = localStorage?.getItem("device-id");
+
+  const deviceID =
+    typeof window !== "undefined" ? localStorage?.getItem("device-id") : null;
 
   const handleName = async (e) => {
     try {
@@ -47,7 +49,10 @@ const Page = () => {
         if (data.message === "User Updated") {
           message.success(data?.message);
           setEditName(e);
-          localStorage?.setItem("user", JSON.stringify(data?.updateUser));
+
+          typeof window !== "undefined"
+            ? localStorage?.setItem("user", JSON.stringify(data?.updateUser))
+            : null;
           dispatch(Loginuser(data?.updateUser));
         } else {
           message.error("Logout Failed");
@@ -76,7 +81,10 @@ const Page = () => {
 
       if (feedback.message === "Logged Out Successfully") {
         message.warning("Device Deleted");
-        localStorage?.setItem("user", JSON.stringify(feedback?.updateUser));
+
+        typeof window !== "undefined"
+          ? localStorage?.setItem("user", JSON.stringify(feedback?.updateUser))
+          : null;
         dispatch(Loginuser(feedback?.updateUser));
       } else {
         message.error("Logout Failed");
@@ -112,7 +120,8 @@ const Page = () => {
                   />
                 </Badge.Ribbon>
               </>
-            }>
+            }
+          >
             <Meta
               avatar={<Avatar src={user?.userImg || user?.name.charAt(0)} />}
               title={user?.name}
@@ -135,7 +144,8 @@ const Page = () => {
                 style={{ margin: "0" }}
                 editable={{
                   onChange: handleName,
-                }}>
+                }}
+              >
                 {editName}
               </Paragraph>
             </Col>
@@ -171,7 +181,8 @@ const Page = () => {
                           onConfirm={() => handleDltConfirm(item)}
                           onCancel={cancel}
                           okText="Yes"
-                          cancelText="No">
+                          cancelText="No"
+                        >
                           <DeleteTwoTone twoToneColor="#eb2f96" />
                         </Popconfirm>
                       </Paragraph>
