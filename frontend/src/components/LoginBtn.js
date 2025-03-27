@@ -37,7 +37,7 @@ const LoginBtn = () => {
   // Logout Handeller
   const handleLogout = async () => {
     // logout
-    const deviceID = localStorage.getItem("device-id");
+    const deviceID = localStorage?.getItem("device-id");
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/logout`,
       {
@@ -53,7 +53,7 @@ const LoginBtn = () => {
     message.info(feedback?.message);
     if (feedback?.message === "Logged Out Successfully") {
       signOut();
-      localStorage.removeItem("user");
+      localStorage?.removeItem("user");
       dispatch(Loginuser(null));
     } else {
       message.warning("Logout Failed");
@@ -133,7 +133,7 @@ const LoginBtn = () => {
 
   const userExistCk = async () => {
     try {
-      const deviceID = localStorage.getItem("device-id");
+      const deviceID = localStorage?.getItem("device-id");
       // userExist
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/userExist`,
@@ -161,7 +161,7 @@ const LoginBtn = () => {
   // Loging Functionality
   const sendLoginDetails = async (data) => {
     try {
-      const deviceID = localStorage.getItem("device-id");
+      const deviceID = localStorage?.getItem("device-id");
       const userAgent = navigator.userAgent;
       const isDevice = user?.device?.filter(
         (item) => item?.deviceID === deviceID
@@ -185,7 +185,7 @@ const LoginBtn = () => {
         );
         const feedback = await response.json();
         dispatch(Loginuser(feedback?.userExist));
-        localStorage.setItem("user", JSON.stringify(feedback?.userExist));
+        localStorage?.setItem("user", JSON.stringify(feedback?.userExist));
         message.info(feedback?.message);
       }
     } catch (error) {
@@ -207,7 +207,8 @@ const LoginBtn = () => {
               onClick={() => router.push("/addmcq")}
               type="primary"
               shape="round"
-              icon={<PlusCircleOutlined />}>
+              icon={<PlusCircleOutlined />}
+            >
               Add Q&A
             </Button>
           </Tooltip>
@@ -216,7 +217,8 @@ const LoginBtn = () => {
             placement="bottomRight"
             title={user?.name}
             content={userContent}
-            trigger="click">
+            trigger="click"
+          >
             <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
           </Popover>
           {/* <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" /> */}
