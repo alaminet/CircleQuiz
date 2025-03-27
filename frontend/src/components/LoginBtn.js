@@ -39,7 +39,7 @@ const LoginBtn = () => {
     // logout
 
     const deviceID =
-      typeof window !== "undefined" ? localStorage?.getItem("device-id") : null;
+      typeof window !== "undefined" ? localStorage.getItem("device-id") : null;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/logout`,
       {
@@ -56,7 +56,7 @@ const LoginBtn = () => {
     if (feedback?.message === "Logged Out Successfully") {
       signOut();
 
-      typeof window !== "undefined" ? localStorage?.removeItem("user") : null;
+      typeof window !== "undefined" ? localStorage.removeItem("user") : null;
       dispatch(Loginuser(null));
     } else {
       message.warning("Logout Failed");
@@ -138,7 +138,7 @@ const LoginBtn = () => {
     try {
       const deviceID =
         typeof window !== "undefined"
-          ? localStorage?.getItem("device-id")
+          ? localStorage.getItem("device-id")
           : null;
       // userExist
       const res = await fetch(
@@ -169,7 +169,7 @@ const LoginBtn = () => {
     try {
       const deviceID =
         typeof window !== "undefined"
-          ? localStorage?.getItem("device-id")
+          ? localStorage.getItem("device-id")
           : null;
       const userAgent = navigator.userAgent;
       const isDevice = user?.device?.filter(
@@ -196,7 +196,7 @@ const LoginBtn = () => {
         dispatch(Loginuser(feedback?.userExist));
 
         typeof window !== "undefined"
-          ? localStorage?.setItem("user", JSON.stringify(feedback?.userExist))
+          ? localStorage.setItem("user", JSON.stringify(feedback?.userExist))
           : null;
         message.info(feedback?.message);
       }

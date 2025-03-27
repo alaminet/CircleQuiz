@@ -25,7 +25,7 @@ const Page = () => {
   const [editName, setEditName] = useState(user?.name);
 
   const deviceID =
-    typeof window !== "undefined" ? localStorage?.getItem("device-id") : null;
+    typeof window !== "undefined" ? localStorage.getItem("device-id") : null;
 
   const handleName = async (e) => {
     try {
@@ -51,7 +51,7 @@ const Page = () => {
           setEditName(e);
 
           typeof window !== "undefined"
-            ? localStorage?.setItem("user", JSON.stringify(data?.updateUser))
+            ? localStorage.setItem("user", JSON.stringify(data?.updateUser))
             : null;
           dispatch(Loginuser(data?.updateUser));
         } else {
@@ -83,7 +83,7 @@ const Page = () => {
         message.warning("Device Deleted");
 
         typeof window !== "undefined"
-          ? localStorage?.setItem("user", JSON.stringify(feedback?.updateUser))
+          ? localStorage.setItem("user", JSON.stringify(feedback?.updateUser))
           : null;
         dispatch(Loginuser(feedback?.updateUser));
       } else {
