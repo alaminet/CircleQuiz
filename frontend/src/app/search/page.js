@@ -1,16 +1,7 @@
 "use client";
-export const dynamic = "force-dynamic";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Col,
-  Layout,
-  Pagination,
-  Result,
-  Row,
-  theme,
-  Input,
-} from "antd";
+import { Col, Layout, Pagination, Result, Row, theme, Input } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import SubjectHeading from "@/components/SubjectHeading";
 import Loading from "../loading";
@@ -30,10 +21,10 @@ const Page = () => {
   const [pageSize, setPageSize] = useState(10); // Set page size
 
   // Search Q&A
-  const onSearch = (value) => {
+  const onSearch = (e) => {
     try {
-      const path = `/search?q=${value.trim()}`;
-      value !== "" && router.push(path);
+      const path = `/search?q=${e.trim()}`;
+      if (e !== "") router.push(path);
     } catch (error) {
       console.log(error);
     }
@@ -41,20 +32,24 @@ const Page = () => {
 
   // MCQ List Filter
   const dataListFiler = dataList?.filter((item) => {
-    if (!search && typeSearch) {
-      const typeCat = typeSearch[1];
-      const typeVal = typeSearch[0];
-      if (typeCat == "category") {
-        return item?.category?.some((cat) => cat.slug == typeVal);
-      } else if (typeCat == "tag") {
-        return item?.tag?.some((tags) => tags.slug == typeVal);
-      } else if (typeCat == "subcategory") {
-        return item?.subcategory?.some((subcat) => subcat.slug == typeVal);
+    try {
+      if (!search && typeSearch) {
+        const typeCat = typeSearch[1];
+        const typeVal = typeSearch[0];
+        if (typeCat == "category") {
+          return item?.category?.some((cat) => cat.slug == typeVal);
+        } else if (typeCat == "tag") {
+          return item?.tag?.some((tags) => tags.slug == typeVal);
+        } else if (typeCat == "subcategory") {
+          return item?.subcategory?.some((subcat) => subcat.slug == typeVal);
+        } else {
+          return item?.question?.toLowerCase().includes(search.toLowerCase());
+        }
       } else {
         return item?.question?.toLowerCase().includes(search.toLowerCase());
       }
-    } else {
-      return item?.question?.toLowerCase().includes(search.toLowerCase());
+    } catch (error) {
+      console.log(error);
     }
   });
 
@@ -75,7 +70,7 @@ const Page = () => {
   // Get MCQ List
   const getData = async (qdata) => {
     try {
-      setDataList(null);
+      setDataList([]);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/search`,
         {
@@ -96,11 +91,7 @@ const Page = () => {
       const uniqueArray = data?.uniqueArray.filter(
         (obj, index, self) => index === self.findIndex((o) => o._id === obj._id)
       );
-      const dataViewArr = [];
-      uniqueArray?.map((item) => {
-        dataViewArr.push(item);
-      });
-      setDataList(dataViewArr);
+      setDataList(uniqueArray);
     } catch (error) {
       console.log(error);
     }
