@@ -40,17 +40,25 @@ const Addmcq = () => {
 
   // slug change
   const handleTitleChange = (e) => {
-    let titleVal = e.target.value;
-    setTagName(titleVal);
-    setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+    try {
+      const titleVal = e.target.value;
+      setTagName(titleVal);
+      setSlugVal(titleVal.split(" ").join("-").toLowerCase());
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Sub-Category filter
   const handlCatCng = (e) => {
-    const subCatFilter = subCatList.filter((item) =>
-      e.some((key) => item.cat.includes(key))
-    );
-    setSubCatFlt(subCatFilter);
+    try {
+      const subCatFilter = subCatList.filter((item) =>
+        e.some((key) => item.cat.includes(key))
+      );
+      setSubCatFlt(subCatFilter);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // New Tag Added server enviroment
@@ -97,8 +105,8 @@ const Addmcq = () => {
   };
 
   const addItem = async (e) => {
-    e.preventDefault();
     try {
+      e.preventDefault();
       await postData({ name: tagName, slug: slugVal });
       getTag();
       setTagName("");
