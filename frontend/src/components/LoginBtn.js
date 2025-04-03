@@ -27,19 +27,19 @@ import {
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useLocalStorage } from "@/lib/helper/useLocalStorage";
 
 const LoginBtn = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((user) => user.loginSlice.login);
   const { data: session, status } = useSession();
+  const isServer = typeof window === "undefined";
 
   // Logout Handeller
   const handleLogout = async () => {
     // logout
-
-    const deviceID =
-      typeof window !== "undefined" ? localStorage.getItem("device-id") : null;
+    const deviceID = !isServer && localStorage.getItem("device-id");
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/logout`,
       {
@@ -55,8 +55,7 @@ const LoginBtn = () => {
     message.info(feedback?.message);
     if (feedback?.message === "Logged Out Successfully") {
       signOut();
-
-      typeof window !== "undefined" ? localStorage.removeItem("user") : null;
+      !isServer && localStorage.removeItem("user");
       dispatch(Loginuser(null));
     } else {
       message.warning("Logout Failed");
@@ -136,10 +135,7 @@ const LoginBtn = () => {
 
   const userExistCk = async () => {
     try {
-      const deviceID =
-        typeof window !== "undefined"
-          ? localStorage.getItem("device-id")
-          : null;
+      const deviceID = !isServer && localStorage.getItem("device-id");
       // userExist
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/userExist`,
@@ -167,10 +163,7 @@ const LoginBtn = () => {
   // Loging Functionality
   const sendLoginDetails = async (data) => {
     try {
-      const deviceID =
-        typeof window !== "undefined"
-          ? localStorage.getItem("device-id")
-          : null;
+      const deviceID = !isServer && localStorage.getItem("device-id");
       const userAgent = navigator.userAgent;
       const isDevice = user?.device?.filter(
         (item) => item?.deviceID === deviceID
@@ -195,9 +188,8 @@ const LoginBtn = () => {
         const feedback = await response.json();
         dispatch(Loginuser(feedback?.userExist));
 
-        typeof window !== "undefined"
-          ? localStorage.setItem("user", JSON.stringify(feedback?.userExist))
-          : null;
+        !isServer &&
+          localStorage.setItem("user", JSON.stringify(feedback?.userExist));
         message.info(feedback?.message);
       }
     } catch (error) {

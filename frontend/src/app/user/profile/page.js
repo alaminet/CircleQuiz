@@ -23,9 +23,9 @@ const Page = () => {
   const user = useSelector((user) => user?.loginSlice?.login);
   const dispatch = useDispatch();
   const [editName, setEditName] = useState(user?.name);
+  const isServer = typeof window === "undefined";
 
-  const deviceID =
-    typeof window !== "undefined" ? localStorage.getItem("device-id") : null;
+  const deviceID = !isServer && localStorage.getItem("device-id");
 
   const handleName = async (e) => {
     try {
@@ -53,9 +53,8 @@ const Page = () => {
           message.success(data?.message);
           setEditName(e);
 
-          typeof window !== "undefined"
-            ? localStorage.setItem("user", JSON.stringify(data?.updateUser))
-            : null;
+          !isServer &&
+            localStorage.setItem("user", JSON.stringify(data?.updateUser));
           dispatch(Loginuser(data?.updateUser));
         } else {
           message.error("Logout Failed");
@@ -88,9 +87,8 @@ const Page = () => {
       if (feedback.message === "Logged Out Successfully") {
         message.warning("Device Deleted");
 
-        typeof window !== "undefined"
-          ? localStorage.setItem("user", JSON.stringify(feedback?.updateUser))
-          : null;
+        !isServer &&
+          localStorage.setItem("user", JSON.stringify(feedback?.updateUser));
         dispatch(Loginuser(feedback?.updateUser));
       } else {
         message.error("Logout Failed");
