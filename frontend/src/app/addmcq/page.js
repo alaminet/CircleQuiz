@@ -1,6 +1,7 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { Suspense, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import {
   Button,
   Form,
@@ -14,7 +15,9 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
-import CustomEditor from "@/components/CustomEditor";
+const CustomEditor = dynamic(() => import("@/components/CustomEditor"), {
+  ssr: false,
+});
 import { useSelector } from "react-redux";
 import Loading from "../loading";
 
