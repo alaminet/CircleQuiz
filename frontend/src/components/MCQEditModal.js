@@ -18,7 +18,10 @@ import {
   Select,
   Col,
 } from "antd";
-import CustomEditor from "./CustomEditor";
+import dynamic from "next/dynamic";
+const CustomEditor = dynamic(() => import("@/components/CustomEditor"), {
+  ssr: false,
+});
 
 const MCQEditModal = ({ data, ModalOpen, setModalOpen }) => {
   const user = useSelector((user) => user.loginSlice.login);

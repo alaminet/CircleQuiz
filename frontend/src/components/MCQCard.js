@@ -31,7 +31,10 @@ import { useSelector } from "react-redux";
 import MCQDescCard from "./MCQDescCard";
 import MCQEditModal from "./MCQEditModal";
 import { useRouter } from "next/navigation";
-import CustomEditor from "./CustomEditor";
+import dynamic from "next/dynamic";
+const CustomEditor = dynamic(() => import("@/components/CustomEditor"), {
+  ssr: false,
+});
 import Link from "next/link";
 const { Title, Text } = Typography;
 

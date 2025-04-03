@@ -15,7 +15,10 @@ import {
 } from "antd";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import CustomEditor from "./CustomEditor";
+import dynamic from "next/dynamic";
+const CustomEditor = dynamic(() => import("@/components/CustomEditor"), {
+  ssr: false,
+});
 const { Text, Paragraph } = Typography;
 
 const MCQDescCard = ({ data }) => {

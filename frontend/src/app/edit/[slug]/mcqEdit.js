@@ -14,7 +14,10 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
-import CustomEditor from "@/components/CustomEditor";
+import dynamic from "next/dynamic";
+const CustomEditor = dynamic(() => import("@/components/CustomEditor"), {
+  ssr: false,
+});
 
 const MCQEdit = ({ id }) => {
   const user = useSelector((user) => user?.loginSlice?.login);
