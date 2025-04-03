@@ -60,6 +60,9 @@ const Page = ({ params }) => {
           body: JSON.stringify(getData),
         }
       );
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
       const data = await res.json();
       const MCQAppArr = [];
       data?.view.map((item) => {

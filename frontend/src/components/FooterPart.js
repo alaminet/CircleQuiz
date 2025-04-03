@@ -1,5 +1,5 @@
-import { Footer } from "antd/es/layout/layout";
 import React from "react";
+import { Footer } from "antd/es/layout/layout";
 
 const FooterPart = () => {
   return (

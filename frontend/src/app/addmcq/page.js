@@ -146,6 +146,9 @@ const Addmcq = () => {
         },
       }
     );
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
@@ -171,6 +174,9 @@ const Addmcq = () => {
         },
       }
     );
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
@@ -196,6 +202,9 @@ const Addmcq = () => {
         },
       }
     );
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {
@@ -219,6 +228,9 @@ const Addmcq = () => {
         },
       }
     );
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
     const data = await res.json();
     const tableData = [];
     data?.view?.map((item) => {

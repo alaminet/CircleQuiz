@@ -45,6 +45,9 @@ const Page = () => {
             }),
           }
         );
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
         const data = await res.json();
         if (data.message === "User Updated") {
           message.success(data?.message);
@@ -77,6 +80,9 @@ const Page = () => {
           body: JSON.stringify({ deviceID: vlaue.deviceID, userID: user?._id }),
         }
       );
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
       const feedback = await res.json();
 
       if (feedback.message === "Logged Out Successfully") {

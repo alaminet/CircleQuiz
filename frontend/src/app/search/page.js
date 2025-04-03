@@ -79,6 +79,9 @@ const Page = () => {
           body: JSON.stringify(qdata),
         }
       );
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
       const data = await res.json();
 
       // Removing duplicates based on 'id'
