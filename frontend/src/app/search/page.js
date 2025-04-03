@@ -1,8 +1,7 @@
 "use client";
-import { Suspense, use, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Button,
   Col,
   Layout,
   Pagination,
@@ -31,8 +30,12 @@ const Page = () => {
 
   // Search Q&A
   const onSearch = (value) => {
-    const path = `/search?q=${value.trim()}`;
-    value !== "" && router.push(path);
+    try {
+      const path = `/search?q=${value.trim()}`;
+      value !== "" && router.push(path);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // MCQ List Filter
@@ -56,8 +59,12 @@ const Page = () => {
 
   // Handel pagination
   const handlePageChange = (page, pageSize) => {
-    setCurrentPage(page);
-    setPageSize(pageSize);
+    try {
+      setCurrentPage(page);
+      setPageSize(pageSize);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const paginatedData = dataListFiler?.slice(
     (currentPage - 1) * pageSize,
@@ -66,8 +73,8 @@ const Page = () => {
 
   // Get MCQ List
   const getData = async (qdata) => {
-    setDataList(null);
     try {
+      setDataList(null);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/mcq/search`,
         {
