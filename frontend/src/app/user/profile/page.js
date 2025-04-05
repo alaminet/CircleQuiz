@@ -10,7 +10,6 @@ import {
   message,
   Tag,
   Popconfirm,
-  Button,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -26,6 +25,7 @@ const Page = () => {
   const isServer = typeof window === "undefined";
 
   const deviceID = !isServer && localStorage.getItem("device-id");
+  const userAgent = navigator.userAgent;
 
   const handleName = async (e) => {
     try {
@@ -76,7 +76,7 @@ const Page = () => {
             "Content-Type": "application/json",
             Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
           },
-          body: JSON.stringify({ deviceID: vlaue.deviceID, userID: user?._id }),
+          body: JSON.stringify({ userAgent: vlaue.userAgent, userID: user?._id }),
         }
       );
       if (!res.ok) {
@@ -167,7 +167,7 @@ const Page = () => {
             <Col span={8}>
               <Row>
                 {user?.device.map((item, i) =>
-                  item.deviceID == deviceID ? (
+                  item.userAgent == userAgent ? (
                     <Col span={24} key={i}>
                       <Paragraph style={{ margin: "0" }}>
                         <Tag color="orange">Native Device</Tag>

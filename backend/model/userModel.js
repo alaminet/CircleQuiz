@@ -32,7 +32,6 @@ const userSchema = new Schema(
     },
     device: [
       {
-        deviceID: String,
         userAgent: String,
         loginAt: Date,
       },

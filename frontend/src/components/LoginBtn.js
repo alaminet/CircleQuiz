@@ -1,6 +1,6 @@
 "use client";
 // import "@ant-design/v5-patch-for-react-19";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import {
   Avatar,
@@ -23,11 +23,9 @@ import {
   NodeIndexOutlined,
   PlusCircleOutlined,
   PushpinOutlined,
-  SearchOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useLocalStorage } from "@/lib/helper/useLocalStorage";
 
 const LoginBtn = () => {
   const router = useRouter();
@@ -39,7 +37,7 @@ const LoginBtn = () => {
   // Logout Handeller
   const handleLogout = async () => {
     // logout
-    const deviceID = !isServer && localStorage.getItem("device-id");
+    const userAgent = navigator.userAgent;
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/logout`,
       {
@@ -48,7 +46,7 @@ const LoginBtn = () => {
           "Content-Type": "application/json",
           Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
         },
-        body: JSON.stringify({ deviceID: deviceID, userID: user?._id }),
+        body: JSON.stringify({ userAgent: userAgent, userID: user?._id }),
       }
     );
     const feedback = await res.json();
@@ -135,7 +133,6 @@ const LoginBtn = () => {
 
   const userExistCk = async () => {
     try {
-      const deviceID = !isServer && localStorage.getItem("device-id");
       // userExist
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/userExist`,
@@ -151,10 +148,15 @@ const LoginBtn = () => {
         }
       );
       const feedback = await res?.json();
+      const userAgent = navigator.userAgent;
       const isDevice = feedback?.userExist?.device?.filter(
-        (item) => item?.deviceID === deviceID
+        (item) => item?.userAgent === userAgent
       );
-      isDevice?.length == 0 && handleLogout();
+      if (isDevice?.length == 0) {
+        signOut();
+        !isServer && localStorage.removeItem("user");
+        dispatch(Loginuser(null));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -163,12 +165,8 @@ const LoginBtn = () => {
   // Loging Functionality
   const sendLoginDetails = async (data) => {
     try {
-      const deviceID = !isServer && localStorage.getItem("device-id");
       const userAgent = navigator.userAgent;
-      const isDevice = user?.device?.filter(
-        (item) => item?.deviceID === deviceID
-      );
-      isDevice?.length == 0 && handleLogout();
+
       if (session && !user) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/auth/login`,
@@ -180,17 +178,16 @@ const LoginBtn = () => {
             },
             body: JSON.stringify({
               data: data,
-              deviceID: deviceID,
               userAgent: userAgent,
             }),
           }
         );
         const feedback = await response.json();
-        dispatch(Loginuser(feedback?.userExist));
 
         !isServer &&
           localStorage.setItem("user", JSON.stringify(feedback?.userExist));
-        message.info(feedback?.message);
+        dispatch(Loginuser(feedback?.userExist));
+        // message.info(feedback?.message);
       }
     } catch (error) {
       console.error("Error sending login details:", error);

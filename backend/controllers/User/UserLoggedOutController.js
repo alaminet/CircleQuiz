@@ -2,13 +2,13 @@ const User = require("../../model/userModel");
 
 const UserLoggedOutController = async (req, res) => {
   try {
-    const { deviceID, userID } = req.body;
-    if (!deviceID || !userID) {
+    const { userAgent, userID } = req.body;
+    if (!userAgent || !userID) {
       return res.status(404).send({ message: "Data Not Found" });
     } else {
       const updateUser = await User.findOneAndUpdate(
         { _id: userID },
-        { $pull: { device: { deviceID: deviceID } } },
+        { $pull: { device: { userAgent: userAgent } } },
         { new: true }
       );
       await res
