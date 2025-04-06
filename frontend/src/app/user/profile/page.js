@@ -76,7 +76,10 @@ const Page = () => {
             "Content-Type": "application/json",
             Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
           },
-          body: JSON.stringify({ userAgent: vlaue.userAgent, userID: user?._id }),
+          body: JSON.stringify({
+            userAgent: vlaue.userAgent,
+            userID: user?._id,
+          }),
         }
       );
       if (!res.ok) {
@@ -124,8 +127,7 @@ const Page = () => {
                   />
                 </Badge.Ribbon>
               </>
-            }
-          >
+            }>
             <Meta
               avatar={<Avatar src={user?.userImg || user?.name.charAt(0)} />}
               title={user?.name}
@@ -148,8 +150,7 @@ const Page = () => {
                 style={{ margin: "0" }}
                 editable={{
                   onChange: handleName,
-                }}
-              >
+                }}>
                 {editName}
               </Paragraph>
             </Col>
@@ -166,8 +167,8 @@ const Page = () => {
             <Col span={1}>:</Col>
             <Col span={8}>
               <Row>
-                {user?.device.map((item, i) =>
-                  item.userAgent == userAgent ? (
+                {user?.device?.map((item, i) =>
+                  item?.userAgent == userAgent ? (
                     <Col span={24} key={i}>
                       <Paragraph style={{ margin: "0" }}>
                         <Tag color="orange">Native Device</Tag>
@@ -185,8 +186,7 @@ const Page = () => {
                           onConfirm={() => handleDltConfirm(item)}
                           onCancel={cancel}
                           okText="Yes"
-                          cancelText="No"
-                        >
+                          cancelText="No">
                           <DeleteTwoTone twoToneColor="#eb2f96" />
                         </Popconfirm>
                       </Paragraph>
