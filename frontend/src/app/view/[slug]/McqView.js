@@ -59,7 +59,7 @@ const McqView = ({ id }) => {
             <Col md={18}>
               <div>
                 <Suspense fallback={<Loading />}>
-                  <div>{viewItem && <MCQCard data={viewItem} />}</div>
+                  <div>{viewItem && <MCQCard data={viewItem} index={++i}/>}</div>
                 </Suspense>
               </div>
             </Col>

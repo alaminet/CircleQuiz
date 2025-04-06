@@ -53,7 +53,7 @@ const LoginBtn = () => {
     message.info(feedback?.message);
     if (feedback?.message === "Logged Out Successfully") {
       signOut();
-      !isServer && localStorage.removeItem("user");
+      localStorage.removeItem("user");
       dispatch(Loginuser(null));
     } else {
       message.warning("Logout Failed");
@@ -208,8 +208,7 @@ const LoginBtn = () => {
               onClick={() => router.push("/addmcq")}
               type="primary"
               shape="round"
-              icon={<PlusCircleOutlined />}
-            >
+              icon={<PlusCircleOutlined />}>
               Add Q&A
             </Button>
           </Tooltip>
@@ -218,8 +217,7 @@ const LoginBtn = () => {
             placement="bottomRight"
             title={user?.name}
             content={userContent}
-            trigger="click"
-          >
+            trigger="click">
             <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
           </Popover>
           {/* <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" /> */}

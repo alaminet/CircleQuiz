@@ -130,7 +130,7 @@ const Page = () => {
                   <Suspense fallback={<Loading />}>
                     {paginatedData?.map((item, i) => (
                       <div key={i}>
-                        <MCQCard data={item} />
+                        <MCQCard data={item} index={++i}/>
                       </div>
                     ))}
                   </Suspense>

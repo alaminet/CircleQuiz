@@ -2,15 +2,17 @@
 import React, { useEffect, use, useState, Suspense } from "react";
 import MCQCard from "@/components/MCQCard";
 import SubjectHeading from "@/components/SubjectHeading";
-import { Col, Layout, Row, Skeleton, theme } from "antd";
+import { Col, Layout, Row,  theme } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import CardBasicWMore from "@/components/CardBasicWMore";
 import { Pagination } from "antd";
 import Loading from "@/app/loading";
+import NotFound from "@/components/NotFound";
 const { Content, Sider } = Layout;
 
 const Page = ({ params }) => {
   const { slug } = use(params);
+
   const [mcqList, setMcqList] = useState();
   const [search, setSearch] = useState("");
   const [typeSearch, setTypeSearch] = useState([]);
@@ -101,21 +103,32 @@ const Page = ({ params }) => {
                   search={setSearch}
                   count={mcqList?.length}
                 />
-                <Suspense fallback={<Loading />}>
-                  {paginatedData?.map((item, i) => (
-                    <div key={i}>
-                      <MCQCard data={item} />
-                    </div>
-                  ))}
-                </Suspense>
-                <Pagination
-                  align="end"
-                  current={currentPage}
-                  pageSize={pageSize}
-                  total={mcqListFiler?.length}
-                  onChange={handlePageChange}
-                  showSizeChanger
-                />
+                 {!paginatedData?.length > 0 ? (
+                  <NotFound />
+                ) : (
+                  <>
+                    <Suspense fallback={<Loading />}>
+                      {paginatedData
+                        ?.sort(
+                          (a, b) =>
+                            new Date(b.createdAt) - new Date(a.createdAt)
+                        )
+                        .map((item, i) => (
+                          <div key={i}>
+                            <MCQCard data={item} index={++i}/>
+                          </div>
+                        ))}
+                    </Suspense>
+                    <Pagination
+                      align="end"
+                      current={currentPage}
+                      pageSize={pageSize}
+                      total={mcqListFiler?.length}
+                      onChange={handlePageChange}
+                      showSizeChanger
+                    />
+                  </>
+                )}
               </div>
             </Col>
             <Col md={6}>

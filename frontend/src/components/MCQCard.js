@@ -38,7 +38,7 @@ const CustomEditor = dynamic(() => import("@/components/CustomEditor"), {
 import Link from "next/link";
 const { Title, Text } = Typography;
 
-const MCQCard = ({ data }) => {
+const MCQCard = ({ data, index }) => {
   const user = useSelector((user) => user.loginSlice.login);
   const contentRef = useRef(null);
   const router = useRouter();
@@ -196,12 +196,19 @@ const MCQCard = ({ data }) => {
             <Col xs={24} md={16}>
               <div>
                 <Link href={`/view/id=${data?._id}&type=mcq`}>
-                  <Title level={5} style={{ margin: "0", color: "blueviolet" }}>
+                  <Title
+                    level={5}
+                    style={{
+                      margin: "0",
+                      color: "blueviolet",
+                      display: "flex",
+                      gap: "5px",
+                    }}>
+                    <p>{index ? index + "." : ""}</p>
                     <span
                       dangerouslySetInnerHTML={{
                         __html: data?.question,
-                      }}
-                    ></span>
+                      }}></span>
                   </Title>
                 </Link>
               </div>
@@ -223,12 +230,12 @@ const MCQCard = ({ data }) => {
               <Col
                 key={k}
                 span={12}
-                style={{ display: "flex", gap: "4px", alignItems: "center" }}
-              >
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                 {k === data?.ans ? (
                   <CheckSquareFilled style={{ color: "green" }} />
                 ) : (
-                  <BorderOutlined />
+                  <span>{String.fromCharCode(k + 65)})</span>
+                  // <BorderOutlined />
                 )}
                 <span
                   dangerouslySetInnerHTML={{
@@ -253,8 +260,7 @@ const MCQCard = ({ data }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}
-                >
+                  onClick={() => setShowDes(!showDes)}>
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -273,8 +279,7 @@ const MCQCard = ({ data }) => {
                     variant="link"
                     size="small"
                     onClick={handleMCQLike}
-                    style={{ gap: "2px", alignItems: "baseline" }}
-                  >
+                    style={{ gap: "2px", alignItems: "baseline" }}>
                     <LikeOutlined /> {likeCount}
                   </Button>
                 )}
@@ -282,8 +287,7 @@ const MCQCard = ({ data }) => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <ShareAltOutlined />
                 </Button>
               </Flex>
@@ -317,8 +321,7 @@ const MCQCard = ({ data }) => {
           title="Add Details"
           open={isPostModal}
           onOk={handlePostOk}
-          onCancel={handlePostCancel}
-        >
+          onCancel={handlePostCancel}>
           <CustomEditor onChange={setDetails} />
         </Modal>
       </div>
