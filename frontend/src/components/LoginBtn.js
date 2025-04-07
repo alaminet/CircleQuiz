@@ -205,10 +205,11 @@ const LoginBtn = () => {
         <Flex gap={10}>
           <Tooltip title="Add Q&A">
             <Button
-              onClick={() => router.push("/addmcq")}
+              onClick={() => user.role === "admin" && router.push("/addmcq")}
               type="primary"
               shape="round"
-              icon={<PlusCircleOutlined />}>
+              icon={<PlusCircleOutlined />}
+            >
               Add Q&A
             </Button>
           </Tooltip>
@@ -217,7 +218,8 @@ const LoginBtn = () => {
             placement="bottomRight"
             title={user?.name}
             content={userContent}
-            trigger="click">
+            trigger="click"
+          >
             <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
           </Popover>
           {/* <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" /> */}

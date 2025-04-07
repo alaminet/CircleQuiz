@@ -1,6 +1,7 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { useEffect, useRef, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import {
   CaretRightOutlined,
   EyeFilled,
@@ -54,7 +55,7 @@ const MCQCard = ({ data, index }) => {
   // Card Menu
   const onClick = async (e) => {
     console.log("click ", e);
-    if (e.key === "edit" && user.role === "admin") {
+    if (e.key === "edit" && user?.role === "admin") {
       // setIsModalOpen(true);
       const id = data?._id;
       const type = "mcq";
@@ -62,7 +63,7 @@ const MCQCard = ({ data, index }) => {
       router.push(path);
     }
     if (e.key === "addDes") {
-      setIsPostModal(true);
+      user ? setIsPostModal(true) : signIn();
     }
   };
   const menutItem = [
@@ -203,12 +204,14 @@ const MCQCard = ({ data, index }) => {
                       color: "blueviolet",
                       display: "flex",
                       gap: "5px",
-                    }}>
+                    }}
+                  >
                     <p>{index ? index + "." : ""}</p>
                     <span
                       dangerouslySetInnerHTML={{
                         __html: data?.question,
-                      }}></span>
+                      }}
+                    ></span>
                   </Title>
                 </Link>
               </div>
@@ -230,7 +233,8 @@ const MCQCard = ({ data, index }) => {
               <Col
                 key={k}
                 span={12}
-                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}
+              >
                 {k === data?.ans ? (
                   <CheckSquareFilled style={{ color: "green" }} />
                 ) : (
@@ -260,7 +264,8 @@ const MCQCard = ({ data, index }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}>
+                  onClick={() => setShowDes(!showDes)}
+                >
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -279,7 +284,8 @@ const MCQCard = ({ data, index }) => {
                     variant="link"
                     size="small"
                     onClick={handleMCQLike}
-                    style={{ gap: "2px", alignItems: "baseline" }}>
+                    style={{ gap: "2px", alignItems: "baseline" }}
+                  >
                     <LikeOutlined /> {likeCount}
                   </Button>
                 )}
@@ -287,7 +293,8 @@ const MCQCard = ({ data, index }) => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}>
+                  style={{ gap: "2px" }}
+                >
                   <ShareAltOutlined />
                 </Button>
               </Flex>
@@ -321,7 +328,8 @@ const MCQCard = ({ data, index }) => {
           title="Add Details"
           open={isPostModal}
           onOk={handlePostOk}
-          onCancel={handlePostCancel}>
+          onCancel={handlePostCancel}
+        >
           <CustomEditor onChange={setDetails} />
         </Modal>
       </div>
