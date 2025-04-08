@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 import LoginBtn from "./LoginBtn";
 import SearchBtn from "./SearchBtn";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "../../public/logo.png";
 
 const TopNavBar = () => {
   const router = useRouter();
@@ -183,7 +185,15 @@ const TopNavBar = () => {
 
   return (
     <>
-      <div>Logo</div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Image src={logo} alt="CA" width={50} height={50} />
+      </div>
       <Menu
         // theme="dark"
         onClick={handleMenu}
@@ -197,7 +207,7 @@ const TopNavBar = () => {
         }}
       />
       <Flex gap={10} align="center">
-        <SearchBtn/>
+        <SearchBtn />
         <LoginBtn />
       </Flex>
     </>
