@@ -1,13 +1,10 @@
 "use client";
-import React, { useEffect, use, useState, Suspense } from "react";
-import MCQCard from "@/components/MCQCard";
+import React, { useEffect, use, useState } from "react";
 import SubjectHeading from "@/components/SubjectHeading";
-import { Col, Layout, Row, theme } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import CardBasicWMore from "@/components/CardBasicWMore";
-import { Pagination } from "antd";
-import Loading from "@/app/loading";
-import NotFound from "@/components/NotFound";
+import { Col, Layout, Row, theme } from "antd";
+import MCQwithPaginateFR from "@/components/MCQwithPaginateFR";
 const { Content, Sider } = Layout;
 
 const Page = ({ params }) => {
@@ -15,8 +12,6 @@ const Page = ({ params }) => {
   const [mcqList, setMcqList] = useState();
   const [search, setSearch] = useState("");
   const [typeSearch, setTypeSearch] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10); // Set page size
 
   // MCQ List Filter
   const mcqListFiler = mcqList?.filter((item) => {
@@ -36,16 +31,6 @@ const Page = ({ params }) => {
       return item?.question?.toLowerCase().includes(search.toLowerCase());
     }
   });
-
-  // Handel pagination
-  const handlePageChange = (page, pageSize) => {
-    setCurrentPage(page);
-    setPageSize(pageSize);
-  };
-  const paginatedData = mcqListFiler?.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
 
   // Get MCQ List
   const getMCQ = async (getData) => {
@@ -102,32 +87,7 @@ const Page = ({ params }) => {
                   search={setSearch}
                   count={mcqList?.length}
                 />
-                {!paginatedData?.length > 0 ? (
-                  <NotFound />
-                ) : (
-                  <>
-                    <Suspense fallback={<Loading />}>
-                      {paginatedData
-                        ?.sort(
-                          (a, b) =>
-                            new Date(b.createdAt) - new Date(a.createdAt)
-                        )
-                        .map((item, i) => (
-                          <div key={i}>
-                            <MCQCard data={item} index={++i}/>
-                          </div>
-                        ))}
-                    </Suspense>
-                    <Pagination
-                      align="end"
-                      current={currentPage}
-                      pageSize={pageSize}
-                      total={mcqListFiler?.length}
-                      onChange={handlePageChange}
-                      showSizeChanger
-                    />
-                  </>
-                )}
+                <MCQwithPaginateFR data={mcqListFiler} />
               </div>
             </Col>
             <Col md={6}>

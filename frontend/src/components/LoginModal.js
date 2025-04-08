@@ -1,24 +1,56 @@
-import React from "react";
-import { FacebookOutlined, GoogleOutlined } from "@ant-design/icons";
-import { Button, Flex, Tooltip } from "antd";
-import LoginBtn from "./LoginBtn";
+"use client";
+import React, { useState } from "react";
+import { signIn } from "next-auth/react";
+import { Button, Modal, Result } from "antd";
 
-const LoginModal = () => {
+const LoginModal = ({ open, setOpen }) => {
+  const [loading, setLoading] = useState(false);
+  const handleOk = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setOpen(false);
+      signIn();
+    }, 3000);
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
   return (
     <>
-      <Flex gap={20} justify="center" align="center">
-        <Tooltip title="Google">
-          {/* <Button type="primary" icon={<GoogleOutlined />}>
-            Google Sign UP
-          </Button> */}
-          <LoginBtn />
-        </Tooltip>
-        <Tooltip title="Facebook">
-          <Button type="primary" icon={<FacebookOutlined />}>
-            Facebook
-          </Button>
-        </Tooltip>
-      </Flex>
+      <Modal
+        open={open}
+        title="Not Authorized"
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Return
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            loading={loading}
+            onClick={handleOk}>
+            Sign in
+          </Button>,
+          // <Button
+          //   key="link"
+          //   href="https://google.com"
+          //   target="_blank"
+          //   type="primary"
+          //   loading={loading}
+          //   onClick={handleOk}>
+          //   Search on Google
+          // </Button>,
+        ]}>
+        <Result
+          status="403"
+          title="Need Access !"
+          subTitle="Sorry, you are not authorized to access this page."
+          // extra={<Button type="primary">Back Home</Button>}
+        />
+      </Modal>
     </>
   );
 };

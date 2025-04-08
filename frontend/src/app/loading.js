@@ -1,15 +1,13 @@
 import React from "react";
-import { Flex, Skeleton, Spin } from "antd";
-const loading = () => {
+import { Flex, Spin } from "antd";
+const Loading = () => {
   return (
     <>
       <Flex gap="middle" vertical>
         <Spin size="large" />
-        {/* <p>loading...</p>
-        <Skeleton active /> */}
       </Flex>
     </>
   );
 };
 
-export default loading;
+export default Loading;

@@ -1,5 +1,5 @@
-import "@ant-design/v5-patch-for-react-19";
 import React from "react";
+import "@ant-design/v5-patch-for-react-19";
 import "ckeditor5/ckeditor5.css";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -21,7 +21,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${notoSerifBengali.variable} `}>
+      <body className={`${notoSerifBengali?.variable}`}>
         <AntdRegistry>
           <SessionProvider>
             <NavLayout>{children}</NavLayout>

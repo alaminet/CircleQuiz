@@ -1,12 +1,11 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Col, Layout, Pagination, Result, Row, theme, Input } from "antd";
+import { Col, Layout, Result, Row, theme, Input } from "antd";
 import SideListWBadge from "@/components/SideListWBadge";
 import SubjectHeading from "@/components/SubjectHeading";
-import Loading from "../loading";
-import MCQCard from "@/components/MCQCard";
 import CardBasicWMore from "@/components/CardBasicWMore";
+import MCQwithPaginateFR from "@/components/MCQwithPaginateFR";
 const { Content, Sider } = Layout;
 const { Search } = Input;
 
@@ -17,21 +16,9 @@ const Page = () => {
   const [dataList, setDataList] = useState();
   const [search, setSearch] = useState("");
   const [typeSearch, setTypeSearch] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10); // Set page size
-
-  // Search Q&A
-  const onSearch = (e) => {
-    try {
-      const path = `/search?q=${e.trim()}`;
-      if (e !== "") router.push(path);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // MCQ List Filter
-  const dataListFiler = dataList?.filter((item) => {
+  const dataListFilter = dataList?.filter((item) => {
     try {
       if (!search && typeSearch) {
         const typeCat = typeSearch[1];
@@ -52,20 +39,6 @@ const Page = () => {
       console.log(error);
     }
   });
-
-  // Handel pagination
-  const handlePageChange = (page, pageSize) => {
-    try {
-      setCurrentPage(page);
-      setPageSize(pageSize);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const paginatedData = dataListFiler?.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
 
   // Get MCQ List
   const getData = async (qdata) => {
@@ -97,6 +70,16 @@ const Page = () => {
     }
   };
 
+  // Search Q&A
+  const onSearch = (e) => {
+    try {
+      const path = `/search?q=${e.trim()}`;
+      if (e !== "") router.push(path);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getData({ value: query, status: "approved" });
   }, [searchParams]);
@@ -113,8 +96,7 @@ const Page = () => {
           collapsedWidth="0"
           style={{
             background: colorBgContainer,
-          }}
-        >
+          }}>
           <SideListWBadge data={dataList} search={setTypeSearch} />
         </Sider>
         <Content>
@@ -127,21 +109,7 @@ const Page = () => {
                     search={setSearch}
                     count={dataList?.length}
                   />
-                  <Suspense fallback={<Loading />}>
-                    {paginatedData?.map((item, i) => (
-                      <div key={i}>
-                        <MCQCard data={item} index={++i}/>
-                      </div>
-                    ))}
-                  </Suspense>
-                  <Pagination
-                    align="end"
-                    current={currentPage}
-                    pageSize={pageSize}
-                    total={dataListFiler?.length}
-                    onChange={handlePageChange}
-                    showSizeChanger
-                  />
+                  <MCQwithPaginateFR data={dataListFilter} />
                 </div>
               </Col>
             ) : (
