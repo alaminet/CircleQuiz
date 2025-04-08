@@ -18,8 +18,8 @@ const SearchBtn = () => {
       <Search
         placeholder="input search text"
         allowClear
-        enterButton="Search"
-        size="large"
+        enterButton={<SearchOutlined />}
+        size="middle"
         onSearch={onSearch}
       />
     </div>

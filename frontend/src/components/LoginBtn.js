@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Avatar, Button, Flex, Menu, message, Popover, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +22,7 @@ const LoginBtn = () => {
   const dispatch = useDispatch();
   const user = useSelector((user) => user.loginSlice.login);
   const { data: session, status } = useSession();
+  const [open, setOpen] = useState(false);
   const isServer = typeof window === "undefined";
 
   // Logout Handeller
@@ -50,12 +51,18 @@ const LoginBtn = () => {
     }
   };
 
+  // popover
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+
   const handleMenu = (e) => {
     userExistCk();
     if (e.key === "logout") {
       handleLogout();
     } else {
       router.push(`/user/${e.key}`);
+      setOpen(false);
       // console.log(e.key);
     }
   };
@@ -207,6 +214,8 @@ const LoginBtn = () => {
             placement="bottomRight"
             title={user?.name}
             content={userContent}
+            open={open}
+            onOpenChange={handleOpenChange}
             trigger="click">
             <Avatar src={user?.userImg || user?.name.charAt(0)} alt="avater" />
           </Popover>

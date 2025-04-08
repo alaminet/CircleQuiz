@@ -46,27 +46,17 @@ const McqView = ({ id }) => {
   return (
     <>
       <Layout>
-        <Sider
-          breakpoint="lg"
-          collapsedWidth="0"
-          style={{
-            background: colorBgContainer,
-          }}>
-          Side Bar
-        </Sider>
         <Content>
           <Row gutter={[8, 8]}>
-            <Col md={18}>
+            <Col md={6}></Col>
+            <Col md={12}>
               <div>
                 <Suspense fallback={<Loading />}>
-                  <div>{viewItem && <MCQCard data={viewItem} index={++i}/>}</div>
+                  <div>{viewItem && <MCQCard data={viewItem} />}</div>
                 </Suspense>
               </div>
             </Col>
-            <Col md={6}>
-              <CardBasicWMore />
-              <CardBasicWMore />
-            </Col>
+            <Col md={6}></Col>
           </Row>
         </Content>
       </Layout>

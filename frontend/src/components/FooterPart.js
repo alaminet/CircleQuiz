@@ -7,9 +7,8 @@ const FooterPart = () => {
       <Footer
         style={{
           textAlign: "center",
-        }}
-      >
-        Circle Academy ©{new Date().getFullYear()} Created by CircleThemeBD
+        }}>
+        Circle Academy ©{new Date().getFullYear()} Developed by CircleThemeBD
       </Footer>
     </>
   );

@@ -107,7 +107,7 @@ const Page = () => {
   return (
     <>
       <Row gutter={[16, 16]} justify="space-between">
-        <Col span={10}>
+        <Col sm={24} md={12} style={{ width: "100%" }}>
           <Card
             style={{
               width: 300,
@@ -140,12 +140,12 @@ const Page = () => {
             />
           </Card>
         </Col>
-        <Col span={14}>
+        <Col sm={24} md={12} style={{ width: "100%" }}>
           <Title level={4}>General Information</Title>
           <Row style={{ alignItems: "center", marginBottom: "5px" }}>
-            <Col span={3}>Name</Col>
+            <Col span={5}>Name</Col>
             <Col span={1}>:</Col>
-            <Col span={8}>
+            <Col span={18}>
               <Paragraph
                 style={{ margin: "0" }}
                 editable={{
@@ -156,16 +156,16 @@ const Page = () => {
             </Col>
           </Row>
           <Row style={{ alignItems: "center", marginBottom: "5px" }}>
-            <Col span={3}>Email</Col>
+            <Col span={5}>Email</Col>
             <Col span={1}>:</Col>
-            <Col span={8}>
+            <Col span={18}>
               <Paragraph style={{ margin: "0" }}>{user?.email}</Paragraph>
             </Col>
           </Row>
           <Row style={{ alignItems: "center", marginBottom: "5px" }}>
-            <Col span={3}>Active Device</Col>
+            <Col span={5}>Device</Col>
             <Col span={1}>:</Col>
-            <Col span={8}>
+            <Col span={18}>
               <Row>
                 {user?.device?.map((item, i) =>
                   item?.userAgent == userAgent ? (
@@ -197,9 +197,9 @@ const Page = () => {
             </Col>
           </Row>
           <Row style={{ alignItems: "center", marginBottom: "5px" }}>
-            <Col span={3}>Current Plan</Col>
+            <Col span={5}>Plan</Col>
             <Col span={1}>:</Col>
-            <Col span={8}>
+            <Col span={18}>
               <Paragraph style={{ margin: "0" }}>Free</Paragraph>
             </Col>
           </Row>
