@@ -54,6 +54,7 @@ const SubjectHeading = ({ title, search, count }) => {
             <Col>
               <div>
                 <Search
+                  allowClear
                   enterButton
                   placeholder="সার্চ করুন"
                   onChange={(e) => search(e.target.value)}

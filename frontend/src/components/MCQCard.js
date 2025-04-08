@@ -200,7 +200,7 @@ const MCQCard = ({ data, index }) => {
                     level={5}
                     style={{
                       margin: "0",
-                      color: "blueviolet",
+                      color: "#1677ff",
                       display: "flex",
                       gap: "5px",
                     }}>
@@ -247,7 +247,7 @@ const MCQCard = ({ data, index }) => {
           </Row>
           <div style={{ marginTop: "20px", display: "flex", gap: "5px" }}>
             {data?.tag.map((tag, j) => (
-              <Button key={j} color="cyan" variant="outlined" size="small">
+              <Button key={j} color="danger" variant="filled" size="small">
                 <span dangerouslySetInnerHTML={{ __html: tag?.name }} />
               </Button>
             ))}
