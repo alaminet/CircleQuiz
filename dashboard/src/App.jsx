@@ -22,6 +22,7 @@ import AddCategory from "./pages/AddCategory";
 import AddTag from "./pages/AddTag";
 import ViewDetails from "./pages/ViewDetails";
 import AddSubCategory from "./pages/AddSubCategory";
+import AddBooks from "./pages/AddBooks";
 
 function App() {
   const router = createBrowserRouter(
@@ -44,6 +45,7 @@ function App() {
             <Route path="exam" element={<Exam />}></Route>
             <Route path="questions" element={<Questions />}></Route>
             <Route path="result" element={<ExamFinished />}></Route>
+            <Route path="addbooks" element={<AddBooks />}></Route>
           </Route>
         </Route>
         <Route element={<LoggedOutUser />}>

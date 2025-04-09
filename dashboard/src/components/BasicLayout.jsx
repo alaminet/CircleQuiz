@@ -50,6 +50,11 @@ const items = [
         label: "Sub-Category Details",
       },
       {
+        key: "addbooks",
+        icon: <FormOutlined />,
+        label: "Book Details",
+      },
+      {
         key: "addtopics",
         icon: <FileDoneOutlined />,
         label: "Topics Details",
