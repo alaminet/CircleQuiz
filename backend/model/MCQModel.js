@@ -64,6 +64,13 @@ const MCQModel = new Schema(
         ref: "Subcategory",
       },
     ],
+    book: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Books",
+      },
+    ],
+    lesson: Array,
     tag: [
       {
         type: Schema.Types.ObjectId,

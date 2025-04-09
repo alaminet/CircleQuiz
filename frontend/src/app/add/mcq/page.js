@@ -19,9 +19,9 @@ const CustomEditor = dynamic(() => import("@/components/CustomEditor"), {
   ssr: false,
 });
 import { useSelector } from "react-redux";
-import Loading from "../loading";
+import Loading from "@/app/loading";
 
-const Addmcq = () => {
+const Page = () => {
   const user = useSelector((user) => user?.loginSlice?.login);
   const [ckForm] = Form.useForm();
   const [error, setError] = useState(null);
@@ -34,12 +34,16 @@ const Addmcq = () => {
   const [details, setDetails] = useState("");
   const [catList, setCatList] = useState([]);
   const [subCatList, setSubCatList] = useState([]);
+  const [bookList, setBookList] = useState([]);
+  const [bookAllList, setBookAllList] = useState([]);
   const [subjList, setSubjList] = useState([]);
   const [tagList, setTagList] = useState([]);
   const [tagName, setTagName] = useState([]);
   const inputRef = useRef(null);
   const [slugVal, setSlugVal] = useState("");
   const [subCatFlt, setSubCatFlt] = useState("");
+  const [bookFlt, setBookFlt] = useState("");
+  const [lessonFlt, setLessonFlt] = useState("");
 
   // slug change
   const handleTitleChange = (e) => {
@@ -59,6 +63,38 @@ const Addmcq = () => {
         e.some((key) => item.cat.includes(key))
       );
       setSubCatFlt(subCatFilter);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Book filter
+  const handlSubCatCng = (e) => {
+    try {
+      const bfilter = bookList?.filter((item) =>
+        e.some((key) => item.cat.includes(key))
+      );
+      setBookFlt(bfilter);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Lesson filter
+  const handlBookCng = (e) => {
+    try {
+      const fltArr = [];
+      bookAllList?.map((book) => {
+        if (book._id == e) {
+          book.lesson?.map((les) => {
+            fltArr.push({
+              label: les,
+              value: les,
+            });
+          });
+        }
+        setLessonFlt(fltArr);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -173,7 +209,6 @@ const Addmcq = () => {
   };
 
   // Get Sub-Category List
-
   const getSubCategory = async () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/subcategory/view`,
@@ -198,6 +233,37 @@ const Addmcq = () => {
           cat: item?.category?._id,
         });
       setSubCatList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
+    });
+  };
+  // Get Books List
+  const getBooks = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/v1/api/book/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: process.env.NEXT_PUBLIC_SECURE_API_KEY,
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await res.json();
+    const tableData = [];
+    const fullData = [];
+    data?.view?.map((item) => {
+      if (item.status === "approved") {
+        tableData.push({
+          label: item?.name,
+          value: item?._id,
+          cat: item?.subCategory?._id,
+        });
+        fullData.push(item);
+        setBookList(tableData?.sort((a, b) => a.label.localeCompare(b.label)));
+        setBookAllList(fullData);
+      }
     });
   };
 
@@ -256,6 +322,7 @@ const Addmcq = () => {
   useEffect(() => {
     getCategory();
     getSubCategory();
+    getBooks();
     getTopics();
     getTag();
   }, []);
@@ -264,7 +331,6 @@ const Addmcq = () => {
     <>
       <div>
         <Row>
-          {/* <Col md={6}>1</Col> */}
           <Col md={24}>
             <div>
               <Title style={{ textAlign: "center" }} level={3}>
@@ -281,16 +347,14 @@ const Addmcq = () => {
                     layout="vertical"
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                  >
+                    autoComplete="off">
                     <div>
                       <Form.Item
                         name="question"
                         label="Question"
                         rules={[
                           { required: true, message: "Please input Question!" },
-                        ]}
-                      >
+                        ]}>
                         <CustomEditor onChange={setQuestionVal} />
                       </Form.Item>
                       <Form.Item hidden>
@@ -311,8 +375,7 @@ const Addmcq = () => {
                               required: true,
                               message: "Please input Option A!",
                             },
-                          ]}
-                        >
+                          ]}>
                           <CustomEditor onChange={setOptA} />
                         </Form.Item>
                         <Form.Item hidden>
@@ -328,8 +391,7 @@ const Addmcq = () => {
                               required: true,
                               message: "Please input Option B!",
                             },
-                          ]}
-                        >
+                          ]}>
                           <CustomEditor onChange={setOptB} />
                         </Form.Item>
                         <Form.Item hidden>
@@ -345,8 +407,7 @@ const Addmcq = () => {
                               required: true,
                               message: "Please input Option C!",
                             },
-                          ]}
-                        >
+                          ]}>
                           <CustomEditor onChange={setOptC} />
                         </Form.Item>
                         <Form.Item hidden>
@@ -362,8 +423,7 @@ const Addmcq = () => {
                               required: true,
                               message: "Please input Option D!",
                             },
-                          ]}
-                        >
+                          ]}>
                           <CustomEditor onChange={setOptD} />
                         </Form.Item>
                         <Form.Item hidden>
@@ -378,8 +438,7 @@ const Addmcq = () => {
                           label="Correct Answer"
                           rules={[
                             { required: true, message: "Slect Correct Ans!" },
-                          ]}
-                        >
+                          ]}>
                           <Select
                             showSearch
                             placeholder="Select Answer"
@@ -414,8 +473,7 @@ const Addmcq = () => {
                           }}
                           rules={[
                             { required: true, message: "Slect Category!" },
-                          ]}
-                        >
+                          ]}>
                           <Select
                             mode="multiple"
                             allowClear
@@ -436,21 +494,48 @@ const Addmcq = () => {
                           }}
                           rules={[
                             { required: true, message: "Slect Sub-Category!" },
-                          ]}
-                        >
+                          ]}>
                           <Select
                             mode="multiple"
                             allowClear
                             showSearch
+                            onChange={handlSubCatCng}
                             placeholder="Select Sub-Category"
                             optionFilterProp="label"
-                            // options={
-                            //   subCatList !== "" &&
-                            //   subCatList?.filter((item) =>
-                            //     item?.cat.includes(catCng)
-                            //   )
-                            // }
                             options={subCatFlt}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col>
+                        <Form.Item
+                          name="book"
+                          label="Books"
+                          style={{
+                            width: 300,
+                          }}>
+                          <Select
+                            allowClear
+                            showSearch
+                            onChange={handlBookCng}
+                            placeholder="Select Book"
+                            optionFilterProp="label"
+                            options={bookFlt}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col>
+                        <Form.Item
+                          name="lesson"
+                          label="Lesson"
+                          style={{
+                            width: 300,
+                          }}>
+                          <Select
+                            allowClear
+                            showSearch
+                            placeholder="Select Lesson"
+                            optionFilterProp="label"
+                            options={lessonFlt}
                           />
                         </Form.Item>
                       </Col>
@@ -466,8 +551,7 @@ const Addmcq = () => {
                               required: true,
                               message: "Slect Related Subject!",
                             },
-                          ]}
-                        >
+                          ]}>
                           <Select
                             mode="multiple"
                             allowClear
@@ -498,8 +582,7 @@ const Addmcq = () => {
                                 <Space
                                   style={{
                                     padding: "0 8px 4px",
-                                  }}
-                                >
+                                  }}>
                                   <Input
                                     placeholder="Please enter item"
                                     ref={inputRef}
@@ -510,8 +593,7 @@ const Addmcq = () => {
                                   <Button
                                     type="text"
                                     icon={<PlusOutlined />}
-                                    onClick={addItem}
-                                  >
+                                    onClick={addItem}>
                                     Add item
                                   </Button>
                                 </Space>
@@ -534,8 +616,7 @@ const Addmcq = () => {
                       <Button
                         type="primary"
                         htmlType="submit"
-                        loading={loadings}
-                      >
+                        loading={loadings}>
                         Submit
                       </Button>
                     </Form.Item>
@@ -551,4 +632,4 @@ const Addmcq = () => {
   );
 };
 
-export default Addmcq;
+export default Page;

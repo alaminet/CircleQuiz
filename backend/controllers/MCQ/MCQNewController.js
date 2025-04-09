@@ -25,6 +25,8 @@ const MCQNewController = async (req, res) => {
         topic: data.subject,
         category: data.category,
         subcategory: data.subcategory,
+        book: data.book,
+        lesson: data.lesson,
         tag: data.tag || null,
         des:
           [

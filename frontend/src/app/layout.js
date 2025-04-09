@@ -1,9 +1,8 @@
 import React from "react";
-import "@ant-design/v5-patch-for-react-19";
+import { Noto_Serif_Bengali } from "next/font/google";
 import "ckeditor5/ckeditor5.css";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
-import { Noto_Serif_Bengali } from "next/font/google";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NavLayout from "@/components/NavLayout";
 
@@ -21,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${notoSerifBengali?.variable}`}>
+      <body className={` ${notoSerifBengali.variable} `}>
         <AntdRegistry>
           <SessionProvider>
             <NavLayout>{children}</NavLayout>

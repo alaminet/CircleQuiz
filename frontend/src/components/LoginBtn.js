@@ -23,6 +23,7 @@ const LoginBtn = () => {
   const user = useSelector((user) => user.loginSlice.login);
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
   const isServer = typeof window === "undefined";
 
   // Logout Handeller
@@ -54,6 +55,9 @@ const LoginBtn = () => {
   // popover
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
+  };
+  const handleAddOpenChange = (newOpen) => {
+    setAddOpen(newOpen);
   };
 
   const handleMenu = (e) => {
@@ -126,6 +130,22 @@ const LoginBtn = () => {
         ]}
       />
     </div>
+  );
+  const addContent = (
+    <Flex gap="small" vertical>
+      <Button
+        onClick={() => user?.role === "admin" && router.push("/add/mcq")}
+        type="primary"
+        shape="round">
+        MCQ
+      </Button>
+      <Button
+        onClick={() => user?.role === "admin" && router.push("/add/short")}
+        type="primary"
+        shape="round">
+        Short QA
+      </Button>
+    </Flex>
   );
 
   const userExistCk = async () => {
@@ -200,16 +220,20 @@ const LoginBtn = () => {
     <>
       {status === "authenticated" ? (
         <Flex gap={10}>
-          <Tooltip title="Add Q&A">
-            <Button
-              onClick={() => user.role === "admin" && router.push("/addmcq")}
-              type="primary"
-              shape="round"
-              icon={<PlusCircleOutlined />}>
-              Add Q&A
-            </Button>
-          </Tooltip>
-
+          {user?.role === "admin" && (
+            <Popover
+              placement="bottomRight"
+              // title="Add"
+              content={addContent}
+              open={addOpen}
+              onOpenChange={handleAddOpenChange}
+              trigger="click">
+              <Button
+                type="primary"
+                shape="circle"
+                icon={<PlusCircleOutlined />}></Button>
+            </Popover>
+          )}
           <Popover
             placement="bottomRight"
             title={user?.name}
