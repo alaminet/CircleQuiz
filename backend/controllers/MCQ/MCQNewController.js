@@ -28,14 +28,15 @@ const MCQNewController = async (req, res) => {
         book: data.book,
         lesson: data.lesson,
         tag: data.tag || null,
-        des:
-          [
-            {
-              post: data.details,
-              posted: data.createdBy,
-              createdAt: createdAt,
-            },
-          ] || null,
+        des: data.details
+          ? [
+              {
+                post: data.details,
+                posted: data.createdBy,
+                createdAt: createdAt,
+              },
+            ]
+          : null,
       }).save();
       await res.status(200).send({ addnew, message: "New Q&A Added" });
     } else {

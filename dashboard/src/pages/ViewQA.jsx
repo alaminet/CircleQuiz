@@ -197,7 +197,7 @@ const ViewQA = () => {
       render: (status, record) => (
         <Select
           optionFilterProp="label"
-          defaultValue={status}
+          value={status}
           style={{ minWidth: "100px" }}
           onChange={(e) => handleStatusCng(e, record.action._id)}
           options={[
@@ -267,7 +267,9 @@ const ViewQA = () => {
         }
       );
       setLoading(false);
-      message.success(res.data.message);
+      res?.data?.viewMCQ.length > 0
+        ? message.success(res.data.message)
+        : message.info("No Data Found");
       // viewMCQ
       const tableData = [];
       let y = 1;

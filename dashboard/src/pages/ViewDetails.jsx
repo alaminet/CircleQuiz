@@ -60,7 +60,7 @@ const ViewDetails = () => {
       width: 100,
       render: (status, record) => (
         <Select
-          defaultValue={status}
+          value={status}
           style={{ minWidth: "100px" }}
           onChange={(e) => handleStatus(e, record.action._id)}
           options={[
@@ -130,15 +130,19 @@ const ViewDetails = () => {
         }
       );
       setLoading(false);
-      message.success(res.data.message);
+      console.log(res?.data?.viewArr);
+
+      res?.data?.viewArr?.length > 0
+        ? message.success(res.data.message)
+        : message.info("No Data Found");
       let tableArr = [];
       let y = 1;
       res?.data?.viewArr?.map((item) => {
         tableArr.push({
           sl: y++,
           question: item?.qn,
-          details: item?.details.post,
-          status: item?.details.status,
+          details: item?.details?.post,
+          status: item?.details?.status,
           action: item?.details,
         });
 
@@ -231,8 +235,7 @@ const ViewDetails = () => {
           name="form"
           autoComplete="off"
           onFinish={handleFind}
-          onFinishFailed={handleFindFailed}
-        >
+          onFinishFailed={handleFindFailed}>
           <Form.Item name="QType" label="">
             <Radio.Group
               block
@@ -282,8 +285,7 @@ const ViewDetails = () => {
               type="primary"
               htmlType="submit"
               loading={loading}
-              disabled={loading}
-            >
+              disabled={loading}>
               Find
             </Button>
           </Form.Item>
@@ -318,8 +320,7 @@ const ViewDetails = () => {
           title="Edit Details"
           open={isPostModal}
           onOk={handlePostOk}
-          onCancel={handlePostCancel}
-        >
+          onCancel={handlePostCancel}>
           <CKEditorInput defaultData={editDtls} onChange={setEditDtls} />
         </Modal>
       </div>

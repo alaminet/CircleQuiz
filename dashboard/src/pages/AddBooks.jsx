@@ -311,7 +311,7 @@ const AddBooks = () => {
       render: (status, record) => (
         <Select
           optionFilterProp="label"
-          defaultValue={status}
+          value={status}
           style={{ minWidth: "100px" }}
           onChange={(e) => handleStatusCng(e, record.action._id)}
           options={[

@@ -7,9 +7,9 @@ const MCQViewDesStatusController = async (req, res) => {
     if (type === "MCQ") {
       const viewMCQ = await MCQ.find({ "des.status": status });
       const viewArr = [];
-      const viewflt = viewMCQ.map((item) => {
-        item?.des.map((desc) => {
-          if (desc.status == status) {
+      viewMCQ.map((item) => {
+        item?.des?.map((desc) => {
+          if (desc?.status == status) {
             viewArr.push({ qn: item.question, details: desc });
           }
         });
