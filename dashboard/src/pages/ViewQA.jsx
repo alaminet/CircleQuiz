@@ -174,6 +174,7 @@ const ViewQA = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      fixed: "right",
       filters: [
         {
           text: "Approve",
@@ -529,8 +530,7 @@ const ViewQA = () => {
           name="form"
           autoComplete="off"
           onFinish={handleFind}
-          onFinishFailed={handleFindFailed}
-        >
+          onFinishFailed={handleFindFailed}>
           <Form.Item name="QType" label="">
             <Radio.Group
               block
@@ -580,8 +580,7 @@ const ViewQA = () => {
               type="primary"
               htmlType="submit"
               loading={loading}
-              disabled={loading}
-            >
+              disabled={loading}>
               Find
             </Button>
           </Form.Item>

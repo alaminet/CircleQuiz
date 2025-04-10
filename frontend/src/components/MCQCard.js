@@ -203,15 +203,16 @@ const MCQCard = ({ data, index }) => {
                       margin: "0",
                       color: "#1677ff",
                       display: "flex",
+                      alignItems: "baseline",
                       gap: "5px",
-                    }}
-                  >
-                    <p>{index ? index + "." : ""}</p>
+                    }}>
+                    <span style={{ textWrap: "nowrap" }}>
+                      {index ? index + ")" : ""}
+                    </span>
                     <span
                       dangerouslySetInnerHTML={{
                         __html: data?.question,
-                      }}
-                    ></span>
+                      }}></span>
                   </Title>
                 </Link>
               </div>
@@ -233,8 +234,7 @@ const MCQCard = ({ data, index }) => {
               <Col
                 key={k}
                 span={12}
-                style={{ display: "flex", gap: "4px", alignItems: "center" }}
-              >
+                style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                 {k === data?.ans ? (
                   <CheckSquareFilled style={{ color: "green" }} />
                 ) : (
@@ -250,7 +250,7 @@ const MCQCard = ({ data, index }) => {
             ))}
           </Row>
           <div style={{ marginTop: "20px", display: "flex", gap: "5px" }}>
-            {data?.tag.map((tag, j) => (
+            {data?.tag?.map((tag, j) => (
               <Button key={j} color="danger" variant="filled" size="small">
                 <span dangerouslySetInnerHTML={{ __html: tag?.name }} />
               </Button>
@@ -264,8 +264,7 @@ const MCQCard = ({ data, index }) => {
                   color="primary"
                   variant="link"
                   size="small"
-                  onClick={() => setShowDes(!showDes)}
-                >
+                  onClick={() => setShowDes(!showDes)}>
                   <strong>Des.</strong>
                   <CaretRightOutlined />
                 </Button>
@@ -284,8 +283,7 @@ const MCQCard = ({ data, index }) => {
                     variant="link"
                     size="small"
                     onClick={handleMCQLike}
-                    style={{ gap: "2px", alignItems: "baseline" }}
-                  >
+                    style={{ gap: "2px", alignItems: "baseline" }}>
                     <LikeOutlined /> {likeCount}
                   </Button>
                 )}
@@ -293,8 +291,7 @@ const MCQCard = ({ data, index }) => {
                   color="default"
                   variant="link"
                   size="small"
-                  style={{ gap: "2px" }}
-                >
+                  style={{ gap: "2px" }}>
                   <ShareAltOutlined />
                 </Button>
               </Flex>
@@ -328,8 +325,7 @@ const MCQCard = ({ data, index }) => {
           title="Add Details"
           open={isPostModal}
           onOk={handlePostOk}
-          onCancel={handlePostCancel}
-        >
+          onCancel={handlePostCancel}>
           <CustomEditor onChange={setDetails} />
         </Modal>
       </div>

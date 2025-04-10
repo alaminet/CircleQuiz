@@ -16,6 +16,7 @@ import {
   Typography,
   Tag,
   theme,
+  Popover,
 } from "antd";
 import { useSelector } from "react-redux";
 import { EditTwoTone, DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
@@ -23,14 +24,10 @@ import { EditTwoTone, DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 const AddBooks = () => {
   const user = useSelector((user) => user.loginSlice.login);
   const [newForm] = Form.useForm();
-  const [editForm] = Form.useForm();
-  const [editItem, setEditItem] = useState();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [tbllist, setTbllist] = useState([]);
   const [subCatlist, setSubCatllist] = useState([]);
-  const [editStatus, setEditStatus] = useState(null);
   const [lessonSlug, setLessonSlug] = useState("");
   const { Title, Paragraph } = Typography;
 
@@ -131,22 +128,8 @@ const AddBooks = () => {
   };
   const { token } = theme.useToken();
   const [tags, setTags] = useState([]);
-  const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [editInputIndex, setEditInputIndex] = useState(-1);
-  const [editInputValue, setEditInputValue] = useState("");
-  const inputRef = useRef(null);
-  const editInputRef = useRef(null);
-  useEffect(() => {
-    var _a;
-    if (inputVisible) {
-      (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.focus();
-    }
-  }, [inputVisible]);
-  useEffect(() => {
-    var _a;
-    (_a = editInputRef.current) === null || _a === void 0 ? void 0 : _a.focus();
-  }, [editInputValue]);
+
   const handleClose = async (post, lesson, removedTag) => {
     const newTags = lesson.filter((tag) => tag !== removedTag);
     setTags(newTags);
@@ -165,21 +148,16 @@ const AddBooks = () => {
     );
     message.success(res?.data.message);
   };
-  const showInput = () => {
-    setInputVisible(true);
-  };
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
+
   const handleInputConfirm = async (post, lesson) => {
     if (inputValue && !tags.includes(inputValue)) {
       setTags([...lesson, inputValue]);
+      // postID, newLesson
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/v1/api/book/editfield`,
+        `${import.meta.env.VITE_API_URL}/v1/api/book/lessonadd`,
         {
-          field: "lesson",
           postID: post,
-          value: [...lesson, inputValue],
+          newLesson: inputValue.trim(),
         },
         {
           headers: {
@@ -189,35 +167,9 @@ const AddBooks = () => {
       );
       message.success(res?.data.message);
     }
-    setInputVisible(false);
     setInputValue("");
   };
-  const handleEditInputChange = (e) => {
-    setEditInputValue(e.target.value);
-  };
-  const handleEditInputConfirm = async (post, lesson) => {
-    const newTags = [...lesson];
-    newTags[editInputIndex] = editInputValue;
-    if (editInputValue && !lesson.includes(editInputValue)) {
-      setTags(newTags);
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/v1/api/book/editfield`,
-        {
-          field: "lesson",
-          postID: post,
-          value: newTags,
-        },
-        {
-          headers: {
-            Authorization: import.meta.env.VITE_SECURE_API_KEY,
-          },
-        }
-      );
-      message.success(res?.data.message);
-    }
-    setEditInputIndex(-1);
-    setEditInputValue("");
-  };
+
   const tagPlusStyle = {
     height: 22,
     background: token.colorBgContainer,
@@ -292,68 +244,43 @@ const AddBooks = () => {
       render: (lesson, record) => (
         <Flex gap="4px 0" wrap>
           {lesson.map((tag, index) => {
-            if (editInputIndex === index) {
-              return (
-                <Input
-                  ref={editInputRef}
-                  key={tag}
-                  size="small"
-                  style={tagInputStyle}
-                  value={editInputValue}
-                  onChange={handleEditInputChange}
-                  onBlur={() =>
-                    handleEditInputConfirm(record.action._id, lesson)
-                  }
-                  onPressEnter={() =>
-                    handleEditInputConfirm(record.action._id, lesson)
-                  }
-                />
-              );
-            }
-            const isLongTag = tag?.length > 20;
-            const tagElem = (
+            return (
               <Tag
-                key={tag}
+                key={index}
                 closable
                 style={{ userSelect: "none" }}
                 onClose={() => handleClose(record.action._id, lesson, tag)}>
-                <span
-                  onDoubleClick={(e) => {
-                    setEditInputIndex(index);
-                    setEditInputValue(tag);
-                    e.preventDefault();
+                <Paragraph
+                  style={{ margin: "0", display: "inline" }}
+                  editable={{
+                    onChange: (e) =>
+                      handleLessEdit(e, record.action._id, index, lesson),
                   }}>
-                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                </span>
+                  {tag}
+                </Paragraph>
               </Tag>
             );
-            return isLongTag ? (
-              <Tooltip title={tag} key={tag}>
-                {tagElem}
-              </Tooltip>
-            ) : (
-              tagElem
-            );
           })}
-          {inputVisible ? (
-            <Input
-              ref={inputRef}
-              type="text"
-              size="small"
-              style={tagInputStyle}
-              value={inputValue}
-              onChange={handleInputChange}
-              onBlur={() => handleInputConfirm(record.action._id, lesson)}
-              onPressEnter={() => handleInputConfirm(record.action._id, lesson)}
-            />
-          ) : (
-            <Tag
-              style={tagPlusStyle}
-              icon={<PlusOutlined />}
-              onClick={showInput}>
+          <Popover
+            content={
+              <div>
+                <Input
+                  type="text"
+                  size="middle"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onBlur={() => handleInputConfirm(record.action._id, lesson)}
+                  onPressEnter={() =>
+                    handleInputConfirm(record.action._id, lesson)
+                  }
+                />
+              </div>
+            }
+            trigger="click">
+            <Tag style={tagPlusStyle} icon={<PlusOutlined />}>
               New Lesson
             </Tag>
-          )}
+          </Popover>
         </Flex>
       ),
     },
@@ -503,6 +430,30 @@ const AddBooks = () => {
       }
     );
     message.success(res?.data.message);
+  };
+
+  // Lesson Edit Change
+  const handleLessEdit = async (values, post, index, lesson) => {
+    // console.log(values, post, index, lesson);
+    const newTags = [...lesson];
+    newTags[index] = values;
+    if (values && !lesson.includes(values)) {
+      setTags(newTags);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/v1/api/book/editfield`,
+        {
+          field: "lesson",
+          postID: post,
+          value: newTags,
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_SECURE_API_KEY,
+          },
+        }
+      );
+      message.success(res?.data.message);
+    }
   };
 
   // MCQ Delete
