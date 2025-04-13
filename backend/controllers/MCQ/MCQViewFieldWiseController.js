@@ -38,6 +38,7 @@ const MCQViewFieldWiseController = async (req, res) => {
         .populate("tag")
         .populate("des.posted")
         .populate("created");
+
       await res.status(200).send({ view, message: "MCQ Updated" });
     }
   } catch (error) {

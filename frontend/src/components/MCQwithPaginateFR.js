@@ -8,6 +8,7 @@ import LoginModal from "./LoginModal";
 import { useSelector } from "react-redux";
 
 const MCQwithPaginateFR = ({ data }) => {
+  let y = 0;
   const user = useSelector((user) => user?.loginSlice?.login);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,13 +30,11 @@ const MCQwithPaginateFR = ({ data }) => {
         ) : (
           <>
             <Suspense fallback={<Loading />}>
-              {paginatedData
-                ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map((item, i) => (
-                  <div key={i}>
-                    <MCQCard data={item} index={++i} />
-                  </div>
-                ))}
+              {paginatedData?.map((item, i) => (
+                <div key={i}>
+                  <MCQCard data={item} index={data?.indexOf(item) + 1} />
+                </div>
+              ))}
             </Suspense>
             <Pagination
               align="end"

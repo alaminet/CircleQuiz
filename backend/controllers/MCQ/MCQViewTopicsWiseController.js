@@ -10,13 +10,19 @@ const MCQViewTopicsWiseController = async (req, res) => {
         { topic: findTopic, status: "approved" },
         { $inc: { views: 1 } }
       );
-      const view = await MCQ.find({ topic: findTopic._id, status: "approved" })
+      const viewArr = await MCQ.find({
+        topic: findTopic._id,
+        status: "approved",
+      })
         .populate("topic")
         .populate("category")
         .populate("subcategory")
         .populate("tag")
         .populate("des.posted")
         .populate("created");
+      const view = viewArr?.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       return res.status(200).send({ view, message: "Data Query Done!" });
     } else {
       return res.status(404).send({ message: "Invalid Data Query" });
