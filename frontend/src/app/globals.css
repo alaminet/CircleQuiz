@@ -7,3 +7,60 @@
   display: block !important;
 }
 
+.ant-carousel .slick-dots li button {
+  color: black !important;
+  background: black !important;
+}
+
+/* Home CSS */
+.home-cat-card {
+  position: relative;
+  width: 270px;
+  height: 370px;
+  overflow: hidden;
+  z-index: 0;
+  cursor: pointer;
+}
+
+.home-cat-card::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #000;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  opacity: 0;
+  transition: all 300 ease-in-out;
+}
+
+.home-cat-card:hover::before {
+  opacity: 0.6;
+}
+
+.home-cat-card .card-img {
+  transition: all 300 ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-cat-card .card-body {
+  background: rgba(30, 192, 255, 0.9);
+  text-align: center;
+  position: absolute;
+  width: 140%;
+  z-index: 1;
+  bottom: -50px;
+  left: -20%;
+  padding-top: 50px;
+  border-top-right-radius: 100%;
+  border-top-left-radius: 100%;
+  transition: all 300 ease-in-out;
+}
+
+.home-cat-card:hover .card-body {
+  bottom: 0px;
+}

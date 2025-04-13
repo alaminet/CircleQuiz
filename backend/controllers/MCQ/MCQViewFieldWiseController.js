@@ -31,14 +31,16 @@ const MCQViewFieldWiseController = async (req, res) => {
       // Add "approved" status dynamically
       update.status = status;
 
-      const view = await MCQ.find(update)
+      const viewArr = await MCQ.find(update)
         .populate("topic")
         .populate("category")
         .populate("subcategory")
         .populate("tag")
         .populate("des.posted")
         .populate("created");
-
+      const view = viewArr?.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       await res.status(200).send({ view, message: "MCQ Updated" });
     }
   } catch (error) {
